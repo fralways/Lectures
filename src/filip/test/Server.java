@@ -91,6 +91,9 @@ public class Server {
                         response = makeResponse(obj);
                         break;
                     }
+
+
+
                     default:{
                         throw new RuntimeException("method not supported");
                     }

@@ -8,9 +8,6 @@
       <root url="jar://$PROJECT_DIR$/lib/javax.ws.rs-api-2.0.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jersey-common.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jersey-server.jar!/" />
-      <root url="jar://$USER_HOME$/Downloads/postgresql-9.4.1209.jre6.jar!/" />
-      <root url="jar://$USER_HOME$/Downloads/gson-2.7.jar!/" />
-      <root url="jar://$USER_HOME$/Downloads/commons-dbutils-1.6.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

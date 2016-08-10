@@ -9,6 +9,8 @@ import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
 
+import static filip.test.StaticKeys.*;
+
 /**
  * Created by Filip on 8/7/2016.
  */
@@ -52,7 +54,7 @@ public class DBHandler {
                 !String.class.isInstance(parameters.get("lastname")) || !String.class.isInstance(parameters.get("description")) ||
                 !String.class.isInstance(parameters.get("university")) || !String.class.isInstance(parameters.get("password"))){
 
-            throw new Exception("invalid data");
+            throw new RuntimeException(EXCEPTION_BADREQUEST);
         }else {
             createUser(parameters.get("email"), parameters.get("title"), parameters.get("userId"),
                     parameters.get("firstname"), parameters.get("lastname"), parameters.get("description"), parameters.get("university"),
@@ -100,9 +102,8 @@ public class DBHandler {
             ps.executeUpdate();
             ps.close();
         }else{
-            throw new RuntimeException();
+            throw new RuntimeException(EXCEPTION_BADREQUEST);
         }
-
     }
 
     public Object getUserByEmail(Object email) throws Exception {
@@ -112,7 +113,7 @@ public class DBHandler {
             ResultSet rs = ps.executeQuery();
             return rs;
         }else{
-            throw new RuntimeException();
+            throw new RuntimeException(EXCEPTION_BADREQUEST);
         }
     }
 
@@ -136,6 +137,32 @@ public class DBHandler {
         ps.close();
 
         return genuuid;
+    }
+
+    public String authenticateUser(Map<String, Object> parameters) throws SQLException, NoSuchAlgorithmException {
+        if (String.class.isInstance(parameters.get("email")) && String.class.isInstance(parameters.get("password"))) {
+            String email = (String) parameters.get("email");
+            String password = (String) parameters.get("password");
+
+            if (!email.equals("") && !password.equals("")){
+                String cryptPassword = Utilities.cryptWithMD5(password);
+                Statement st = conn.createStatement();
+                PreparedStatement ps = conn.prepareStatement("SELECT * FROM users WHERE email = ? and password = ?");
+                ps.setString(1, email);
+                ps.setString(2, cryptPassword);
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()){
+                    //napravi token i vrati korisniku
+                    return "OK";
+                }else {
+                    throw new RuntimeException(EXCEPTION_BADREQUEST);
+                }
+            }else{
+                throw new RuntimeException(EXCEPTION_BADREQUEST);
+            }
+        }else {
+            throw new RuntimeException(EXCEPTION_BADREQUEST);
+        }
     }
 
 }

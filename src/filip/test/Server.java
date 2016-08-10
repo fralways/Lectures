@@ -9,15 +9,17 @@ package filip.test;
         import java.net.InetSocketAddress;
         import java.net.URI;
         import java.net.URLDecoder;
+        import java.security.NoSuchAlgorithmException;
         import java.util.*;
         import java.sql.*;
 
         import com.google.gson.Gson;
         import com.google.gson.GsonBuilder;
-        import com.sun.net.httpserver.Headers;
         import com.sun.net.httpserver.HttpExchange;
         import com.sun.net.httpserver.HttpHandler;
         import com.sun.net.httpserver.HttpServer;
+
+        import static filip.test.StaticKeys.*;
 
 public class Server {
 
@@ -39,33 +41,15 @@ public class Server {
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         System.out.println("Server started at " + port);
         server.createContext("/user", new UserHandler());
+        server.createContext("/login", new LoginHandler());
         server.setExecutor(null);
         server.start();
     }
 
-    private Map<String, Object> extractBodyParameters (HttpExchange he) throws IOException {
-        Map<String, Object> parameters = new HashMap<>();
-        InputStreamReader isr = new InputStreamReader(he.getRequestBody(), "utf-8");
-        BufferedReader br = new BufferedReader(isr);
-        String query = br.readLine();
-        parseQuery(query, parameters);
-
-        return parameters;
-    }
-
-    private Map<String, Object> extractURIParameters (HttpExchange he) throws IOException {
-        Map<String, Object> parameters = new HashMap<>();
-        URI requestedUri = he.getRequestURI();
-        String query = requestedUri.getRawQuery();
-        parseQuery(query, parameters);
-
-        return parameters;
-    }
-
+    //region Handlers
     private class UserHandler implements HttpHandler {
 
         @Override
-
         public void handle(HttpExchange he) throws IOException {
             // parse request
             String method = he.getRequestMethod();
@@ -91,23 +75,14 @@ public class Server {
                         response = makeResponse(obj);
                         break;
                     }
-
-
-
                     default:{
-                        throw new RuntimeException("method not supported");
+                        throw new RuntimeException(EXCEPTION_BADMETHOD);
                     }
                 }
-                he.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-            } catch (SQLException e) {
-                response = makeResponse(e.toString());
-                he.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
-            } catch (RuntimeException e){
-                response = makeResponse(e.toString());
-                he.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, 0);
+                handleResponseHeader(he, null);
             } catch (Exception e){
                 response = makeResponse(e.toString());
-                he.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                handleResponseHeader(he, e);
             } finally {
                 // send response
                 OutputStream os = he.getResponseBody();
@@ -115,6 +90,76 @@ public class Server {
                 os.close();
             }
         }
+    }
+
+    private class LoginHandler implements HttpHandler {
+
+        @Override
+        public void handle(HttpExchange he) throws IOException {
+            String method = he.getRequestMethod();
+            String response = "";
+            Map<String, Object> parameters;
+            try {
+
+                if (method.equals("POST")) {
+                    parameters = extractBodyParameters(he);
+                    dbHandler.authenticateUser(parameters);
+                } else {
+                    throw new RuntimeException(EXCEPTION_BADMETHOD);
+                }
+                handleResponseHeader(he, null);
+            }catch (RuntimeException|SQLException|NoSuchAlgorithmException e){
+                response = makeResponse(e.toString());
+                handleResponseHeader(he, e);
+            }finally {
+                OutputStream os = he.getResponseBody();
+                os.write(response.getBytes());
+                os.close();
+            }
+        }
+    }
+    //endregion
+
+    //region Supporting methods
+
+    private void handleResponseHeader(HttpExchange he, Exception ex) throws IOException {
+        if (ex == null){
+            he.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+        }else{
+            switch (ex.getMessage()){
+                case EXCEPTION_BADMETHOD:{
+                    he.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, 0);
+                    break;
+                }
+                case EXCEPTION_BADREQUEST:{
+                    he.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                    break;
+                }
+                default:{
+                    he.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
+                    break;
+                }
+            }
+        }
+    }
+
+    private Map<String, Object> extractBodyParameters (HttpExchange he) throws IOException {
+        Map<String, Object> parameters = new HashMap<>();
+        InputStreamReader isr = new InputStreamReader(he.getRequestBody(), "utf-8");
+        BufferedReader br = new BufferedReader(isr);
+        String query = br.readLine();
+        parseQuery(query, parameters);
+
+        return parameters;
+    }
+
+    private Map<String, Object> extractURIParameters (HttpExchange he) throws IOException {
+        Map<String, Object> parameters = new HashMap<>();
+        URI requestedUri = he.getRequestURI();
+        String query = requestedUri.getRawQuery();
+        parseQuery(query, parameters);
+
+        return parameters;
     }
 
     private static void parseQuery(String query, Map<String,
@@ -168,5 +213,6 @@ public class Server {
         return response;
     }
 
+    //endregion
 
 }

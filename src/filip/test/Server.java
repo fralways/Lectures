@@ -1,10 +1,9 @@
 package filip.test;
-
 /**
  * Created by Filip on 8/7/2016.
  */
 
-        import java.io.*;
+import java.io.*;
         import java.net.HttpURLConnection;
         import java.net.InetSocketAddress;
         import java.net.URI;
@@ -15,11 +14,14 @@ package filip.test;
 
         import com.google.gson.Gson;
         import com.google.gson.GsonBuilder;
+        import com.sun.net.httpserver.Headers;
         import com.sun.net.httpserver.HttpExchange;
         import com.sun.net.httpserver.HttpHandler;
         import com.sun.net.httpserver.HttpServer;
+        import io.jsonwebtoken.Jwt;
 
         import static filip.test.StaticKeys.*;
+        import static filip.test.Utilities.*;
 
 public class Server {
 
@@ -42,11 +44,47 @@ public class Server {
         System.out.println("Server started at " + port);
         server.createContext("/user", new UserHandler());
         server.createContext("/login", new LoginHandler());
+        server.createContext("/home", new HomeHandler());
+        server.createContext("/test", new TestHandler());
         server.setExecutor(null);
         server.start();
     }
 
     //region Handlers
+
+    private class HomeHandler implements HttpHandler {
+
+        @Override
+        public void handle(HttpExchange he) throws IOException {
+            // parse request
+            String method = he.getRequestMethod();
+            String response = "";
+            Map<String, Object> parameters;
+
+            try {
+                switch (method){
+                    case "GET": {
+                        Map<String, String> endpoints = Utilities.getEndpoints();
+                        response = makeResponse(endpoints);
+                        break;
+                    }
+                    default:{
+                        throw new RuntimeException(EXCEPTION_BADMETHOD);
+                    }
+                }
+                handleResponseHeader(he, null);
+            } catch (Exception e){
+                response = makeResponse(e.toString());
+                handleResponseHeader(he, e);
+            } finally {
+                // send response
+                OutputStream os = he.getResponseBody();
+                os.write(response.getBytes());
+                os.close();
+            }
+        }
+    }
+
     private class UserHandler implements HttpHandler {
 
         @Override
@@ -57,22 +95,27 @@ public class Server {
             Map<String, Object> parameters;
 
             try {
-
                 switch (method){
                     case "POST": {
                         parameters = extractBodyParameters(he);
                         dbHandler.createUser(parameters);
+                        System.out.println("created user");
                         break;
                     }
                     case "DELETE": {
+                        verifyToken(he);
                         parameters = extractBodyParameters(he);
                         dbHandler.deleteUserByEmail(parameters.get("email"));
+                        handleResponseHeader(he, null);
+                        System.out.println("deleted user");
                         break;
                     }
                     case "GET": {
+                        verifyToken(he);
                         parameters = extractURIParameters(he);
                         Object obj = dbHandler.getUserByEmail(parameters.get("email"));
                         response = makeResponse(obj);
+
                         break;
                     }
                     default:{
@@ -103,13 +146,39 @@ public class Server {
 
                 if (method.equals("POST")) {
                     parameters = extractBodyParameters(he);
-                    dbHandler.authenticateUser(parameters);
+                    String jwt = dbHandler.authenticateUser(parameters);
+                    Headers headers= he.getResponseHeaders();
+                    headers.set("JWT", jwt);
                 } else {
                     throw new RuntimeException(EXCEPTION_BADMETHOD);
                 }
                 handleResponseHeader(he, null);
             }catch (RuntimeException|SQLException|NoSuchAlgorithmException e){
                 response = makeResponse(e.toString());
+                handleResponseHeader(he, e);
+            }finally {
+                OutputStream os = he.getResponseBody();
+                os.write(response.getBytes());
+                os.close();
+            }
+        }
+    }
+
+    private class TestHandler implements HttpHandler {
+
+        @Override
+        public void handle(HttpExchange he) throws IOException {
+            String method = he.getRequestMethod();
+            String response = "";
+            Map<String, Object> parameters;
+
+            Headers headers= he.getRequestHeaders();
+            String jwt = headers.get("JWT").get(0);
+            try {
+                Jwt something = verifyToken(jwt);
+                handleResponseHeader(he, null);
+            }catch (Exception e){
+                response = makeResponse(EXCEPTION_NOTAUTHORIZED);
                 handleResponseHeader(he, e);
             }finally {
                 OutputStream os = he.getResponseBody();
@@ -133,6 +202,10 @@ public class Server {
                 }
                 case EXCEPTION_BADREQUEST:{
                     he.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+                    break;
+                }
+                case EXCEPTION_NOTAUTHORIZED:{
+                    he.sendResponseHeaders(HttpURLConnection.HTTP_UNAUTHORIZED, 0);
                     break;
                 }
                 default:{

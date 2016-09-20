@@ -13,8 +13,8 @@
       <schema id="2" parent="1" name="public">
         <object-id>2200</object-id>
         <visible>1</visible>
-        <introspection-state-number>759</introspection-state-number>
-        <introspection-timestamp>2016-08-08.02:44:52.347</introspection-timestamp>
+        <introspection-state-number>814</introspection-state-number>
+        <introspection-timestamp>2016-08-10.21:49:52.212</introspection-timestamp>
       </schema>
       <schema id="3" parent="1" name="pg_catalog">
         <object-id>11</object-id>
@@ -34,12 +34,12 @@
       <table id="8" parent="2" name="image">
         <object-id>16403</object-id>
         <comment>table for  images</comment>
-        <state-number>740</state-number>
+        <state-number>814</state-number>
       </table>
       <table id="9" parent="2" name="users">
         <object-id>16393</object-id>
         <comment>table for all users</comment>
-        <state-number>759</state-number>
+        <state-number>814</state-number>
       </table>
       <routine id="10" parent="2" name="uuid_generate_v1">
         <object-id>16484</object-id>
@@ -128,10 +128,9 @@
         <underlying-index>image_pkey</underlying-index>
         <primary>1</primary>
       </key>
-      <foreign-key id="27" parent="8" name="image_users_email_fk">
-        <object-id>16520</object-id>
+      <foreign-key id="27" parent="8" name="image_users_guid_fk">
+        <object-id>16538</object-id>
         <columns>userref</columns>
-        <ref-key>~.users.User_pkey</ref-key>
         <cascade-update-rule>restrict</cascade-update-rule>
         <cascade-delete-rule>restrict</cascade-delete-rule>
       </foreign-key>
@@ -177,90 +176,107 @@
         <mandatory>1</mandatory>
         <data-type>text|0</data-type>
       </column>
-      <index id="37" parent="9" name="User_email_uindex">
+      <column id="37" parent="9" name="guid">
+        <state-number>801</state-number>
+        <mandatory>1</mandatory>
+        <data-type>text|0</data-type>
+      </column>
+      <index id="38" parent="9" name="User_email_uindex">
         <object-id>16402</object-id>
         <columns>email</columns>
         <desc-columns></desc-columns>
         <unique>1</unique>
       </index>
-      <index id="38" parent="9" name="User_pkey">
+      <index id="39" parent="9" name="User_pkey">
         <object-id>16399</object-id>
         <columns>email</columns>
         <desc-columns></desc-columns>
         <unique>1</unique>
       </index>
-      <index id="39" parent="9" name="User_userId_uindex">
+      <index id="40" parent="9" name="User_userId_uindex">
         <object-id>16401</object-id>
         <columns>userid</columns>
         <desc-columns></desc-columns>
         <unique>1</unique>
       </index>
-      <key id="40" parent="9" name="User_pkey">
-        <object-id>16400</object-id>
-        <columns>email</columns>
+      <index id="41" parent="9" name="User_pkey">
+        <object-id>16531</object-id>
+        <columns>guid</columns>
+        <desc-columns></desc-columns>
+        <unique>1</unique>
+      </index>
+      <index id="42" parent="9" name="users_guid_uindex">
+        <object-id>16530</object-id>
+        <columns>guid</columns>
+        <desc-columns></desc-columns>
+        <unique>1</unique>
+      </index>
+      <key id="43" parent="9" name="User_pkey">
+        <object-id>16532</object-id>
+        <columns>guid</columns>
         <underlying-index>User_pkey</underlying-index>
         <primary>1</primary>
       </key>
-      <foreign-key id="41" parent="9" name="users_image_id_fk">
-        <object-id>16525</object-id>
+      <foreign-key id="44" parent="9" name="users_image_id_fk">
+        <object-id>16543</object-id>
         <columns>imageref</columns>
         <ref-key>~.image.image_pkey</ref-key>
         <cascade-update-rule>restrict</cascade-update-rule>
         <cascade-delete-rule>restrict</cascade-delete-rule>
       </foreign-key>
-      <argument id="42" parent="10">
+      <argument id="45" parent="10">
         <direction>RETURN</direction>
         <data-type>uuid|0</data-type>
       </argument>
-      <argument id="43" parent="11">
+      <argument id="46" parent="11">
         <direction>RETURN</direction>
         <data-type>uuid|0</data-type>
       </argument>
-      <argument id="44" parent="12" name="namespace">
+      <argument id="47" parent="12" name="namespace">
         <direction>IN</direction>
         <data-type>uuid|0</data-type>
       </argument>
-      <argument id="45" parent="12" name="name">
-        <direction>IN</direction>
-        <data-type>text|0</data-type>
-      </argument>
-      <argument id="46" parent="12">
-        <direction>RETURN</direction>
-        <data-type>uuid|0</data-type>
-      </argument>
-      <argument id="47" parent="13">
-        <direction>RETURN</direction>
-        <data-type>uuid|0</data-type>
-      </argument>
-      <argument id="48" parent="14" name="namespace">
-        <direction>IN</direction>
-        <data-type>uuid|0</data-type>
-      </argument>
-      <argument id="49" parent="14" name="name">
+      <argument id="48" parent="12" name="name">
         <direction>IN</direction>
         <data-type>text|0</data-type>
       </argument>
-      <argument id="50" parent="14">
+      <argument id="49" parent="12">
         <direction>RETURN</direction>
         <data-type>uuid|0</data-type>
       </argument>
-      <argument id="51" parent="15">
+      <argument id="50" parent="13">
         <direction>RETURN</direction>
         <data-type>uuid|0</data-type>
       </argument>
-      <argument id="52" parent="16">
+      <argument id="51" parent="14" name="namespace">
+        <direction>IN</direction>
+        <data-type>uuid|0</data-type>
+      </argument>
+      <argument id="52" parent="14" name="name">
+        <direction>IN</direction>
+        <data-type>text|0</data-type>
+      </argument>
+      <argument id="53" parent="14">
         <direction>RETURN</direction>
         <data-type>uuid|0</data-type>
       </argument>
-      <argument id="53" parent="17">
+      <argument id="54" parent="15">
         <direction>RETURN</direction>
         <data-type>uuid|0</data-type>
       </argument>
-      <argument id="54" parent="18">
+      <argument id="55" parent="16">
         <direction>RETURN</direction>
         <data-type>uuid|0</data-type>
       </argument>
-      <argument id="55" parent="19">
+      <argument id="56" parent="17">
+        <direction>RETURN</direction>
+        <data-type>uuid|0</data-type>
+      </argument>
+      <argument id="57" parent="18">
+        <direction>RETURN</direction>
+        <data-type>uuid|0</data-type>
+      </argument>
+      <argument id="58" parent="19">
         <direction>RETURN</direction>
         <data-type>uuid|0</data-type>
       </argument>

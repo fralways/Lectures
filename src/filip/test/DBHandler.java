@@ -1,11 +1,16 @@
 package filip.test;
 
-import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.handlers.MapListHandler;
+import io.jsonwebtoken.Jwts;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 
@@ -65,27 +70,38 @@ public class DBHandler {
     private void createUser(Object email, Object title, Object userId, Object firstname,
                            Object lastname, Object description, Object university, Object password) throws IOException, SQLException, NoSuchAlgorithmException {
 
-        String imageId = createImage();
-        String cryptPassword = Utilities.cryptWithMD5((String) password);
-        PreparedStatement ps = conn.prepareStatement("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM users WHERE email = ?");
         ps.setString(1, (String)email);
-        ps.setString(2, (String)title);
-        ps.setString(3, (String)userId);
-        ps.setString(4, (String)firstname);
-        ps.setString(5, (String)lastname);
-        ps.setString(6, (String)description);
-        ps.setString(7, (String)university);
-        ps.setString(8, imageId);
-        ps.setString(9, cryptPassword);
-        ps.executeUpdate();
-        ps.close();
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()){
+            rs.close();
+            throw new SQLException();
+        }else {
+            String cryptPassword = Utilities.cryptWithMD5((String) password);
+            String guid = Utilities.cryptWithMD5((String) email);
 
-        //update image with foreign key (need this for cascade delete)
-        ps = conn.prepareStatement("UPDATE image SET userref = ? WHERE id = ?");
-        ps.setString(1, (String)email);
-        ps.setString(2, imageId);
-        ps.executeUpdate();
-        ps.close();
+            String imageId = createImage();
+            ps = conn.prepareStatement("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            ps.setString(1, (String) email);
+            ps.setString(2, (String) title);
+            ps.setString(3, (String) userId);
+            ps.setString(4, (String) firstname);
+            ps.setString(5, (String) lastname);
+            ps.setString(6, (String) description);
+            ps.setString(7, (String) university);
+            ps.setString(8, imageId);
+            ps.setString(9, cryptPassword);
+            ps.setString(10, guid);
+            ps.executeUpdate();
+            ps.close();
+
+            //update image with foreign key (need this for cascade delete)
+            ps = conn.prepareStatement("UPDATE image SET userref = ? WHERE id = ?");
+            ps.setString(1, guid);
+            ps.setString(2, imageId);
+            ps.executeUpdate();
+            ps.close();
+        }
     }
 
     public void deleteAllUsers() throws IOException, SQLException {
@@ -152,9 +168,25 @@ public class DBHandler {
                 ps.setString(2, cryptPassword);
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()){
+
+                    String userEmail = rs.getString("email");
+
                     //napravi token i vrati korisniku
-                    return "OK";
+                    byte[] key = JWT_SECRET.getBytes();
+
+                    Date dt = new Date();
+                    DateTime dtOrg = new DateTime(dt);
+                    DateTime dtPlusOne = dtOrg.plusDays(1);
+
+                    String jwt =
+                            Jwts.builder().setIssuer("http://lectures.com")
+                                    .setSubject("users/" + userEmail)
+                                    .setExpiration(dtPlusOne.toDate())
+                                    .signWith(SignatureAlgorithm.HS256,key)
+                                    .compact();
+                    return jwt;
                 }else {
+                    // invalid credentials
                     throw new RuntimeException(EXCEPTION_BADREQUEST);
                 }
             }else{

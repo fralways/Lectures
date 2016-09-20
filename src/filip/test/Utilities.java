@@ -6,10 +6,19 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.sun.net.httpserver.Headers;
+import com.sun.net.httpserver.HttpExchange;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureException;
+
+import static filip.test.StaticKeys.*;
 
 /**
  * Created by Filip on 8/8/2016.
@@ -52,8 +61,7 @@ public class Utilities {
             forConvert = resList;
         }
 
-        String json = new Gson().toJson(forConvert);
-        return json;
+        return new Gson().toJson(forConvert);
     }
 
     public static String cryptWithMD5(String pass) throws NoSuchAlgorithmException{
@@ -68,4 +76,34 @@ public class Utilities {
         return sb.toString();
     }
 
+    public static Jws verifyToken(HttpExchange he) throws Exception {
+
+        Headers headers= he.getRequestHeaders();
+
+        try {
+            String jwt = headers.get("JWT").get(0);
+            Jws token = verifyToken(jwt);
+            return token;
+        }catch (Exception e){
+            throw new Exception(EXCEPTION_NOTAUTHORIZED);
+        }
+    }
+
+    public static Jws verifyToken(String jwt) throws Exception {
+        try {
+            byte[] key = JWT_SECRET.getBytes();
+            return (Jws) Jwts.parser().setSigningKey(key).parseClaimsJws(jwt);
+        }catch (SignatureException e){
+            throw new Exception(EXCEPTION_NOTAUTHORIZED);
+        }
+    }
+
+    public static Map<String, String> getEndpoints(){
+        Map<java.lang.String, java.lang.String> endpoints = new HashMap<>();
+
+        endpoints.put("user", "http://localhost:8000/user");
+        endpoints.put("login", "http://localhost:8000/login");
+
+        return endpoints;
+    }
 }

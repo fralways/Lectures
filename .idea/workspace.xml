@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/filip/test/DBHandler.java" line="105" />
+    <bookmark url="file://$PROJECT_DIR$/src/filip/test/DBHandler.java" line="121" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="68fa7627-3112-4670-9e8f-548f505250b7" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/joda_time_joda_time_2_9_4.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Lectures/filip/test/DBHandler.class" afterPath="$PROJECT_DIR$/out/production/Lectures/filip/test/DBHandler.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Lectures/filip/test/Server$UserHandler.class" afterPath="$PROJECT_DIR$/out/production/Lectures/filip/test/Server$UserHandler.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Lectures/filip/test/Server.class" afterPath="$PROJECT_DIR$/out/production/Lectures/filip/test/Server.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Lectures/filip/test/Utilities.class" afterPath="$PROJECT_DIR$/out/production/Lectures/filip/test/Utilities.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dataSources.ids" afterPath="$PROJECT_DIR$/.idea/dataSources.ids" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dataSources.xml" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Jersey_2_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Jersey_2_2.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Lectures.iml" afterPath="$PROJECT_DIR$/Lectures.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/DBHandler.java" afterPath="$PROJECT_DIR$/src/filip/test/DBHandler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/Server.java" afterPath="$PROJECT_DIR$/src/filip/test/Server.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/StaticKeys.java" afterPath="$PROJECT_DIR$/src/filip/test/StaticKeys.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/Utilities.java" afterPath="$PROJECT_DIR$/src/filip/test/Utilities.java" />
     </list>
     <ignored path="Lectures.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -40,6 +51,24 @@
         <option name="myItemId" />
         <option name="myItemType" value="com.intellij.database.view.DatabaseStructure$Root" />
       </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="PostgreSQL - postgres@localhost" />
+        <option name="myItemType" value="com.intellij.database.view.DbNodeDescriptor" />
+      </PATH_ELEMENT>
+    </PATH>
+    <PATH>
+      <PATH_ELEMENT>
+        <option name="myItemId" />
+        <option name="myItemType" value="com.intellij.database.view.DatabaseStructure$Root" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="PostgreSQL - postgres@localhost" />
+        <option name="myItemType" value="com.intellij.database.view.DbNodeDescriptor" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" />
+        <option name="myItemType" value="com.intellij.database.view.DatabaseStructure$GroupNode" />
+      </PATH_ELEMENT>
     </PATH>
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
@@ -51,22 +80,11 @@
       <file leaf-file-name="Server.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/filip/test/Server.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="91" column="9" selection-start-line="91" selection-start-column="9" selection-end-line="91" selection-end-column="9" />
+            <state relative-caret-position="138">
+              <caret line="95" column="0" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="method#parseQuery#0;class#Server#0" expanded="false" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HttpURLConnection.java" pinned="false" current-in-tab="false">
-        <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/src.zip!/java/net/HttpURLConnection.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="789" column="47" selection-start-line="789" selection-start-column="28" selection-end-line="789" selection-end-column="47" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -74,26 +92,25 @@
       <file leaf-file-name="DBHandler.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/filip/test/DBHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="377">
-              <caret line="163" column="61" selection-start-line="163" selection-start-column="61" selection-end-line="163" selection-end-column="61" />
+            <state relative-caret-position="-50">
+              <caret line="110" column="19" selection-start-line="110" selection-start-column="19" selection-end-line="110" selection-end-column="19" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <marker date="1470788981842" expanded="true" signature="1041:1060" ph="SELECT * FRO... users" />
-                <marker date="1470788981842" expanded="true" signature="2738:2750" ph="INSERT INTO " />
-                <marker date="1470788981842" expanded="true" signature="2738:2776" ph="INSERT INTO User... " />
-                <marker date="1470788981842" expanded="true" signature="2738:2790" ph="INSERT INTO User... " />
-                <marker date="1470788981842" expanded="true" signature="3323:3349" ph="UPDATE image... " />
-                <marker date="1470788981842" expanded="true" signature="3323:3364" ph="UPDATE image... " />
-                <marker date="1470788981842" expanded="true" signature="3619:3636" ph="DELETE FROM " />
-                <marker date="1470788981842" expanded="true" signature="3867:3900" ph="DELETE FROM " />
-                <marker date="1470788981842" expanded="true" signature="4269:4304" ph="SELECT * FRO... users" />
-                <marker date="1470788981842" expanded="true" signature="4689:4714" ph="SELECT uuid_... " />
-                <marker date="1470788981842" expanded="true" signature="4834:4855" ph="INSERT INTO image... " />
-                <marker date="1470788981842" expanded="true" signature="4834:4868" ph="INSERT INTO image... " />
-                <marker date="1470788981842" expanded="true" signature="4834:4883" ph="INSERT INTO image... " />
-                <marker date="1470788981842" expanded="true" signature="5835:5885" ph="SELECT * FRO... users" />
-                <marker date="1470788981842" expanded="true" signature="5835:5887" ph="SELECT * FRO... users" />
-                <marker date="1470788981842" expanded="true" signature="5835:5889" ph="SELECT * FRO... users" />
+                <marker date="1470858600838" expanded="true" signature="1123:1142" ph="SELECT * FRO... users" />
+                <marker date="1470858600838" expanded="true" signature="2706:2741" ph="SELECT * FRO... users" />
+                <marker date="1470858600838" expanded="true" signature="3158:3170" ph="INSERT INTO " />
+                <marker date="1470858600838" expanded="true" signature="3158:3196" ph="INSERT INTO User... " />
+                <marker date="1470858600838" expanded="true" signature="3158:3213" ph="INSERT INTO User... " />
+                <marker date="1470858600838" expanded="true" signature="3841:3882" ph="UPDATE image... " />
+                <marker date="1470858600838" expanded="true" signature="4154:4171" ph="DELETE FROM " />
+                <marker date="1470858600838" expanded="true" signature="4402:4435" ph="DELETE FROM " />
+                <marker date="1470858600838" expanded="true" signature="4804:4839" ph="SELECT * FRO... users" />
+                <marker date="1470858600838" expanded="true" signature="5224:5249" ph="SELECT uuid_... " />
+                <marker date="1470858600838" expanded="true" signature="5369:5390" ph="INSERT INTO image... " />
+                <marker date="1470858600838" expanded="true" signature="5369:5403" ph="INSERT INTO image... " />
+                <marker date="1470858600838" expanded="true" signature="5369:5418" ph="INSERT INTO image... " />
+                <marker date="1470858600838" expanded="true" signature="6370:6420" ph="SELECT * FRO... users" />
+                <marker date="1470858600838" expanded="true" signature="6370:6422" ph="SELECT * FRO... users" />
+                <marker date="1470858600838" expanded="true" signature="6370:6424" ph="SELECT * FRO... users" />
               </folding>
             </state>
           </provider>
@@ -102,8 +119,8 @@
       <file leaf-file-name="Utilities.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/filip/test/Utilities.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-97">
-              <caret line="24" column="43" selection-start-line="24" selection-start-column="43" selection-end-line="24" selection-end-column="43" />
+            <state relative-caret-position="397">
+              <caret line="107" column="5" selection-start-line="107" selection-start-column="5" selection-end-line="107" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -111,41 +128,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="postgres.public.users" pinned="false" current-in-tab="false">
-        <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.users">
-          <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-            <state>
-              <filtering enabled="true" />
-            </state>
-          </provider>
-          <provider editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="postgres.public.image" pinned="false" current-in-tab="false">
-        <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.image">
-          <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-            <state>
-              <filtering enabled="true" />
-            </state>
-          </provider>
-          <provider editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="StaticKeys.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/filip/test/StaticKeys.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="8" column="51" selection-start-line="8" selection-start-column="31" selection-end-line="8" selection-end-column="51" />
+            <state relative-caret-position="204">
+              <caret line="12" column="39" selection-start-line="12" selection-start-column="39" selection-end-line="12" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -181,9 +168,10 @@
         <option value="$PROJECT_DIR$/src/filip/test/server.java" />
         <option value="$PROJECT_DIR$/src/filip/test/LectureExceptions.java" />
         <option value="$PROJECT_DIR$/src/filip/test/BadRequestException.java" />
-        <option value="$PROJECT_DIR$/src/filip/test/Utilities.java" />
+        <option value="$PROJECT_DIR$/src/filip/test/Server.kt" />
         <option value="$PROJECT_DIR$/src/filip/test/StaticKeys.java" />
         <option value="$PROJECT_DIR$/src/filip/test/DBHandler.java" />
+        <option value="$PROJECT_DIR$/src/filip/test/Utilities.java" />
         <option value="$PROJECT_DIR$/src/filip/test/Server.java" />
       </list>
     </option>
@@ -207,7 +195,7 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1936" />
+    <option name="width" value="1932" />
     <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -235,7 +223,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
@@ -279,19 +267,19 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="aspect.path.notification.shown" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.database.dataSource.DataSourceTemplate" value="PostgreSQL" />
-    <property name="last_opened_file_path" value="C:/Program Files/Git/bin/git.exe" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="findjar.last.used.dir" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="Downloaded.Files.Path.Enabled" value="true" />
     <property name="Repository.Attach.JavaDocs" value="false" />
@@ -422,136 +410,6 @@
       <envs />
       <method />
     </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-      <method />
-    </configuration>
-    <configuration default="true" type="ArquillianTestNG" factoryName="">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="SUITE_NAME" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="GROUP_NAME" />
-      <option name="TEST_OBJECT" value="CLASS" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="OUTPUT_DIRECTORY" />
-      <option name="ANNOTATION_TYPE" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <option name="USE_DEFAULT_REPORTERS" value="false" />
-      <option name="PROPERTIES_FILE" />
-      <envs />
-      <properties />
-      <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Cold Fusion runner description" factoryName="Cold Fusion" custom_browser="" web_path="">
-      <method />
-    </configuration>
-    <configuration default="true" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="myFilePath" />
-      <option name="GLUE" />
-      <option name="myNameFilter" />
-      <option name="myGeneratedName" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="FlashRunConfigurationType" factoryName="Flash App">
-      <option name="BCName" value="" />
-      <option name="IOSSimulatorSdkPath" value="" />
-      <option name="adlOptions" value="" />
-      <option name="airProgramParameters" value="" />
-      <option name="appDescriptorForEmulator" value="Android" />
-      <option name="debugTransport" value="USB" />
-      <option name="debuggerSdkRaw" value="BC SDK" />
-      <option name="emulator" value="NexusOne" />
-      <option name="emulatorAdlOptions" value="" />
-      <option name="fastPackaging" value="true" />
-      <option name="fullScreenHeight" value="0" />
-      <option name="fullScreenWidth" value="0" />
-      <option name="launchUrl" value="false" />
-      <option name="launcherParameters">
-        <LauncherParameters>
-          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
-          <option name="launcherType" value="OSDefault" />
-          <option name="newPlayerInstance" value="false" />
-          <option name="playerPath" value="FlashPlayerDebugger.exe" />
-        </LauncherParameters>
-      </option>
-      <option name="mobileRunTarget" value="Emulator" />
-      <option name="moduleName" value="" />
-      <option name="overriddenMainClass" value="" />
-      <option name="overriddenOutputFileName" value="" />
-      <option name="overrideMainClass" value="false" />
-      <option name="runTrusted" value="true" />
-      <option name="screenDpi" value="0" />
-      <option name="screenHeight" value="0" />
-      <option name="screenWidth" value="0" />
-      <option name="url" value="http://" />
-      <option name="usbDebugPort" value="7936" />
-      <method />
-    </configuration>
-    <configuration default="true" type="FlexUnitRunConfigurationType" factoryName="FlexUnit" appDescriptorForEmulator="Android" class_name="" emulatorAdlOptions="" method_name="" package_name="" scope="Class">
-      <option name="BCName" value="" />
-      <option name="launcherParameters">
-        <LauncherParameters>
-          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
-          <option name="launcherType" value="OSDefault" />
-          <option name="newPlayerInstance" value="false" />
-          <option name="playerPath" value="FlashPlayerDebugger.exe" />
-        </LauncherParameters>
-      </option>
-      <option name="moduleName" value="" />
-      <option name="trusted" value="true" />
-      <method />
-    </configuration>
     <configuration default="true" type="GradleRunConfiguration" factoryName="Gradle">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -566,15 +424,6 @@
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <method />
-    </configuration>
-    <configuration default="true" type="GrailsRunConfigurationType" factoryName="Grails">
-      <setting name="vmparams" value="" />
-      <setting name="cmdLine" value="run-app" />
-      <setting name="passParentEnv" value="true" />
-      <setting name="launchBrowser" value="true" />
-      <setting name="depsClasspath" value="false" />
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <method />
     </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
@@ -640,9 +489,6 @@
       <envs />
       <method />
     </configuration>
-    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
-      <method />
-    </configuration>
     <configuration default="true" type="JetRunConfigurationType" factoryName="Kotlin">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" />
@@ -674,12 +520,6 @@
       <option name="SHMEM_ADDRESS" value="javadebug" />
       <option name="HOST" value="localhost" />
       <option name="PORT" value="5005" />
-      <method />
-    </configuration>
-    <configuration default="true" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <envs />
       <method />
     </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
@@ -738,28 +578,6 @@
       <listeners />
       <method />
     </configuration>
-    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
-      <node-interpreter>project</node-interpreter>
-      <node-options />
-      <gulpfile />
-      <tasks />
-      <arguments />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="js.build_tools.npm" factoryName="npm">
-      <command value="run-script" />
-      <scripts />
-      <node-interpreter value="project" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="osgi.bnd.run" factoryName="Run Launcher">
-      <method />
-    </configuration>
-    <configuration default="true" type="osgi.bnd.run" factoryName="Test Launcher (JUnit)">
-      <method />
-    </configuration>
     <list size="2">
       <item index="0" class="java.lang.String" itemvalue="Application.test" />
       <item index="1" class="java.lang.String" itemvalue="Application.Server" />
@@ -789,7 +607,10 @@
       <workItem from="1470606313423" duration="13342000" />
       <workItem from="1470649452168" duration="5878000" />
       <workItem from="1470775440439" duration="4741000" />
-      <workItem from="1470783973016" duration="5259000" />
+      <workItem from="1470783973016" duration="5324000" />
+      <workItem from="1470850066130" duration="6435000" />
+      <workItem from="1474376384512" duration="236000" />
+      <workItem from="1474376677954" duration="46000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1470784280812</created>
@@ -805,11 +626,18 @@
       <option name="project" value="LOCAL" />
       <updated>1470789207407</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="work on login, other changes">
+      <created>1470789260282</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1470789260282</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="45624000" />
+    <option name="totallyTimeSpent" value="52406000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -821,35 +649,35 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="false" />
+    <frame x="-8" y="-8" width="1932" height="1056" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32900432" sideWeight="0.49573562" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32792208" sideWeight="0.49791667" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.32900432" sideWeight="0.49573562" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31744313" sideWeight="0.510661" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.21055438" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31601733" sideWeight="0.48933902" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32900432" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31501058" sideWeight="0.48933902" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32900432" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.32900432" sideWeight="0.49573562" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18869936" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Database" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36038962" sideWeight="0.4552239" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25586355" sideWeight="0.49445325" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19467641" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25417536" sideWeight="0.49445325" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3982684" sideWeight="0.49573562" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.397463" sideWeight="0.49573562" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36038962" sideWeight="0.4552239" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.32900432" sideWeight="0.49573562" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25586355" sideWeight="0.50554675" order="6" side_tool="true" content_ui="tabs" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25586355" sideWeight="0.50554675" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32900432" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -871,7 +699,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="47" />
+      <option name="time" value="66" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -880,26 +708,12 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.image">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/filip/test/Server.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#parseQuery#0;class#Server#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -919,61 +733,35 @@
         <state relative-caret-position="1768">
           <caret line="110" column="24" selection-start-line="110" selection-start-column="22" selection-end-line="110" selection-end-column="24" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <marker date="1470788981842" expanded="true" signature="1041:1060" ph="SELECT * FRO... users" />
-            <marker date="1470788981842" expanded="true" signature="2738:2750" ph="INSERT INTO " />
-            <marker date="1470788981842" expanded="true" signature="2738:2776" ph="INSERT INTO User... " />
-            <marker date="1470788981842" expanded="true" signature="2738:2790" ph="INSERT INTO User... " />
-            <marker date="1470788981842" expanded="true" signature="3323:3349" ph="UPDATE image... " />
-            <marker date="1470788981842" expanded="true" signature="3323:3364" ph="UPDATE image... " />
-            <marker date="1470788981842" expanded="true" signature="3619:3636" ph="DELETE FROM " />
-            <marker date="1470788981842" expanded="true" signature="3867:3900" ph="DELETE FROM " />
-            <marker date="1470788981842" expanded="true" signature="4269:4304" ph="SELECT * FRO... users" />
-            <marker date="1470788981842" expanded="true" signature="4689:4714" ph="SELECT uuid_... " />
-            <marker date="1470788981842" expanded="true" signature="4834:4855" ph="INSERT INTO image... " />
-            <marker date="1470788981842" expanded="true" signature="4834:4868" ph="INSERT INTO image... " />
-            <marker date="1470788981842" expanded="true" signature="4834:4883" ph="INSERT INTO image... " />
-            <marker date="1470788981842" expanded="true" signature="5835:5885" ph="SELECT * FRO... users" />
-            <marker date="1470788981842" expanded="true" signature="5835:5887" ph="SELECT * FRO... users" />
-            <marker date="1470788981842" expanded="true" signature="5835:5889" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="1123:1142" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="2706:2741" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="3158:3170" ph="INSERT INTO " />
+            <marker date="1470858600838" expanded="true" signature="3158:3196" ph="INSERT INTO User... " />
+            <marker date="1470858600838" expanded="true" signature="3158:3213" ph="INSERT INTO User... " />
+            <marker date="1470858600838" expanded="true" signature="3841:3882" ph="UPDATE image... " />
+            <marker date="1470858600838" expanded="true" signature="4154:4171" ph="DELETE FROM " />
+            <marker date="1470858600838" expanded="true" signature="4402:4435" ph="DELETE FROM " />
+            <marker date="1470858600838" expanded="true" signature="4804:4839" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="5224:5249" ph="SELECT uuid_... " />
+            <marker date="1470858600838" expanded="true" signature="5369:5390" ph="INSERT INTO image... " />
+            <marker date="1470858600838" expanded="true" signature="5369:5403" ph="INSERT INTO image... " />
+            <marker date="1470858600838" expanded="true" signature="5369:5418" ph="INSERT INTO image... " />
+            <marker date="1470858600838" expanded="true" signature="6370:6420" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="6370:6422" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="6370:6424" ph="SELECT * FRO... users" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/filip/test/BadRequestException.java" />
-    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.users">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.image">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.users" />
+    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.image" />
     <entry file="file://$PROJECT_DIR$/src/filip/test/Server.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#parseQuery#0;class#Server#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -983,61 +771,35 @@
         <state relative-caret-position="816">
           <caret line="51" column="9" selection-start-line="51" selection-start-column="9" selection-end-line="51" selection-end-column="9" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <marker date="1470788981842" expanded="true" signature="1041:1060" ph="SELECT * FRO... users" />
-            <marker date="1470788981842" expanded="true" signature="2738:2750" ph="INSERT INTO " />
-            <marker date="1470788981842" expanded="true" signature="2738:2776" ph="INSERT INTO User... " />
-            <marker date="1470788981842" expanded="true" signature="2738:2790" ph="INSERT INTO User... " />
-            <marker date="1470788981842" expanded="true" signature="3323:3349" ph="UPDATE image... " />
-            <marker date="1470788981842" expanded="true" signature="3323:3364" ph="UPDATE image... " />
-            <marker date="1470788981842" expanded="true" signature="3619:3636" ph="DELETE FROM " />
-            <marker date="1470788981842" expanded="true" signature="3867:3900" ph="DELETE FROM " />
-            <marker date="1470788981842" expanded="true" signature="4269:4304" ph="SELECT * FRO... users" />
-            <marker date="1470788981842" expanded="true" signature="4689:4714" ph="SELECT uuid_... " />
-            <marker date="1470788981842" expanded="true" signature="4834:4855" ph="INSERT INTO image... " />
-            <marker date="1470788981842" expanded="true" signature="4834:4868" ph="INSERT INTO image... " />
-            <marker date="1470788981842" expanded="true" signature="4834:4883" ph="INSERT INTO image... " />
-            <marker date="1470788981842" expanded="true" signature="5835:5885" ph="SELECT * FRO... users" />
-            <marker date="1470788981842" expanded="true" signature="5835:5887" ph="SELECT * FRO... users" />
-            <marker date="1470788981842" expanded="true" signature="5835:5889" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="1123:1142" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="2706:2741" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="3158:3170" ph="INSERT INTO " />
+            <marker date="1470858600838" expanded="true" signature="3158:3196" ph="INSERT INTO User... " />
+            <marker date="1470858600838" expanded="true" signature="3158:3213" ph="INSERT INTO User... " />
+            <marker date="1470858600838" expanded="true" signature="3841:3882" ph="UPDATE image... " />
+            <marker date="1470858600838" expanded="true" signature="4154:4171" ph="DELETE FROM " />
+            <marker date="1470858600838" expanded="true" signature="4402:4435" ph="DELETE FROM " />
+            <marker date="1470858600838" expanded="true" signature="4804:4839" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="5224:5249" ph="SELECT uuid_... " />
+            <marker date="1470858600838" expanded="true" signature="5369:5390" ph="INSERT INTO image... " />
+            <marker date="1470858600838" expanded="true" signature="5369:5403" ph="INSERT INTO image... " />
+            <marker date="1470858600838" expanded="true" signature="5369:5418" ph="INSERT INTO image... " />
+            <marker date="1470858600838" expanded="true" signature="6370:6420" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="6370:6422" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="6370:6424" ph="SELECT * FRO... users" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/filip/test/BadRequestException.java" />
-    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.users">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.image">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.users" />
+    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.image" />
     <entry file="file://$PROJECT_DIR$/src/filip/test/Server.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
           <caret line="32" column="40" selection-start-line="32" selection-start-column="40" selection-end-line="32" selection-end-column="40" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#parseQuery#0;class#Server#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1047,53 +809,28 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <marker date="1470788981842" expanded="true" signature="1041:1060" ph="SELECT * FRO... users" />
-            <marker date="1470788981842" expanded="true" signature="2738:2750" ph="INSERT INTO " />
-            <marker date="1470788981842" expanded="true" signature="2738:2776" ph="INSERT INTO User... " />
-            <marker date="1470788981842" expanded="true" signature="2738:2790" ph="INSERT INTO User... " />
-            <marker date="1470788981842" expanded="true" signature="3323:3349" ph="UPDATE image... " />
-            <marker date="1470788981842" expanded="true" signature="3323:3364" ph="UPDATE image... " />
-            <marker date="1470788981842" expanded="true" signature="3619:3636" ph="DELETE FROM " />
-            <marker date="1470788981842" expanded="true" signature="3867:3900" ph="DELETE FROM " />
-            <marker date="1470788981842" expanded="true" signature="4269:4304" ph="SELECT * FRO... users" />
-            <marker date="1470788981842" expanded="true" signature="4689:4714" ph="SELECT uuid_... " />
-            <marker date="1470788981842" expanded="true" signature="4834:4855" ph="INSERT INTO image... " />
-            <marker date="1470788981842" expanded="true" signature="4834:4868" ph="INSERT INTO image... " />
-            <marker date="1470788981842" expanded="true" signature="4834:4883" ph="INSERT INTO image... " />
-            <marker date="1470788981842" expanded="true" signature="5835:5885" ph="SELECT * FRO... users" />
-            <marker date="1470788981842" expanded="true" signature="5835:5887" ph="SELECT * FRO... users" />
-            <marker date="1470788981842" expanded="true" signature="5835:5889" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="1123:1142" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="2706:2741" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="3158:3170" ph="INSERT INTO " />
+            <marker date="1470858600838" expanded="true" signature="3158:3196" ph="INSERT INTO User... " />
+            <marker date="1470858600838" expanded="true" signature="3158:3213" ph="INSERT INTO User... " />
+            <marker date="1470858600838" expanded="true" signature="3841:3882" ph="UPDATE image... " />
+            <marker date="1470858600838" expanded="true" signature="4154:4171" ph="DELETE FROM " />
+            <marker date="1470858600838" expanded="true" signature="4402:4435" ph="DELETE FROM " />
+            <marker date="1470858600838" expanded="true" signature="4804:4839" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="5224:5249" ph="SELECT uuid_... " />
+            <marker date="1470858600838" expanded="true" signature="5369:5390" ph="INSERT INTO image... " />
+            <marker date="1470858600838" expanded="true" signature="5369:5403" ph="INSERT INTO image... " />
+            <marker date="1470858600838" expanded="true" signature="5369:5418" ph="INSERT INTO image... " />
+            <marker date="1470858600838" expanded="true" signature="6370:6420" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="6370:6422" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="6370:6424" ph="SELECT * FRO... users" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.users">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.image">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.users" />
+    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.image" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/src.zip!/java/net/URLClassLoader.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5542">
@@ -1112,44 +849,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3332">
           <caret line="263" column="0" selection-start-line="263" selection-start-column="0" selection-end-line="263" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#147821#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#23047#23048#0" expanded="false" />
-            <element signature="e#23104#23105#0" expanded="false" />
-            <element signature="e#23453#23454#0" expanded="false" />
-            <element signature="e#23509#23510#0" expanded="false" />
-            <element signature="e#32636#32637#0" expanded="false" />
-            <element signature="e#32683#32684#0" expanded="false" />
-            <element signature="e#45841#45842#0" expanded="false" />
-            <element signature="e#45932#45933#0" expanded="false" />
-            <element signature="e#56746#56747#0" expanded="false" />
-            <element signature="e#56789#56790#0" expanded="false" />
-            <element signature="e#58208#58209#0" expanded="false" />
-            <element signature="e#58257#58258#0" expanded="false" />
-            <element signature="e#58496#58497#0" expanded="false" />
-            <element signature="e#58567#58568#0" expanded="false" />
-            <element signature="e#58809#58810#0" expanded="false" />
-            <element signature="e#58891#58892#0" expanded="false" />
-            <element signature="e#104463#104464#0" expanded="false" />
-            <element signature="e#104523#104524#0" expanded="false" />
-            <element signature="e#112572#112573#0" expanded="false" />
-            <element signature="e#112604#112605#0" expanded="false" />
-            <element signature="e#112898#112899#0" expanded="false" />
-            <element signature="e#112942#112943#0" expanded="false" />
-            <element signature="e#114513#114514#0" expanded="false" />
-            <element signature="e#114550#114551#0" expanded="false" />
-            <element signature="e#114579#114580#0" expanded="false" />
-            <element signature="e#114620#114621#0" expanded="false" />
-            <element signature="e#117160#117161#0" expanded="false" />
-            <element signature="e#117198#117199#0" expanded="false" />
-            <element signature="e#136811#136812#0" expanded="false" />
-            <element signature="e#136896#136897#0" expanded="false" />
-            <element signature="e#139547#139548#0" expanded="false" />
-            <element signature="e#139624#139625#0" expanded="false" />
-            <element signature="e#144390#144391#0" expanded="false" />
-            <element signature="e#144427#144428#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1183,106 +882,12 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/example/helloworld/HelloWorld.java" />
-    <entry file="uml://DATABASE/8d20e011-728f-48cf-b4da-53e8de5b7568">
-      <provider selected="true" editor-type-id="UmlEditorProvider">
-        <state>
-          <ID>DATABASE</ID>
-          <OriginalElement>8d20e011-728f-48cf-b4da-53e8de5b7568</OriginalElement>
-          <nodes />
-          <notes />
-          <edges />
-          <settings layout="Hierarchic Group" zoom="1.0" x="612.0" y="299.0" />
-          <SelectedNodes />
-          <Categories>
-            <Category>Columns</Category>
-            <Category>Key columns</Category>
-          </Categories>
-          <SCOPE>All</SCOPE>
-        </state>
-      </provider>
-    </entry>
-    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.image">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.User">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/8d20e011-728f-48cf-b4da-53e8de5b7568/console.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="uml://DATABASE/8d20e011-728f-48cf-b4da-53e8de5b7568.TABLE:postgres.public.image">
-      <provider selected="true" editor-type-id="UmlEditorProvider">
-        <state>
-          <ID>DATABASE</ID>
-          <OriginalElement>8d20e011-728f-48cf-b4da-53e8de5b7568.TABLE:postgres.public.image</OriginalElement>
-          <nodes>
-            <node x="-217.0" y="42.0">8d20e011-728f-48cf-b4da-53e8de5b7568.TABLE:postgres.public.image</node>
-          </nodes>
-          <notes />
-          <edges />
-          <settings layout="Hierarchic Group" zoom="1.0" x="-308.0" y="-11.0" />
-          <SelectedNodes>
-            <node>8d20e011-728f-48cf-b4da-53e8de5b7568.TABLE:postgres.public.image</node>
-          </SelectedNodes>
-          <Categories>
-            <Category>Columns</Category>
-            <Category>Key columns</Category>
-          </Categories>
-          <SCOPE>All</SCOPE>
-        </state>
-      </provider>
-    </entry>
-    <entry file="uml://DATABASE/8d20e011-728f-48cf-b4da-53e8de5b7568.TABLE:postgres.public.User">
-      <provider selected="true" editor-type-id="UmlEditorProvider">
-        <state>
-          <ID>DATABASE</ID>
-          <OriginalElement>8d20e011-728f-48cf-b4da-53e8de5b7568.TABLE:postgres.public.User</OriginalElement>
-          <nodes>
-            <node x="1.0" y="145.0">8d20e011-728f-48cf-b4da-53e8de5b7568.TABLE:postgres.public.users</node>
-            <node x="60.0" y="0.0">8d20e011-728f-48cf-b4da-53e8de5b7568.TABLE:postgres.public.image</node>
-          </nodes>
-          <notes />
-          <edges>
-            <edge source="8d20e011-728f-48cf-b4da-53e8de5b7568.TABLE:postgres.public.users" target="8d20e011-728f-48cf-b4da-53e8de5b7568.TABLE:postgres.public.image">
-              <point x="0.0" y="-103.0" />
-              <point x="0.0" y="48.0" />
-            </edge>
-          </edges>
-          <settings layout="Hierarchic Group" zoom="1.0" x="-248.0" y="117.0" />
-          <SelectedNodes>
-            <node>8d20e011-728f-48cf-b4da-53e8de5b7568.TABLE:postgres.public.users</node>
-          </SelectedNodes>
-          <Categories>
-            <Category>Columns</Category>
-            <Category>Key columns</Category>
-          </Categories>
-          <SCOPE>All</SCOPE>
-        </state>
-      </provider>
-    </entry>
+    <entry file="uml://DATABASE/8d20e011-728f-48cf-b4da-53e8de5b7568" />
+    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.image" />
+    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.User" />
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/8d20e011-728f-48cf-b4da-53e8de5b7568/console.sql" />
+    <entry file="uml://DATABASE/8d20e011-728f-48cf-b4da-53e8de5b7568.TABLE:postgres.public.image" />
+    <entry file="uml://DATABASE/8d20e011-728f-48cf-b4da-53e8de5b7568.TABLE:postgres.public.User" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/src.zip!/java/sql/DriverManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2941">
@@ -1315,137 +920,18 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3332">
           <caret line="263" column="0" selection-start-line="263" selection-start-column="0" selection-end-line="263" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#147821#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#23047#23048#0" expanded="false" />
-            <element signature="e#23104#23105#0" expanded="false" />
-            <element signature="e#23453#23454#0" expanded="false" />
-            <element signature="e#23509#23510#0" expanded="false" />
-            <element signature="e#32636#32637#0" expanded="false" />
-            <element signature="e#32683#32684#0" expanded="false" />
-            <element signature="e#45841#45842#0" expanded="false" />
-            <element signature="e#45932#45933#0" expanded="false" />
-            <element signature="e#56746#56747#0" expanded="false" />
-            <element signature="e#56789#56790#0" expanded="false" />
-            <element signature="e#58208#58209#0" expanded="false" />
-            <element signature="e#58257#58258#0" expanded="false" />
-            <element signature="e#58496#58497#0" expanded="false" />
-            <element signature="e#58567#58568#0" expanded="false" />
-            <element signature="e#58809#58810#0" expanded="false" />
-            <element signature="e#58891#58892#0" expanded="false" />
-            <element signature="e#104463#104464#0" expanded="false" />
-            <element signature="e#104523#104524#0" expanded="false" />
-            <element signature="e#112572#112573#0" expanded="false" />
-            <element signature="e#112604#112605#0" expanded="false" />
-            <element signature="e#112898#112899#0" expanded="false" />
-            <element signature="e#112942#112943#0" expanded="false" />
-            <element signature="e#114513#114514#0" expanded="false" />
-            <element signature="e#114550#114551#0" expanded="false" />
-            <element signature="e#114579#114580#0" expanded="false" />
-            <element signature="e#114620#114621#0" expanded="false" />
-            <element signature="e#117160#117161#0" expanded="false" />
-            <element signature="e#117198#117199#0" expanded="false" />
-            <element signature="e#136811#136812#0" expanded="false" />
-            <element signature="e#136896#136897#0" expanded="false" />
-            <element signature="e#139547#139548#0" expanded="false" />
-            <element signature="e#139624#139625#0" expanded="false" />
-            <element signature="e#144390#144391#0" expanded="false" />
-            <element signature="e#144427#144428#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.image">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.image">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.image">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.image">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="uml://DATABASE/8d20e011-728f-48cf-b4da-53e8de5b7568.TABLE:postgres.public.users">
-      <provider selected="true" editor-type-id="UmlEditorProvider">
-        <state>
-          <ID>DATABASE</ID>
-          <OriginalElement>8d20e011-728f-48cf-b4da-53e8de5b7568.TABLE:postgres.public.users</OriginalElement>
-          <nodes>
-            <node x="" y="">8d20e011-728f-48cf-b4da-53e8de5b7568.TABLE:postgres.public.image</node>
-            <node x="" y="">8d20e011-728f-48cf-b4da-53e8de5b7568.TABLE:postgres.public.users</node>
-          </nodes>
-          <notes />
-          <edges />
-          <settings layout="Hierarchic Group" zoom="1.0" x="123.0" y="176.0" />
-          <SelectedNodes />
-          <Categories>
-            <Category>Columns</Category>
-            <Category>Key columns</Category>
-          </Categories>
-          <SCOPE>All</SCOPE>
-        </state>
-      </provider>
-    </entry>
+    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.image" />
+    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.image" />
+    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.image" />
+    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.image" />
+    <entry file="uml://DATABASE/8d20e011-728f-48cf-b4da-53e8de5b7568.TABLE:postgres.public.users" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/src.zip!/java/io/File.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
           <caret line="148" column="7" selection-start-line="148" selection-start-column="7" selection-end-line="148" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.image">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1457,78 +943,71 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/filip/test/BadRequestException.java" />
-    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.users">
-      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-        <state>
-          <filtering enabled="true" />
+    <entry file="jar://$PROJECT_DIR$/lib/jjwt-0.6.0.jar!/io/jsonwebtoken/Jwts.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="51" column="29" selection-start-line="51" selection-start-column="29" selection-end-line="51" selection-end-column="29" />
         </state>
       </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/src.zip!/java/net/HttpURLConnection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="705" column="45" selection-start-line="705" selection-start-column="28" selection-end-line="705" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.users" />
+    <entry file="dbDummy://dbtable:/775c5f5b/8d20e011-728f-48cf-b4da-53e8de5b7568/postgres.public.image" />
+    <entry file="file://$PROJECT_DIR$/src/filip/test/DBHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-50">
+          <caret line="110" column="19" selection-start-line="110" selection-start-column="19" selection-end-line="110" selection-end-column="19" />
+          <folding>
+            <marker date="1470858600838" expanded="true" signature="1123:1142" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="2706:2741" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="3158:3170" ph="INSERT INTO " />
+            <marker date="1470858600838" expanded="true" signature="3158:3196" ph="INSERT INTO User... " />
+            <marker date="1470858600838" expanded="true" signature="3158:3213" ph="INSERT INTO User... " />
+            <marker date="1470858600838" expanded="true" signature="3841:3882" ph="UPDATE image... " />
+            <marker date="1470858600838" expanded="true" signature="4154:4171" ph="DELETE FROM " />
+            <marker date="1470858600838" expanded="true" signature="4402:4435" ph="DELETE FROM " />
+            <marker date="1470858600838" expanded="true" signature="4804:4839" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="5224:5249" ph="SELECT uuid_... " />
+            <marker date="1470858600838" expanded="true" signature="5369:5390" ph="INSERT INTO image... " />
+            <marker date="1470858600838" expanded="true" signature="5369:5403" ph="INSERT INTO image... " />
+            <marker date="1470858600838" expanded="true" signature="5369:5418" ph="INSERT INTO image... " />
+            <marker date="1470858600838" expanded="true" signature="6370:6420" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="6370:6422" ph="SELECT * FRO... users" />
+            <marker date="1470858600838" expanded="true" signature="6370:6424" ph="SELECT * FRO... users" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/filip/test/StaticKeys.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="39" selection-start-line="12" selection-start-column="39" selection-end-line="12" selection-end-column="39" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/filip/test/Utilities.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-97">
-          <caret line="24" column="43" selection-start-line="24" selection-start-column="43" selection-end-line="24" selection-end-column="43" />
+        <state relative-caret-position="397">
+          <caret line="107" column="5" selection-start-line="107" selection-start-column="5" selection-end-line="107" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/src.zip!/java/net/HttpURLConnection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="789" column="47" selection-start-line="789" selection-start-column="28" selection-end-line="789" selection-end-column="47" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/filip/test/StaticKeys.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="51" selection-start-line="8" selection-start-column="31" selection-end-line="8" selection-end-column="51" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/filip/test/DBHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="377">
-          <caret line="163" column="61" selection-start-line="163" selection-start-column="61" selection-end-line="163" selection-end-column="61" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <marker date="1470788981842" expanded="true" signature="1041:1060" ph="SELECT * FRO... users" />
-            <marker date="1470788981842" expanded="true" signature="2738:2750" ph="INSERT INTO " />
-            <marker date="1470788981842" expanded="true" signature="2738:2776" ph="INSERT INTO User... " />
-            <marker date="1470788981842" expanded="true" signature="2738:2790" ph="INSERT INTO User... " />
-            <marker date="1470788981842" expanded="true" signature="3323:3349" ph="UPDATE image... " />
-            <marker date="1470788981842" expanded="true" signature="3323:3364" ph="UPDATE image... " />
-            <marker date="1470788981842" expanded="true" signature="3619:3636" ph="DELETE FROM " />
-            <marker date="1470788981842" expanded="true" signature="3867:3900" ph="DELETE FROM " />
-            <marker date="1470788981842" expanded="true" signature="4269:4304" ph="SELECT * FRO... users" />
-            <marker date="1470788981842" expanded="true" signature="4689:4714" ph="SELECT uuid_... " />
-            <marker date="1470788981842" expanded="true" signature="4834:4855" ph="INSERT INTO image... " />
-            <marker date="1470788981842" expanded="true" signature="4834:4868" ph="INSERT INTO image... " />
-            <marker date="1470788981842" expanded="true" signature="4834:4883" ph="INSERT INTO image... " />
-            <marker date="1470788981842" expanded="true" signature="5835:5885" ph="SELECT * FRO... users" />
-            <marker date="1470788981842" expanded="true" signature="5835:5887" ph="SELECT * FRO... users" />
-            <marker date="1470788981842" expanded="true" signature="5835:5889" ph="SELECT * FRO... users" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/filip/test/Server.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="91" column="9" selection-start-line="91" selection-start-column="9" selection-end-line="91" selection-end-column="9" />
+        <state relative-caret-position="138">
+          <caret line="95" column="0" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#parseQuery#0;class#Server#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1597,7 +1076,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>org.postgresql:postgresql:9.4.1209.jre7</last-edited>
+          <last-edited>joda-time:joda-time:2.9.4</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

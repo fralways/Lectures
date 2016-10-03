@@ -18,8 +18,7 @@ import java.io.*;
         import com.sun.net.httpserver.HttpExchange;
         import com.sun.net.httpserver.HttpHandler;
         import com.sun.net.httpserver.HttpServer;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
+        import io.jsonwebtoken.Claims;
 
         import static filip.test.StaticKeys.*;
         import static filip.test.Utilities.*;
@@ -31,9 +30,12 @@ public class Server {
 
     public static void main(String[] args) {
         Server server = new Server();
+
         try {
             server.serverInit();
             server.dbHandler = new DBHandler();
+            SocketHandler socketServer = new SocketHandler();
+            socketServer.start();
         } catch (IOException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }

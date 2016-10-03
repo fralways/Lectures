@@ -31,6 +31,8 @@ public class DBHandler {
         props.setProperty("user","postgres");
         props.setProperty("password","filip123");
         props.setProperty("ssl","false");
+//        props.setProperty("tcpKeepAlive", "true");
+        props.put("autoReconnect", "true");
         conn = DriverManager.getConnection(url, props);
     }
 

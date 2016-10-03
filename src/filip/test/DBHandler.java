@@ -1,5 +1,6 @@
 package filip.test;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
 import io.jsonwebtoken.Jwts;
@@ -10,9 +11,8 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.*;
 import java.util.Date;
-import java.util.Map;
-import java.util.Properties;
 
 import static filip.test.StaticKeys.*;
 
@@ -133,6 +133,46 @@ public class DBHandler {
         }
     }
 
+    public void updateUserWithParams(String email, Map<String, Object> params) throws Exception {
+
+        StringBuilder statement = new StringBuilder("UPDATE users SET ");
+
+        Set<String> allowedFields = new HashSet<>(
+                Arrays.asList("firstname", "lastname", "description", "title", "password", "university"));
+
+        boolean hasChange = false;
+
+        for(Map.Entry<String, Object> entry : params.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+
+            //check if field is modifiable
+            if (!allowedFields.contains(key)){
+                continue;
+            }
+
+            if (statement.length() > "UPDATE users SET ".length()){
+                statement.append(",");
+            }
+
+            statement.append(key);
+            statement.append("='");
+            statement.append(value);
+            statement.append("'");
+
+            hasChange = true;
+        }
+
+        statement.append(" WHERE email='");
+        statement.append(email);
+        statement.append("'");
+
+        if (hasChange) {
+            PreparedStatement ps = conn.prepareStatement(statement.toString());
+            ps.executeUpdate();
+        }
+    }
+
     public String createImage() throws IOException, SQLException {
         Statement st = null;
         st = conn.createStatement();
@@ -180,7 +220,7 @@ public class DBHandler {
 
                     String jwt =
                             Jwts.builder().setIssuer("http://lectures.com")
-                                    .setSubject("users/" + userEmail)
+                                    .setSubject(userEmail)
                                     .setExpiration(dtPlusOne.toDate())
                                     .signWith(SignatureAlgorithm.HS256,key)
                                     .compact();

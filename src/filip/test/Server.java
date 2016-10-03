@@ -18,7 +18,8 @@ import java.io.*;
         import com.sun.net.httpserver.HttpExchange;
         import com.sun.net.httpserver.HttpHandler;
         import com.sun.net.httpserver.HttpServer;
-        import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwt;
 
         import static filip.test.StaticKeys.*;
         import static filip.test.Utilities.*;
@@ -118,6 +119,13 @@ public class Server {
 
                         break;
                     }
+                    case "PUT": {
+                        Claims claims = verifyToken(he);
+                        String userEmail = claims.getSubject();
+                        parameters = extractBodyParameters(he);
+                        dbHandler.updateUserWithParams(userEmail, parameters);
+                        break;
+                    }
                     default:{
                         throw new RuntimeException(EXCEPTION_BADMETHOD);
                     }
@@ -175,7 +183,7 @@ public class Server {
             Headers headers= he.getRequestHeaders();
             String jwt = headers.get("JWT").get(0);
             try {
-                Jwt something = verifyToken(jwt);
+                Claims claims = verifyToken(jwt);
                 handleResponseHeader(he, null);
             }catch (Exception e){
                 response = makeResponse(EXCEPTION_NOTAUTHORIZED);

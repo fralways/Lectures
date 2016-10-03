@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
@@ -76,23 +77,23 @@ public class Utilities {
         return sb.toString();
     }
 
-    public static Jws verifyToken(HttpExchange he) throws Exception {
+    public static Claims verifyToken(HttpExchange he) throws Exception {
 
         Headers headers= he.getRequestHeaders();
 
         try {
             String jwt = headers.get("JWT").get(0);
-            Jws token = verifyToken(jwt);
-            return token;
+            Claims claims = verifyToken(jwt);
+            return claims;
         }catch (Exception e){
             throw new Exception(EXCEPTION_NOTAUTHORIZED);
         }
     }
 
-    public static Jws verifyToken(String jwt) throws Exception {
+    public static Claims verifyToken(String jwt) throws Exception {
         try {
             byte[] key = JWT_SECRET.getBytes();
-            return (Jws) Jwts.parser().setSigningKey(key).parseClaimsJws(jwt);
+            return Jwts.parser().setSigningKey(key).parseClaimsJws(jwt).getBody();
         }catch (SignatureException e){
             throw new Exception(EXCEPTION_NOTAUTHORIZED);
         }
@@ -101,8 +102,10 @@ public class Utilities {
     public static Map<String, String> getEndpoints(){
         Map<java.lang.String, java.lang.String> endpoints = new HashMap<>();
 
-        endpoints.put("user", "http://localhost:8000/user");
-        endpoints.put("login", "http://localhost:8000/login");
+        endpoints.put("login", "http://24.135.62.219:8000/login");
+        endpoints.put("user", "http://24.135.62.219:8000/user");
+        endpoints.put("user-get", "http://24.135.62.219:8000/user?email={email}");
+        endpoints.put("user-delete", "http://24.135.62.219:8000/user?email={email}");
 
         return endpoints;
     }

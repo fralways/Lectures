@@ -4,23 +4,26 @@ package filip.test;
  */
 
 import java.io.*;
-        import java.net.HttpURLConnection;
-        import java.net.InetSocketAddress;
-        import java.net.URI;
-        import java.net.URLDecoder;
-        import java.security.NoSuchAlgorithmException;
-        import java.util.*;
-        import java.sql.*;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
+import java.sql.*;
 
-        import com.google.gson.Gson;
-        import com.google.gson.GsonBuilder;
-        import com.sun.net.httpserver.Headers;
-        import com.sun.net.httpserver.HttpExchange;
-        import com.sun.net.httpserver.HttpHandler;
-        import com.sun.net.httpserver.HttpServer;
-        import io.jsonwebtoken.Claims;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.sun.net.httpserver.Headers;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
+import io.jsonwebtoken.Claims;
 
-        import static filip.test.StaticKeys.*;
+import static filip.test.StaticKeys.*;
         import static filip.test.Utilities.*;
 
 public class Server {
@@ -34,7 +37,7 @@ public class Server {
         try {
             server.serverInit();
             server.dbHandler = new DBHandler();
-            SocketHandler socketServer = new SocketHandler();
+            SocketHandler socketServer = SocketHandler.INSTANCE;
             socketServer.start();
         } catch (IOException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
@@ -49,6 +52,7 @@ public class Server {
         server.createContext("/login", new LoginHandler());
         server.createContext("/home", new HomeHandler());
         server.createContext("/test", new TestHandler());
+        server.createContext("/logs", new LogsHandler());
         server.setExecutor(null);
         server.start();
     }
@@ -62,7 +66,6 @@ public class Server {
             // parse request
             String method = he.getRequestMethod();
             String response = "";
-            Map<String, Object> parameters;
 
             try {
                 switch (method){
@@ -153,7 +156,6 @@ public class Server {
             String response = "";
             Map<String, Object> parameters;
             try {
-
                 if (method.equals("POST")) {
                     parameters = extractBodyParameters(he);
                     String jwt = dbHandler.authenticateUser(parameters);
@@ -164,6 +166,37 @@ public class Server {
                 }
                 handleResponseHeader(he, null);
             }catch (RuntimeException|SQLException|NoSuchAlgorithmException e){
+                response = makeResponse(e.toString());
+                handleResponseHeader(he, e);
+            }finally {
+                OutputStream os = he.getResponseBody();
+                os.write(response.getBytes());
+                os.close();
+            }
+        }
+    }
+
+    private class LogsHandler implements HttpHandler {
+
+        @Override
+        public void handle(HttpExchange he) throws IOException {
+            String method = he.getRequestMethod();
+            String response = "";
+            Map<String, Object> parameters;
+
+            try {
+                if (method.equals("GET")) {
+                    byte[] encoded = Files.readAllBytes(Paths.get("C:\\Users\\Filip\\Desktop\\serverOutput.txt"));
+                    if (null == encoded){
+                        System.out.println("Cannot find log file");
+                    }else {
+                        response = new String(encoded, StandardCharsets.UTF_8);
+                    }
+                }else {
+                    throw new RuntimeException(EXCEPTION_BADMETHOD);
+                }
+                handleResponseHeader(he, null);
+            }catch (RuntimeException e){
                 response = makeResponse(e.toString());
                 handleResponseHeader(he, e);
             }finally {

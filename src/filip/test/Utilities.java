@@ -102,10 +102,17 @@ public class Utilities {
     public static Map<String, String> getEndpoints(){
         Map<java.lang.String, java.lang.String> endpoints = new HashMap<>();
 
-        endpoints.put("login", "http://24.135.62.219:8000/login");
-        endpoints.put("user", "http://24.135.62.219:8000/user");
-        endpoints.put("user-get", "http://24.135.62.219:8000/user?email={email}");
-        endpoints.put("user-delete", "http://24.135.62.219:8000/user?email={email}");
+        String host = "http://24.135.62.219";
+        String port = "8000";
+
+        StringBuffer sb = new StringBuffer(host);
+        sb.append(':').append(port).append('/');
+
+        endpoints.put("login", sb.toString() + "login");
+        endpoints.put("user", sb.toString() + "user");
+        endpoints.put("user-get", sb.toString() + "user?email={email}");
+        endpoints.put("user-delete", sb.toString() + "user?email={email}");
+        endpoints.put("logs", sb.toString() + "logs");
 
         return endpoints;
     }

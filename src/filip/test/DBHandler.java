@@ -1,16 +1,13 @@
 package filip.test;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.Date;
 
@@ -22,7 +19,6 @@ import static filip.test.StaticKeys.*;
 public class DBHandler {
 
     private final Connection conn;
-    private static int num = 10;
 
     public DBHandler() throws ClassNotFoundException, SQLException {
         Class.forName("org.postgresql.Driver");
@@ -31,7 +27,7 @@ public class DBHandler {
         props.setProperty("user","postgres");
         props.setProperty("password","filip123");
         props.setProperty("ssl","false");
-//        props.setProperty("tcpKeepAlive", "true");
+        props.setProperty("tcpKeepAlive", "true");
         props.put("autoReconnect", "true");
         conn = DriverManager.getConnection(url, props);
     }
@@ -152,6 +148,10 @@ public class DBHandler {
             if (!allowedFields.contains(key)){
                 continue;
             }
+            //hash password
+            if (key.equals("password")){
+                value = Utilities.cryptWithMD5((String) value);
+            }
 
             if (statement.length() > "UPDATE users SET ".length()){
                 statement.append(",");
@@ -176,7 +176,7 @@ public class DBHandler {
     }
 
     public String createImage() throws IOException, SQLException {
-        Statement st = null;
+        Statement st;
         st = conn.createStatement();
         ResultSet rs = st.executeQuery("SELECT uuid_generate_v4()");
         rs.next();
@@ -204,14 +204,14 @@ public class DBHandler {
 
             if (!email.equals("") && !password.equals("")){
                 String cryptPassword = Utilities.cryptWithMD5(password);
-                Statement st = conn.createStatement();
                 PreparedStatement ps = conn.prepareStatement("SELECT * FROM users WHERE email = ? and password = ?");
                 ps.setString(1, email);
                 ps.setString(2, cryptPassword);
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()){
 
-                    String userEmail = rs.getString("email");
+//                    String userEmail = rs.getString("email");
+                    String guid = rs.getString("guid");
 
                     //napravi token i vrati korisniku
                     byte[] key = JWT_SECRET.getBytes();
@@ -222,14 +222,14 @@ public class DBHandler {
 
                     String jwt =
                             Jwts.builder().setIssuer("http://lectures.com")
-                                    .setSubject(userEmail)
+                                    .setSubject(guid)
                                     .setExpiration(dtPlusOne.toDate())
                                     .signWith(SignatureAlgorithm.HS256,key)
                                     .compact();
                     return jwt;
                 }else {
                     // invalid credentials
-                    throw new RuntimeException(EXCEPTION_BADREQUEST);
+                    throw new RuntimeException(EXCEPTION_NOTAUTHORIZED);
                 }
             }else{
                 throw new RuntimeException(EXCEPTION_BADREQUEST);

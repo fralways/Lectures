@@ -16,7 +16,7 @@ public class Test {
 
     public static void main(String args[]) throws IOException {
         final String host = "localhost";
-        final int portNumber = 81;
+        final int portNumber = 8210;
         System.out.println("Creating socket to '" + host + "' on port " + portNumber);
 
 //        while (true) {

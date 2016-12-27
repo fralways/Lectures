@@ -1,9 +1,12 @@
 package filip.test;
 
+import com.google.gson.Gson;
+import com.sun.corba.se.spi.orbutil.fsm.Guard;
 import io.jsonwebtoken.Jwts;
 
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.joda.time.DateTime;
+import org.postgresql.jdbc.PgArray;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -59,9 +62,16 @@ public class DBHandler {
 
             throw new RuntimeException(EXCEPTION_BADREQUEST);
         }else {
-            createUser(parameters.get("email"), parameters.get("title"), parameters.get("userId"),
-                    parameters.get("firstname"), parameters.get("lastname"), parameters.get("description"), parameters.get("university"),
-                    parameters.get("password"));
+
+            if (Utilities.isValidEmailAddress((String) parameters.get("email"))){
+                createUser(parameters.get("email"), parameters.get("title"), parameters.get("userId"),
+                        parameters.get("firstname"), parameters.get("lastname"), parameters.get("description"), parameters.get("university"),
+                        parameters.get("password"));
+            }else {
+                throw new RuntimeException(EXCEPTION_BADREQUEST);
+            }
+
+
         }
     }
 
@@ -73,7 +83,7 @@ public class DBHandler {
         ResultSet rs = ps.executeQuery();
         if (rs.next()){
             rs.close();
-            throw new SQLException();
+            throw new SQLException(EXCEPTION_INTERNAL);
         }else {
             String cryptPassword = Utilities.cryptWithMD5((String) password);
             String guid = Utilities.cryptWithMD5((String) email);
@@ -125,13 +135,39 @@ public class DBHandler {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM users WHERE email = ?");
             ps.setString(1, (String) email);
             ResultSet rs = ps.executeQuery();
-            return rs;
+
+            List<HashMap<String, Object>> results = Utilities.convertResultSetToList(rs);
+            HashMap<String, Object> user = results.get(0);
+            PgArray lectures = (PgArray) user.get("lectures");
+            if (lectures != null) {
+                String[] lecturesArray = (String[]) lectures.getArray();
+                //add lectures to USER object
+                if (lecturesArray.length > 0) {
+                    StringBuilder statement = new StringBuilder("SELECT * FROM lecture WHERE guid='");
+                    for (int i = 0; i < lecturesArray.length; i++) {
+                        if (i != 0) {
+                            statement.append(" or guid='");
+                        }
+                        String lectureId = lecturesArray[i];
+                        statement.append(lectureId);
+                        statement.append("'");
+                    }
+
+                    ps = conn.prepareStatement(statement.toString());
+                    rs = ps.executeQuery();
+
+                    results = Utilities.convertResultSetToList(rs);
+                    user.put("lectures", results);
+                }
+            }
+
+            return user;
         }else{
             throw new RuntimeException(EXCEPTION_BADREQUEST);
         }
     }
 
-    public void updateUserWithParams(String email, Map<String, Object> params) throws Exception {
+    public void updateUserWithParams(String userId, Map<String, Object> params) throws Exception {
 
         StringBuilder statement = new StringBuilder("UPDATE users SET ");
 
@@ -165,8 +201,8 @@ public class DBHandler {
             hasChange = true;
         }
 
-        statement.append(" WHERE email='");
-        statement.append(email);
+        statement.append(" WHERE guid='");
+        statement.append(userId);
         statement.append("'");
 
         if (hasChange) {
@@ -235,6 +271,72 @@ public class DBHandler {
                 throw new RuntimeException(EXCEPTION_BADREQUEST);
             }
         }else {
+            throw new RuntimeException(EXCEPTION_BADREQUEST);
+        }
+    }
+
+
+    public String createLecture(Map<String, Object> parameters, String userId) throws Exception {
+
+        boolean badReq = false;
+        if (!String.class.isInstance(parameters.get("title"))) {
+            badReq = true;
+        }else if (parameters.get("description") != null && !String.class.isInstance(parameters.get("description"))){
+            badReq = true;
+        }
+
+        if (badReq){
+            throw new RuntimeException(EXCEPTION_BADREQUEST);
+        }else {
+            //title,descr,id od 10brojeva
+            String title = (String)parameters.get("title");
+            String descr = (String)parameters.get("description");
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT uuid_generate_v4()");
+            rs.next();
+            String genuuid = rs.getString(1);
+
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO lecture(title, description, guid) VALUES (?, ?, ?)");
+            ps.setString(1, title);
+            ps.setString(2, descr);
+            ps.setString(3, genuuid);
+            ps.executeUpdate();
+            ps.close();
+
+            ps = conn.prepareStatement("update users set lectures = array_append(lectures, CAST (? AS TEXT )) where guid=?");
+            ps.setString(1, genuuid);
+            ps.setString(2, userId);
+            ps.executeUpdate();
+            ps.close();
+
+            return genuuid;
+        }
+    }
+
+    public void deleteLecture(Object id, String userId) throws SQLException{
+        if (String.class.isInstance(id)){
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM lecture WHERE guid = ?");
+            ps.setString(1, (String) id);
+            ps.executeUpdate();
+            ps.close();
+
+            ps = conn.prepareStatement("update users set lectures = array_remove(lectures, CAST (? AS TEXT )) where guid=?");
+            ps.setString(1, (String)id);
+            ps.setString(2, userId);
+            ps.executeUpdate();
+            ps.close();
+        }else {
+            throw new RuntimeException(EXCEPTION_BADREQUEST);
+        }
+    }
+
+    public Object getLecture(Object id) throws Exception {
+        if (String.class.isInstance(id)){
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM lecture WHERE guid = ?");
+            ps.setString(1, (String)id);
+            ResultSet rs = ps.executeQuery();
+            return rs;
+        } else{
             throw new RuntimeException(EXCEPTION_BADREQUEST);
         }
     }

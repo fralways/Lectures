@@ -23,11 +23,7 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes>
-      <connection connection-id="b5738777-369c-48eb-84c9-1f1cd109e2e4">
-        <schema name="public" object-types="function, index, sequence, table, view" />
-      </connection>
-    </loaded-nodes>
+    <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="b5738777-369c-48eb-84c9-1f1cd109e2e4">
@@ -35,7 +31,9 @@
     </connection>
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-list connection-id="b5738777-369c-48eb-84c9-1f1cd109e2e4" dataset="public.users" active-filter-id="" />
+    <filter-list connection-id="b5738777-369c-48eb-84c9-1f1cd109e2e4" dataset="public.users" active-filter-id="ffa20291-ad7b-4e55-934d-1751148dad96">
+      <filter id="ffa20291-ad7b-4e55-934d-1751148dad96" name="select * from &quot;public&quot;.users" temporary="false" custom-name="false" type="basic" join-type="AND" />
+    </filter-list>
     <filter-list connection-id="b5738777-369c-48eb-84c9-1f1cd109e2e4" dataset="public.image" active-filter-id="" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">

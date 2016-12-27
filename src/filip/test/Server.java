@@ -53,6 +53,7 @@ public class Server {
         server.createContext("/home", new HomeHandler());
         server.createContext("/test", new TestHandler());
         server.createContext("/logs", new LogsHandler());
+        server.createContext("/lecture", new LectureHandler());
         server.setExecutor(null);
         server.start();
     }
@@ -103,32 +104,34 @@ public class Server {
             try {
                 switch (method){
                     case "POST": {
+                        System.out.println("Usao u create user");
                         parameters = extractBodyParameters(he);
                         dbHandler.createUser(parameters);
-                        System.out.println("created user");
                         break;
                     }
                     case "DELETE": {
+                        System.out.println("Usao u delete user");
                         verifyToken(he);
                         parameters = extractBodyParameters(he);
                         dbHandler.deleteUserByEmail(parameters.get("email"));
-                        handleResponseHeader(he, null);
-                        System.out.println("deleted user");
                         break;
                     }
                     case "GET": {
+                        System.out.println("Usao u get user");
                         verifyToken(he);
                         parameters = extractURIParameters(he);
                         Object obj = dbHandler.getUserByEmail(parameters.get("email"));
+
                         response = makeResponse(obj);
 
                         break;
                     }
-                    case "PUT": {
+                    case "PATCH": {
+                        System.out.println("Usao u patch user");
                         Claims claims = verifyToken(he);
-                        String userEmail = claims.getSubject();
+                        String userId = claims.getSubject();
                         parameters = extractBodyParameters(he);
-                        dbHandler.updateUserWithParams(userEmail, parameters);
+                        dbHandler.updateUserWithParams(userId, parameters);
                         break;
                     }
                     default:{
@@ -136,9 +139,11 @@ public class Server {
                     }
                 }
                 handleResponseHeader(he, null);
+                System.out.println("success");
             } catch (Exception e){
                 response = makeResponse(e.toString());
                 handleResponseHeader(he, e);
+                System.out.println("error");
             } finally {
                 // send response
                 OutputStream os = he.getResponseBody();
@@ -157,13 +162,15 @@ public class Server {
             Map<String, Object> parameters;
             try {
                 if (method.equals("POST")) {
+                    System.out.println("Trying to login");
                     parameters = extractBodyParameters(he);
                     String jwt = dbHandler.authenticateUser(parameters);
-                    Headers headers= he.getResponseHeaders();
+                    Headers headers = he.getResponseHeaders();
                     headers.set("JWT", jwt);
                 } else {
                     throw new RuntimeException(EXCEPTION_BADMETHOD);
                 }
+                System.out.println("success");
                 handleResponseHeader(he, null);
             }catch (RuntimeException|SQLException|NoSuchAlgorithmException e){
                 response = makeResponse(e.toString());
@@ -207,27 +214,77 @@ public class Server {
         }
     }
 
-    private class TestHandler implements HttpHandler {
+    private class LectureHandler implements HttpHandler {
 
         @Override
         public void handle(HttpExchange he) throws IOException {
+            // parse request
             String method = he.getRequestMethod();
             String response = "";
             Map<String, Object> parameters;
 
-            Headers headers= he.getRequestHeaders();
-            String jwt = headers.get("JWT").get(0);
             try {
-                Claims claims = verifyToken(jwt);
+                switch (method){
+                    case "POST": {
+                        System.out.println("create new lecture");
+                        parameters = extractBodyParameters(he);
+                        Claims claims = verifyToken(he);
+                        String userId = claims.getSubject();
+                        String lectureGuid = dbHandler.createLecture(parameters, userId);
+                        Map<String, String> jsonResponse = new HashMap<>();
+                        jsonResponse.put("id", lectureGuid);
+                        response = makeResponse(jsonResponse);
+                        break;
+                    }
+                    case "DELETE": {
+                        System.out.println("delete lecture");
+                        Claims claims = verifyToken(he);
+                        String userId = claims.getSubject();
+                        parameters = extractBodyParameters(he);
+                        dbHandler.deleteLecture(parameters.get("id"), userId);
+                        break;
+                    }
+                    case "GET": {
+                        System.out.println("get lecture");
+                        verifyToken(he);
+                        parameters = extractURIParameters(he);
+                        Object lecture = dbHandler.getLecture(parameters.get("id"));
+                        response = makeResponse(lecture);
+                        break;
+                    }
+//                    case "PATCH": {
+//                        System.out.println("Usao u patch user");
+//                        Claims claims = verifyToken(he);
+//                        String userId = claims.getSubject();
+//                        System.out.println("user id: " + userId);
+//                        parameters = extractBodyParameters(he);
+//                        dbHandler.updateUserWithParams(userId, parameters);
+//                        break;
+//                    }
+                    default:{
+                        throw new RuntimeException(EXCEPTION_BADMETHOD);
+                    }
+                }
                 handleResponseHeader(he, null);
-            }catch (Exception e){
-                response = makeResponse(EXCEPTION_NOTAUTHORIZED);
+                System.out.println("success");
+            } catch (Exception e){
+                response = makeResponse(e.toString());
                 handleResponseHeader(he, e);
-            }finally {
+                System.out.println("error");
+            } finally {
+                // send response
                 OutputStream os = he.getResponseBody();
                 os.write(response.getBytes());
                 os.close();
             }
+        }
+    }
+
+    private class TestHandler implements HttpHandler {
+
+        @Override
+        public void handle(HttpExchange he) throws IOException {
+            dbHandler.getAllFromDB();
         }
     }
     //endregion
@@ -236,8 +293,14 @@ public class Server {
 
     private void handleResponseHeader(HttpExchange he, Exception ex) throws IOException {
         if (ex == null){
+            Headers responseHeaders = he.getResponseHeaders();
+            responseHeaders.set("Content-Type", "application/json");
             he.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
         }else{
+            Headers responseHeaders = he.getResponseHeaders();
+            responseHeaders.set("Content-Type", "text/plain");
+            System.out.println("error message: " + ex.getMessage());
+
             switch (ex.getMessage()){
                 case EXCEPTION_BADMETHOD:{
                     he.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, 0);
@@ -251,6 +314,7 @@ public class Server {
                     he.sendResponseHeaders(HttpURLConnection.HTTP_UNAUTHORIZED, 0);
                     break;
                 }
+                case EXCEPTION_INTERNAL:
                 default:{
                     he.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
                     break;

@@ -40,7 +40,7 @@ public class DBHandler {
         try {
             st = conn.createStatement();
 
-            ResultSet rs = st.executeQuery("SELECT * FROM users");
+            ResultSet rs = st.executeQuery("SELECT * FROM question");
             while (rs.next())
             {
                 System.out.print("Column 1 returned ");
@@ -341,4 +341,38 @@ public class DBHandler {
         }
     }
 
+    public String createQuestion(Map<String, Object> parameters) throws Exception{
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery("SELECT uuid_generate_v4()");
+        rs.next();
+        String guid = rs.getString(1);
+        Question question = new Question(parameters, guid);
+
+        PreparedStatement ps = conn.prepareStatement("INSERT INTO question(guid, question, correctIndex, duration, answers) VALUES (?, ?, ?, ?, ?)");
+//        PreparedStatement ps = conn.prepareStatement("INSERT INTO question(guid, question, correctIndex, duration) VALUES (?, ?, ?, ?)");
+        ps.setString(1, question.guid);
+        ps.setString(2, question.question);
+        ps.setInt(3, question.correctIndex);
+        ps.setInt(4, question.duration);
+
+        final String[] data = question.answers.toArray(new String[question.answers.size()]);
+        final java.sql.Array sqlArray = conn.createArrayOf("VARCHAR", data);
+        ps.setArray(5, sqlArray);
+        ps.executeUpdate();
+        ps.close();
+
+        return question.guid;
+    }
+
+    public Question getQuestion(Object id) throws Exception {
+        if (String.class.isInstance(id)){
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM question WHERE guid = ?");
+            ps.setString(1, (String)id);
+            ResultSet rs = ps.executeQuery();
+            Question question = new Question(rs);
+            return question;
+        } else{
+            throw new RuntimeException(EXCEPTION_BADREQUEST);
+        }
+    }
 }

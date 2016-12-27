@@ -54,6 +54,7 @@ public class Server {
         server.createContext("/test", new TestHandler());
         server.createContext("/logs", new LogsHandler());
         server.createContext("/lecture", new LectureHandler());
+        server.createContext("/question", new QuestionHandler());
         server.setExecutor(null);
         server.start();
     }
@@ -215,7 +216,6 @@ public class Server {
     }
 
     private class LectureHandler implements HttpHandler {
-
         @Override
         public void handle(HttpExchange he) throws IOException {
             // parse request
@@ -252,15 +252,79 @@ public class Server {
                         response = makeResponse(lecture);
                         break;
                     }
-//                    case "PATCH": {
-//                        System.out.println("Usao u patch user");
-//                        Claims claims = verifyToken(he);
-//                        String userId = claims.getSubject();
-//                        System.out.println("user id: " + userId);
-//                        parameters = extractBodyParameters(he);
-//                        dbHandler.updateUserWithParams(userId, parameters);
-//                        break;
-//                    }
+                    case "PATCH": {
+                        System.out.println("patch lecture");
+                        Claims claims = verifyToken(he);
+                        String userId = claims.getSubject();
+                        System.out.println("user id: " + userId);
+                        parameters = extractBodyParameters(he);
+                        dbHandler.updateUserWithParams(userId, parameters);
+                        break;
+                    }
+                    default:{
+                        throw new RuntimeException(EXCEPTION_BADMETHOD);
+                    }
+                }
+                handleResponseHeader(he, null);
+                System.out.println("success");
+            } catch (Exception e){
+                response = makeResponse(e.toString());
+                handleResponseHeader(he, e);
+                System.out.println("error");
+            } finally {
+                // send response
+                OutputStream os = he.getResponseBody();
+                os.write(response.getBytes());
+                os.close();
+            }
+        }
+    }
+
+    private class QuestionHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange he) throws IOException {
+            // parse request
+            String method = he.getRequestMethod();
+            String response = "";
+            Map<String, Object> parameters;
+
+            try {
+                switch (method){
+                    case "POST": {
+                        System.out.println("create new question");
+                        parameters = extractBodyParameters(he);
+                        verifyToken(he);
+                        String questionGuid = dbHandler.createQuestion(parameters);
+                        Map<String, String> jsonResponse = new HashMap<>();
+                        jsonResponse.put("id", questionGuid);
+                        response = makeResponse(jsonResponse);
+                        break;
+                    }
+                    case "DELETE": {
+                        System.out.println("delete lecture");
+                        Claims claims = verifyToken(he);
+                        String userId = claims.getSubject();
+                        parameters = extractBodyParameters(he);
+                        dbHandler.deleteLecture(parameters.get("id"), userId);
+                        break;
+                    }
+                    case "GET": {
+                        System.out.println("get question");
+                        verifyToken(he);
+                        parameters = extractURIParameters(he);
+                        Question question = dbHandler.getQuestion(parameters.get("id"));
+                        response = makeResponse(question);
+                        break;
+                    }
+                    case "PATCH": {
+                        System.out.println("patch lecture");
+                        Claims claims = verifyToken(he);
+                        String userId = claims.getSubject();
+                        System.out.println("user id: " + userId);
+                        parameters = extractBodyParameters(he);
+                        dbHandler.updateUserWithParams(userId, parameters);
+                        break;
+                    }
                     default:{
                         throw new RuntimeException(EXCEPTION_BADMETHOD);
                     }

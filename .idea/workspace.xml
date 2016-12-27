@@ -5,19 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="68fa7627-3112-4670-9e8f-548f505250b7" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/javax_mail.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Lectures/filip/test/DBHandler.class" afterPath="$PROJECT_DIR$/out/production/Lectures/filip/test/DBHandler.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Lectures/filip/test/Server$UserHandler.class" afterPath="$PROJECT_DIR$/out/production/Lectures/filip/test/Server$UserHandler.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Lectures/filip/test/Server.class" afterPath="$PROJECT_DIR$/out/production/Lectures/filip/test/Server.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Lectures/filip/test/Utilities.class" afterPath="$PROJECT_DIR$/out/production/Lectures/filip/test/Utilities.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/filip/test/Lecture.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/filip/test/Question.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Lectures.iml" afterPath="$PROJECT_DIR$/Lectures.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/DBHandler.java" afterPath="$PROJECT_DIR$/src/filip/test/DBHandler.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/Server.java" afterPath="$PROJECT_DIR$/src/filip/test/Server.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/StaticKeys.java" afterPath="$PROJECT_DIR$/src/filip/test/StaticKeys.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/Test.java" afterPath="$PROJECT_DIR$/src/filip/test/Test.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/Utilities.java" afterPath="$PROJECT_DIR$/src/filip/test/Utilities.java" />
     </list>
     <ignored path="Lectures.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -61,8 +53,30 @@
       <file leaf-file-name="Server.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/filip/test/Server.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2057">
-              <caret line="142" column="0" selection-start-line="142" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
+            <state relative-caret-position="384">
+              <caret line="334" column="0" selection-start-line="334" selection-start-column="0" selection-end-line="334" selection-end-column="0" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Lecture.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/filip/test/Lecture.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="136">
+              <caret line="8" column="32" selection-start-line="8" selection-start-column="32" selection-end-line="8" selection-end-column="32" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Question.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/filip/test/Question.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="161">
+              <caret line="20" column="24" selection-start-line="20" selection-start-column="24" selection-end-line="20" selection-end-column="24" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -73,37 +87,42 @@
       <file leaf-file-name="StaticKeys.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/filip/test/StaticKeys.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="10" column="42" selection-start-line="10" selection-start-column="42" selection-end-line="10" selection-end-column="42" />
+            <state relative-caret-position="136">
+              <caret line="8" column="44" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="44" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DBHandler.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="DBHandler.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/filip/test/DBHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="577">
-              <caret line="333" column="39" selection-start-line="333" selection-start-column="39" selection-end-line="333" selection-end-column="39" />
+            <state relative-caret-position="407">
+              <caret line="371" column="39" selection-start-line="371" selection-start-column="39" selection-end-line="371" selection-end-column="39" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <marker date="1482771993715" expanded="true" signature="1205:1224" ph="SELECT * FRO... users" />
-                <marker date="1482771993715" expanded="true" signature="2985:3020" ph="SELECT * FRO... users" />
-                <marker date="1482771993715" expanded="true" signature="3455:3510" ph="INSERT INTO users... " />
-                <marker date="1482771993715" expanded="true" signature="4138:4179" ph="UPDATE image... " />
-                <marker date="1482771993715" expanded="true" signature="4451:4468" ph="DELETE FROM " />
-                <marker date="1482771993715" expanded="true" signature="4699:4732" ph="DELETE FROM " />
-                <marker date="1482771993715" expanded="true" signature="5101:5136" ph="SELECT * FRO... users" />
-                <marker date="1482771993715" expanded="true" signature="8051:8076" ph="SELECT uuid_... " />
-                <marker date="1482771993715" expanded="true" signature="8196:8245" ph="INSERT INTO image... " />
-                <marker date="1482771993715" expanded="true" signature="9142:9194" ph="SELECT * FRO... users" />
-                <marker date="1482771993715" expanded="true" signature="11242:11267" ph=" SELECT statement" />
-                <marker date="1482771993715" expanded="true" signature="11399:11457" ph=" INSERT statement (LECTURES)" />
-                <marker date="1482771993715" expanded="true" signature="11399:11461" ph=" INSERT statement (LECTURES)" />
-                <marker date="1482771993715" expanded="true" signature="11672:11754" ph=" UPDATE statement (USERS)" />
-                <marker date="1482771993715" expanded="true" signature="12112:12146" ph=" DELETE statement (LECTURE)" />
-                <marker date="1482771993715" expanded="true" signature="12289:12371" ph=" UPDATE statement (USERS)" />
-                <marker date="1482771993715" expanded="true" signature="12763:12799" ph=" SELECT statement (LECTURE)" />
+                <marker date="1482879100249" expanded="true" signature="1205:1219" ph="SELECT * FRO... users" />
+                <marker date="1482879100249" expanded="true" signature="1205:1227" ph=" SELECT statement (QUESTION)" />
+                <marker date="1482879100249" expanded="true" signature="2988:3023" ph="SELECT * FRO... users" />
+                <marker date="1482879100249" expanded="true" signature="3458:3513" ph="INSERT INTO users... " />
+                <marker date="1482879100249" expanded="true" signature="4141:4182" ph="UPDATE image... " />
+                <marker date="1482879100249" expanded="true" signature="4454:4471" ph="DELETE FROM " />
+                <marker date="1482879100249" expanded="true" signature="4702:4735" ph="DELETE FROM " />
+                <marker date="1482879100249" expanded="true" signature="5104:5139" ph="SELECT * FRO... users" />
+                <marker date="1482879100249" expanded="true" signature="8054:8079" ph="SELECT uuid_... " />
+                <marker date="1482879100249" expanded="true" signature="8199:8248" ph="INSERT INTO image... " />
+                <marker date="1482879100249" expanded="true" signature="9145:9197" ph="SELECT * FRO... users" />
+                <marker date="1482879100249" expanded="true" signature="11245:11270" ph=" SELECT statement" />
+                <marker date="1482879100249" expanded="true" signature="11402:11460" ph=" INSERT statement (LECTURES)" />
+                <marker date="1482879100249" expanded="true" signature="11402:11464" ph=" INSERT statement (LECTURES)" />
+                <marker date="1482879100249" expanded="true" signature="11675:11757" ph=" UPDATE statement (USERS)" />
+                <marker date="1482879100249" expanded="true" signature="12115:12149" ph=" DELETE statement (LECTURE)" />
+                <marker date="1482879100249" expanded="true" signature="12292:12374" ph=" UPDATE statement (USERS)" />
+                <marker date="1482879100249" expanded="true" signature="12766:12802" ph=" SELECT statement (LECTURE)" />
+                <marker date="1482879100249" expanded="true" signature="13181:13206" ph=" SELECT statement" />
+                <marker date="1482879100249" expanded="true" signature="13383:13475" ph=" INSERT statement (QUESTION)" />
+                <marker date="1482879100249" expanded="true" signature="13535:13615" ph=" INSERT statement (QUESTION)" />
+                <marker date="1482879100249" expanded="true" signature="14242:14279" ph=" SELECT statement (QUESTION)" />
               </folding>
             </state>
           </provider>
@@ -112,8 +131,8 @@
       <file leaf-file-name="Utilities.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/filip/test/Utilities.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="765">
-              <caret line="66" column="15" selection-start-line="66" selection-start-column="15" selection-end-line="66" selection-end-column="45" />
+            <state relative-caret-position="212">
+              <caret line="133" column="46" selection-start-line="133" selection-start-column="18" selection-end-line="133" selection-end-column="46" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <marker date="1482766141524" expanded="true" signature="28:42" ph="..." />
@@ -158,9 +177,11 @@
         <option value="$PROJECT_DIR$/src/filip/test/ClientSocketHandler.java" />
         <option value="$PROJECT_DIR$/src/filip/test/Test.java" />
         <option value="$PROJECT_DIR$/src/filip/test/StaticKeys.java" />
-        <option value="$PROJECT_DIR$/src/filip/test/Server.java" />
+        <option value="$PROJECT_DIR$/src/filip/test/Lecture.java" />
         <option value="$PROJECT_DIR$/src/filip/test/Utilities.java" />
+        <option value="$PROJECT_DIR$/src/filip/test/Server.java" />
         <option value="$PROJECT_DIR$/src/filip/test/DBHandler.java" />
+        <option value="$PROJECT_DIR$/src/filip/test/Question.java" />
       </list>
     </option>
   </component>
@@ -268,6 +289,7 @@
     <property name="Downloaded.Files.Path.Enabled" value="true" />
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
+    <property name="SearchEverywhereHistoryKey" value="convertResultSetToList&#9;PSI&#9;JAVA://filip.test.Utilities#convertResultSetToList" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -669,7 +691,14 @@
       <option name="project" value="LOCAL" />
       <updated>1475600418285</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="lectures">
+      <created>1482874112057</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1482874112057</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -686,7 +715,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1924" height="1056" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32850778" sideWeight="0.49573562" order="6" side_tool="false" content_ui="tabs" />
@@ -698,12 +727,12 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33407572" sideWeight="0.510661" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.21055438" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32850778" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3062361" sideWeight="0.48933902" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3062361" sideWeight="0.48933902" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.32900432" sideWeight="0.49573562" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.222103" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.48863637" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21566524" sideWeight="0.48863637" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
@@ -768,11 +797,12 @@
     <MESSAGE value="more work" />
     <MESSAGE value="added sockets (start)" />
     <MESSAGE value="improvements (mostly sockets)" />
-    <option name="LAST_COMMIT_MESSAGE" value="improvements (mostly sockets)" />
+    <MESSAGE value="lectures" />
+    <option name="LAST_COMMIT_MESSAGE" value="lectures" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="108" />
+      <option name="time" value="124" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -781,20 +811,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/src.zip!/java/net/URLClassLoader.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5542">
-          <caret line="380" column="0" selection-start-line="380" selection-start-column="0" selection-end-line="380" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/src.zip!/java/lang/ClassLoader.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4981">
-          <caret line="356" column="0" selection-start-line="356" selection-start-column="0" selection-end-line="356" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/src.zip!/java/lang/Class.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3332">
@@ -997,16 +1013,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/filip/test/StaticKeys.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="42" selection-start-line="10" selection-start-column="42" selection-end-line="10" selection-end-column="42" />
+        <state relative-caret-position="136">
+          <caret line="8" column="44" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="44" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/filip/test/Utilities.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
-          <caret line="66" column="15" selection-start-line="66" selection-start-column="15" selection-end-line="66" selection-end-column="45" />
+        <state relative-caret-position="212">
+          <caret line="133" column="46" selection-start-line="133" selection-start-column="18" selection-end-line="133" selection-end-column="46" />
           <folding>
             <element signature="imports" expanded="true" />
             <marker date="1482766141524" expanded="true" signature="28:42" ph="..." />
@@ -1015,10 +1031,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/filip/test/Lecture.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="32" selection-start-line="8" selection-start-column="32" selection-end-line="8" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/filip/test/Server.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2057">
-          <caret line="142" column="0" selection-start-line="142" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
+        <state relative-caret-position="384">
+          <caret line="334" column="0" selection-start-line="334" selection-start-column="0" selection-end-line="334" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1027,27 +1051,42 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/filip/test/DBHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="577">
-          <caret line="333" column="39" selection-start-line="333" selection-start-column="39" selection-end-line="333" selection-end-column="39" />
+        <state relative-caret-position="407">
+          <caret line="371" column="39" selection-start-line="371" selection-start-column="39" selection-end-line="371" selection-end-column="39" />
           <folding>
             <element signature="imports" expanded="true" />
-            <marker date="1482771993715" expanded="true" signature="1205:1224" ph="SELECT * FRO... users" />
-            <marker date="1482771993715" expanded="true" signature="2985:3020" ph="SELECT * FRO... users" />
-            <marker date="1482771993715" expanded="true" signature="3455:3510" ph="INSERT INTO users... " />
-            <marker date="1482771993715" expanded="true" signature="4138:4179" ph="UPDATE image... " />
-            <marker date="1482771993715" expanded="true" signature="4451:4468" ph="DELETE FROM " />
-            <marker date="1482771993715" expanded="true" signature="4699:4732" ph="DELETE FROM " />
-            <marker date="1482771993715" expanded="true" signature="5101:5136" ph="SELECT * FRO... users" />
-            <marker date="1482771993715" expanded="true" signature="8051:8076" ph="SELECT uuid_... " />
-            <marker date="1482771993715" expanded="true" signature="8196:8245" ph="INSERT INTO image... " />
-            <marker date="1482771993715" expanded="true" signature="9142:9194" ph="SELECT * FRO... users" />
-            <marker date="1482771993715" expanded="true" signature="11242:11267" ph=" SELECT statement" />
-            <marker date="1482771993715" expanded="true" signature="11399:11457" ph=" INSERT statement (LECTURES)" />
-            <marker date="1482771993715" expanded="true" signature="11399:11461" ph=" INSERT statement (LECTURES)" />
-            <marker date="1482771993715" expanded="true" signature="11672:11754" ph=" UPDATE statement (USERS)" />
-            <marker date="1482771993715" expanded="true" signature="12112:12146" ph=" DELETE statement (LECTURE)" />
-            <marker date="1482771993715" expanded="true" signature="12289:12371" ph=" UPDATE statement (USERS)" />
-            <marker date="1482771993715" expanded="true" signature="12763:12799" ph=" SELECT statement (LECTURE)" />
+            <marker date="1482879100249" expanded="true" signature="1205:1219" ph="SELECT * FRO... users" />
+            <marker date="1482879100249" expanded="true" signature="1205:1227" ph=" SELECT statement (QUESTION)" />
+            <marker date="1482879100249" expanded="true" signature="2988:3023" ph="SELECT * FRO... users" />
+            <marker date="1482879100249" expanded="true" signature="3458:3513" ph="INSERT INTO users... " />
+            <marker date="1482879100249" expanded="true" signature="4141:4182" ph="UPDATE image... " />
+            <marker date="1482879100249" expanded="true" signature="4454:4471" ph="DELETE FROM " />
+            <marker date="1482879100249" expanded="true" signature="4702:4735" ph="DELETE FROM " />
+            <marker date="1482879100249" expanded="true" signature="5104:5139" ph="SELECT * FRO... users" />
+            <marker date="1482879100249" expanded="true" signature="8054:8079" ph="SELECT uuid_... " />
+            <marker date="1482879100249" expanded="true" signature="8199:8248" ph="INSERT INTO image... " />
+            <marker date="1482879100249" expanded="true" signature="9145:9197" ph="SELECT * FRO... users" />
+            <marker date="1482879100249" expanded="true" signature="11245:11270" ph=" SELECT statement" />
+            <marker date="1482879100249" expanded="true" signature="11402:11460" ph=" INSERT statement (LECTURES)" />
+            <marker date="1482879100249" expanded="true" signature="11402:11464" ph=" INSERT statement (LECTURES)" />
+            <marker date="1482879100249" expanded="true" signature="11675:11757" ph=" UPDATE statement (USERS)" />
+            <marker date="1482879100249" expanded="true" signature="12115:12149" ph=" DELETE statement (LECTURE)" />
+            <marker date="1482879100249" expanded="true" signature="12292:12374" ph=" UPDATE statement (USERS)" />
+            <marker date="1482879100249" expanded="true" signature="12766:12802" ph=" SELECT statement (LECTURE)" />
+            <marker date="1482879100249" expanded="true" signature="13181:13206" ph=" SELECT statement" />
+            <marker date="1482879100249" expanded="true" signature="13383:13475" ph=" INSERT statement (QUESTION)" />
+            <marker date="1482879100249" expanded="true" signature="13535:13615" ph=" INSERT statement (QUESTION)" />
+            <marker date="1482879100249" expanded="true" signature="14242:14279" ph=" SELECT statement (QUESTION)" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/filip/test/Question.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="161">
+          <caret line="20" column="24" selection-start-line="20" selection-start-column="24" selection-end-line="20" selection-end-column="24" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

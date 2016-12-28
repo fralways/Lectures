@@ -1,7 +1,5 @@
 package filip.test;
 
-import com.google.gson.Gson;
-import com.sun.corba.se.spi.orbutil.fsm.Guard;
 import io.jsonwebtoken.Jwts;
 
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -157,6 +155,11 @@ public class DBHandler {
                     rs = ps.executeQuery();
 
                     results = Utilities.convertResultSetToList(rs);
+                    ArrayList<Map<String, Lecture>> lecturesList = new ArrayList();
+                    for (int i=0; i<results.size(); i++){
+                        Map<String, Object> lecture = results.get(i);
+                        lecture.remove("questions");
+                    }
                     user.put("lectures", results);
                 }
             }
@@ -275,42 +278,27 @@ public class DBHandler {
         }
     }
 
+    public Lecture createLecture(Map<String, Object> parameters, String userId) throws Exception {
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery("SELECT uuid_generate_v4()");
+        rs.next();
+        String guid = rs.getString(1);
+        Lecture lecture = new Lecture(parameters, guid);
 
-    public String createLecture(Map<String, Object> parameters, String userId) throws Exception {
+        PreparedStatement ps = conn.prepareStatement("INSERT INTO lecture(title, description, guid) VALUES (?, ?, ?)");
+        ps.setString(1, lecture.title);
+        ps.setString(2, lecture.description);
+        ps.setString(3, lecture.guid);
+        ps.executeUpdate();
+        ps.close();
 
-        boolean badReq = false;
-        if (!String.class.isInstance(parameters.get("title"))) {
-            badReq = true;
-        }else if (parameters.get("description") != null && !String.class.isInstance(parameters.get("description"))){
-            badReq = true;
-        }
+        ps = conn.prepareStatement("update users set lectures = array_append(lectures, CAST (? AS TEXT )) where guid=?");
+        ps.setString(1, lecture.guid);
+        ps.setString(2, userId);
+        ps.executeUpdate();
+        ps.close();
 
-        if (badReq){
-            throw new RuntimeException(EXCEPTION_BADREQUEST);
-        }else {
-            //title,descr,id od 10brojeva
-            String title = (String)parameters.get("title");
-            String descr = (String)parameters.get("description");
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT uuid_generate_v4()");
-            rs.next();
-            String genuuid = rs.getString(1);
-
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO lecture(title, description, guid) VALUES (?, ?, ?)");
-            ps.setString(1, title);
-            ps.setString(2, descr);
-            ps.setString(3, genuuid);
-            ps.executeUpdate();
-            ps.close();
-
-            ps = conn.prepareStatement("update users set lectures = array_append(lectures, CAST (? AS TEXT )) where guid=?");
-            ps.setString(1, genuuid);
-            ps.setString(2, userId);
-            ps.executeUpdate();
-            ps.close();
-
-            return genuuid;
-        }
+        return lecture;
     }
 
     public void deleteLecture(Object id, String userId) throws SQLException{
@@ -330,15 +318,106 @@ public class DBHandler {
         }
     }
 
-    public Object getLecture(Object id) throws Exception {
+    List<HashMap<String,Object>> getLectureQuestions(Lecture lecture) throws Exception{
+        StringBuilder statement = new StringBuilder("SELECT * FROM question WHERE guid='");
+        for (int i = 0; i < lecture.questionIds.size(); i++) {
+            if (i != 0) {
+                statement.append(" or guid='");
+            }
+            String lectureId = lecture.questionIds.get(i);
+            statement.append(lectureId);
+            statement.append("'");
+        }
+
+        PreparedStatement ps = conn.prepareStatement(statement.toString());
+        ResultSet rs = ps.executeQuery();
+
+        List<HashMap<String,Object>> questionsList = Utilities.convertResultSetToList(rs);
+        for (int i=0; i<questionsList.size(); i++){
+            HashMap<String,Object> question = questionsList.get(i);
+            PgArray answersDB = (PgArray)question.get("answers");
+            String[] answersStringArray = (String[]) answersDB.getArray();
+            ArrayList<String> questions = new ArrayList<>();
+            questions.addAll(Arrays.asList(answersStringArray));
+            question.put("answers", questions);
+        }
+
+        return questionsList;
+    }
+
+    public Lecture getLecture(Object id) throws Exception {
         if (String.class.isInstance(id)){
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM lecture WHERE guid = ?");
             ps.setString(1, (String)id);
             ResultSet rs = ps.executeQuery();
-            return rs;
+
+            Lecture lecture = new Lecture(rs);
+            List<HashMap<String,Object>> questions = getLectureQuestions(lecture);
+            lecture.updateQuestionsWithPulledValues(questions);
+            return lecture;
         } else{
             throw new RuntimeException(EXCEPTION_BADREQUEST);
         }
+    }
+
+    public void updateLectureWithParams(Map<String, Object> params) throws Exception {
+
+        //provera se da li postoje na ovaj nacin
+        Lecture lecture = getLecture("f2584c52-ed7a-4242-ad74-59c5b962f811");
+        Question question = getQuestion("b1a1dcb0-4f3e-42bf-9b72-d3a30093f9cf");
+
+        if (lecture != null && question != null){
+            PreparedStatement ps = conn.prepareStatement("update lecture set questions = array_append(questions, CAST (? AS TEXT )) where guid=?");
+            ps.setString(1, question.guid);
+            ps.setString(2, lecture.guid);
+            ps.executeUpdate();
+            ps.close();
+        }else {
+            throw new Exception(EXCEPTION_BADREQUEST);
+        }
+
+
+
+//        StringBuilder statement = new StringBuilder("UPDATE users SET ");
+//
+//        Set<String> allowedFields = new HashSet<>(
+//                Arrays.asList("firstname", "lastname", "description", "title", "password", "university"));
+//
+//        boolean hasChange = false;
+//
+//        for(Map.Entry<String, Object> entry : params.entrySet()) {
+//            String key = entry.getKey();
+//            Object value = entry.getValue();
+//
+//            //check if field is modifiable
+//            if (!allowedFields.contains(key)){
+//                continue;
+//            }
+//            //hash password
+//            if (key.equals("password")){
+//                value = Utilities.cryptWithMD5((String) value);
+//            }
+//
+//            if (statement.length() > "UPDATE users SET ".length()){
+//                statement.append(",");
+//            }
+//
+//            statement.append(key);
+//            statement.append("='");
+//            statement.append(value);
+//            statement.append("'");
+//
+//            hasChange = true;
+//        }
+//
+//        statement.append(" WHERE guid='");
+//        statement.append(userId);
+//        statement.append("'");
+//
+//        if (hasChange) {
+//            PreparedStatement ps = conn.prepareStatement(statement.toString());
+//            ps.executeUpdate();
+//        }
     }
 
     public String createQuestion(Map<String, Object> parameters) throws Exception{

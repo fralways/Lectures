@@ -230,9 +230,9 @@ public class Server {
                         parameters = extractBodyParameters(he);
                         Claims claims = verifyToken(he);
                         String userId = claims.getSubject();
-                        String lectureGuid = dbHandler.createLecture(parameters, userId);
+                        Lecture lecture = dbHandler.createLecture(parameters, userId);
                         Map<String, String> jsonResponse = new HashMap<>();
-                        jsonResponse.put("id", lectureGuid);
+                        jsonResponse.put("id", lecture.guid);
                         response = makeResponse(jsonResponse);
                         break;
                     }
@@ -248,17 +248,17 @@ public class Server {
                         System.out.println("get lecture");
                         verifyToken(he);
                         parameters = extractURIParameters(he);
-                        Object lecture = dbHandler.getLecture(parameters.get("id"));
+                        Lecture lecture = dbHandler.getLecture(parameters.get("id"));
                         response = makeResponse(lecture);
                         break;
                     }
                     case "PATCH": {
+                        //op = replace/add/remove
                         System.out.println("patch lecture");
                         Claims claims = verifyToken(he);
                         String userId = claims.getSubject();
-                        System.out.println("user id: " + userId);
                         parameters = extractBodyParameters(he);
-                        dbHandler.updateUserWithParams(userId, parameters);
+                        dbHandler.updateLectureWithParams(parameters);
                         break;
                     }
                     default:{

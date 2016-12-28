@@ -15,12 +15,12 @@ import static filip.test.StaticKeys.*;
  */
 public class Question {
     String guid;
-    public String question;
-    public ArrayList<String> answers;
-    public int correctIndex;
-    public int duration;
+    String question;
+    ArrayList<String> answers;
+    int correctIndex;
+    int duration;
 
-    public Question(Map<String, Object> parameters, String guid) throws Exception{
+    Question(Map<String, Object> parameters, String guid) throws Exception{
         checkIfCorrectEntry(parameters);
         String question = (String) parameters.get("question");
         int correctIndex = Integer.parseInt((String)parameters.get("correctindex"));
@@ -33,7 +33,7 @@ public class Question {
         this.duration = duration;
     }
 
-    public Question(ResultSet rs) throws Exception{
+    Question(ResultSet rs) throws Exception{
         List<HashMap<String,Object>> questionDictionaryList = Utilities.convertResultSetToList(rs);
 
         if (questionDictionaryList.size() == 0){
@@ -57,7 +57,7 @@ public class Question {
         this.duration = duration;
     }
 
-    public void checkIfCorrectEntry(Map<String, Object> parameters) throws Exception {
+    void checkIfCorrectEntry(Map<String, Object> parameters) throws Exception {
         boolean badEntry = true;
         if (String.class.isInstance(parameters.get("question")) && String.class.isInstance(parameters.get("duration")) &&
                 String.class.isInstance(parameters.get("correctindex")) && parameters.get("answers") != null){
@@ -75,7 +75,7 @@ public class Question {
                         break;
                     }
                 }
-            }//else stavi da ne valja, mora barem jedan answer da ima
+            }//if else, then badEntry already = true
 
             if (correctIndex > answers.size() - 1 || correctIndex < 0){
                 badEntry = true;

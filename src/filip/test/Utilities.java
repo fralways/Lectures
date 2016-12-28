@@ -116,6 +116,8 @@ public class Utilities {
         endpoints.put("logs", sb.toString() + "logs");
         endpoints.put("lecture", sb.toString() + "lecture");
         endpoints.put("lecture-get", sb.toString() + "lecture?id={id}");
+        endpoints.put("question", sb.toString() + "question");
+        endpoints.put("question-get", sb.toString() + "question?id={id}");
 
         return endpoints;
     }

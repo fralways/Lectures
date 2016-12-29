@@ -22,6 +22,8 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import io.jsonwebtoken.Claims;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import static filip.test.StaticKeys.*;
         import static filip.test.Utilities.*;
@@ -253,10 +255,8 @@ public class Server {
                         break;
                     }
                     case "PATCH": {
-                        //op = replace/add/remove
                         System.out.println("patch lecture");
-                        Claims claims = verifyToken(he);
-                        String userId = claims.getSubject();
+                        verifyToken(he);
                         parameters = extractBodyParameters(he);
                         dbHandler.updateLectureWithParams(parameters);
                         break;
@@ -317,12 +317,10 @@ public class Server {
                         break;
                     }
                     case "PATCH": {
-                        System.out.println("patch lecture");
-                        Claims claims = verifyToken(he);
-                        String userId = claims.getSubject();
-                        System.out.println("user id: " + userId);
+                        System.out.println("patch question");
+                        verifyToken(he);
                         parameters = extractBodyParameters(he);
-                        dbHandler.updateUserWithParams(userId, parameters);
+                        dbHandler.updateQuestionWithParams(parameters);
                         break;
                     }
                     default:{
@@ -388,11 +386,31 @@ public class Server {
     }
 
     private Map<String, Object> extractBodyParameters (HttpExchange he) throws IOException {
+        Headers headers = he.getRequestHeaders();
+
+        String contentType = "application/x-www-form-urlencoded";
+        if (headers.containsKey("Content-type")){
+            contentType = headers.getFirst("Content-Type");
+        }
+
         Map<String, Object> parameters = new HashMap<>();
-        InputStreamReader isr = new InputStreamReader(he.getRequestBody(), "utf-8");
-        BufferedReader br = new BufferedReader(isr);
-        String query = br.readLine();
-        parseQuery(query, parameters);
+        switch (contentType){
+            case "application/json": {
+                InputStreamReader isr = new InputStreamReader(he.getRequestBody(), "utf-8");
+                BufferedReader br = new BufferedReader(isr);
+                String body = br.readLine();
+                parameters = readJsonApplication(body);
+                break;
+            }
+            case "application/x-www-form-urlencoded":
+            default: {
+                InputStreamReader isr = new InputStreamReader(he.getRequestBody(), "utf-8");
+                BufferedReader br = new BufferedReader(isr);
+                String query = br.readLine();
+                parseQuery(query, parameters);
+                break;
+            }
+        }
 
         return parameters;
     }
@@ -404,6 +422,11 @@ public class Server {
         parseQuery(query, parameters);
 
         return parameters;
+    }
+
+    public Map<String, Object> readJsonApplication(String body){
+        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
+        return gson.fromJson(body, Map.class);
     }
 
     private static void parseQuery(String query, Map<String,

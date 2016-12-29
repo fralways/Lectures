@@ -68,8 +68,6 @@ public class DBHandler {
             }else {
                 throw new RuntimeException(EXCEPTION_BADREQUEST);
             }
-
-
         }
     }
 
@@ -172,46 +170,53 @@ public class DBHandler {
 
     public void updateUserWithParams(String userId, Map<String, Object> params) throws Exception {
 
-        StringBuilder statement = new StringBuilder("UPDATE users SET ");
-
         Set<String> allowedFields = new HashSet<>(
                 Arrays.asList("firstname", "lastname", "description", "title", "password", "university"));
 
-        boolean hasChange = false;
-
-        for(Map.Entry<String, Object> entry : params.entrySet()) {
-            String key = entry.getKey();
-            Object value = entry.getValue();
-
-            //check if field is modifiable
-            if (!allowedFields.contains(key)){
-                continue;
-            }
-            //hash password
-            if (key.equals("password")){
-                value = Utilities.cryptWithMD5((String) value);
-            }
-
-            if (statement.length() > "UPDATE users SET ".length()){
-                statement.append(",");
-            }
-
-            statement.append(key);
-            statement.append("='");
-            statement.append(value);
-            statement.append("'");
-
-            hasChange = true;
-        }
-
-        statement.append(" WHERE guid='");
-        statement.append(userId);
-        statement.append("'");
-
-        if (hasChange) {
-            PreparedStatement ps = conn.prepareStatement(statement.toString());
+        String querry = makePatchDBQuerry("users", allowedFields, params, userId);
+        if (querry != null){
+            PreparedStatement ps = conn.prepareStatement(querry);
             ps.executeUpdate();
+        }else{
+            throw new Exception(EXCEPTION_BADREQUEST);
         }
+//        StringBuilder statement = new StringBuilder("UPDATE users SET ");
+//        Set<String> allowedFields = new HashSet<>(
+//                Arrays.asList("firstname", "lastname", "description", "title", "password", "university"));
+//        boolean hasChange = false;
+//        for(Map.Entry<String, Object> entry : params.entrySet()) {
+//            String key = entry.getKey();
+//            Object value = entry.getValue();
+//
+//            //check if field is modifiable
+//            if (!allowedFields.contains(key)){
+//                continue;
+//            }
+//            //hash password
+//            if (key.equals("password")){
+//                value = Utilities.cryptWithMD5((String) value);
+//            }
+//
+//            if (statement.length() > "UPDATE users SET ".length()){
+//                statement.append(",");
+//            }
+//
+//            statement.append(key);
+//            statement.append("='");
+//            statement.append(value);
+//            statement.append("'");
+//
+//            hasChange = true;
+//        }
+//
+//        statement.append(" WHERE guid='");
+//        statement.append(userId);
+//        statement.append("'");
+//
+//        if (hasChange) {
+//            PreparedStatement ps = conn.prepareStatement(statement.toString());
+//            ps.executeUpdate();
+//        }
     }
 
     public String createImage() throws IOException, SQLException {
@@ -361,63 +366,82 @@ public class DBHandler {
     }
 
     public void updateLectureWithParams(Map<String, Object> params) throws Exception {
+        String op = (String) params.get("op");
+        String path = (String) params.get("path");
+        Map<String, Object> parameters = (Map<String, Object>)params.get("parameters");
+        if (op != null && path != null && parameters != null){
+            switch (op) {
+                case "add": {
+                    String lectureId = path;
+                    String questionId = (String) parameters.get("questionId");
 
-        //provera se da li postoje na ovaj nacin
-        Lecture lecture = getLecture("f2584c52-ed7a-4242-ad74-59c5b962f811");
-        Question question = getQuestion("b1a1dcb0-4f3e-42bf-9b72-d3a30093f9cf");
+                    if (lectureId != null && questionId != null) {
+                        //provera se da li postoje na ovaj nacin
+                        Lecture lecture = getLecture(lectureId);
+                        Question question = getQuestion(questionId);
 
-        if (lecture != null && question != null){
-            PreparedStatement ps = conn.prepareStatement("update lecture set questions = array_append(questions, CAST (? AS TEXT )) where guid=?");
-            ps.setString(1, question.guid);
-            ps.setString(2, lecture.guid);
-            ps.executeUpdate();
-            ps.close();
-        }else {
+                        if (lecture != null && question != null) {
+                            PreparedStatement ps = conn.prepareStatement("update lecture set questions = array_append(questions, CAST (? AS TEXT )) where guid=?");
+                            ps.setString(1, question.guid);
+                            ps.setString(2, lecture.guid);
+                            ps.executeUpdate();
+                            ps.close();
+                        } else {
+                            throw new Exception(EXCEPTION_BADREQUEST);
+                        }
+                    } else {
+                        throw new Exception(EXCEPTION_BADREQUEST);
+                    }
+
+                    break;
+                }
+                case "remove": {
+                    String lectureId = path;
+                    String questionId = (String) parameters.get("questionId");
+
+                    if (lectureId != null && questionId != null) {
+                        //provera se da li postoje na ovaj nacin
+                        Lecture lecture = getLecture(lectureId);
+                        Question question = getQuestion(questionId);
+
+                        if (lecture != null && question != null) {
+                            PreparedStatement ps = conn.prepareStatement("update lecture set questions = array_remove(questions, CAST (? AS TEXT )) where guid=?");
+                            ps.setString(1, question.guid);
+                            ps.setString(2, lecture.guid);
+                            ps.executeUpdate();
+                            ps.close();
+
+                            ps = conn.prepareStatement("DELETE FROM question WHERE guid = ?");
+                            ps.setString(1, question.guid);
+                            ps.executeUpdate();
+                            ps.close();
+                        } else {
+                            throw new Exception(EXCEPTION_BADREQUEST);
+                        }
+                    } else {
+                        throw new Exception(EXCEPTION_BADREQUEST);
+                    }
+
+                    break;
+                }
+                case "replace": {
+                    Set<String> allowedFields = new HashSet<>(
+                            Arrays.asList("title", "description"));
+                    String query = makePatchDBQuerry("lecture", allowedFields, parameters, path);
+                    if (query != null) {
+                        PreparedStatement ps = conn.prepareStatement(query);
+                        ps.executeUpdate();
+                        ps.close();
+                    }
+                }
+
+                default: {
+                    throw new Exception(EXCEPTION_BADREQUEST);
+                }
+            }
+        }else{
             throw new Exception(EXCEPTION_BADREQUEST);
         }
-
-
-
-//        StringBuilder statement = new StringBuilder("UPDATE users SET ");
-//
-//        Set<String> allowedFields = new HashSet<>(
-//                Arrays.asList("firstname", "lastname", "description", "title", "password", "university"));
-//
-//        boolean hasChange = false;
-//
-//        for(Map.Entry<String, Object> entry : params.entrySet()) {
-//            String key = entry.getKey();
-//            Object value = entry.getValue();
-//
-//            //check if field is modifiable
-//            if (!allowedFields.contains(key)){
-//                continue;
-//            }
-//            //hash password
-//            if (key.equals("password")){
-//                value = Utilities.cryptWithMD5((String) value);
-//            }
-//
-//            if (statement.length() > "UPDATE users SET ".length()){
-//                statement.append(",");
-//            }
-//
-//            statement.append(key);
-//            statement.append("='");
-//            statement.append(value);
-//            statement.append("'");
-//
-//            hasChange = true;
-//        }
-//
-//        statement.append(" WHERE guid='");
-//        statement.append(userId);
-//        statement.append("'");
-//
-//        if (hasChange) {
-//            PreparedStatement ps = conn.prepareStatement(statement.toString());
-//            ps.executeUpdate();
-//        }
     }
 
     public String createQuestion(Map<String, Object> parameters) throws Exception{
@@ -428,7 +452,6 @@ public class DBHandler {
         Question question = new Question(parameters, guid);
 
         PreparedStatement ps = conn.prepareStatement("INSERT INTO question(guid, question, correctIndex, duration, answers) VALUES (?, ?, ?, ?, ?)");
-//        PreparedStatement ps = conn.prepareStatement("INSERT INTO question(guid, question, correctIndex, duration) VALUES (?, ?, ?, ?)");
         ps.setString(1, question.guid);
         ps.setString(2, question.question);
         ps.setInt(3, question.correctIndex);
@@ -453,5 +476,100 @@ public class DBHandler {
         } else{
             throw new RuntimeException(EXCEPTION_BADREQUEST);
         }
+    }
+
+    public void updateQuestionWithParams(Map<String, Object> params) throws Exception {
+        String op = (String) params.get("op");
+        String path = (String) params.get("path");
+        Map<String, Object> parameters = (Map<String, Object>)params.get("parameters");
+        if (op != null && path != null && parameters != null){
+            switch (op) {
+                case "add": {
+                    String answer = (String)parameters.get("answer");
+                    if (answer != null) {
+                        PreparedStatement ps = conn.prepareStatement("update question set answers = array_append(answers, CAST (? AS TEXT )) where guid=?");
+                        ps.setString(1, answer);
+                        ps.setString(2, path);
+                        ps.executeUpdate();
+                        ps.close();
+                    }else {
+                        throw new Exception(EXCEPTION_BADREQUEST);
+                    }
+
+                    break;
+                }
+                case "remove": {
+                    String answer = (String)parameters.get("answer");
+                    if (answer != null) {
+                        PreparedStatement ps = conn.prepareStatement("update question set answers = array_remove(answers, CAST (? AS TEXT )) where guid=?");
+                        ps.setString(1, answer);
+                        ps.setString(2, path);
+                        ps.executeUpdate();
+                        ps.close();
+                    }else {
+                        throw new Exception(EXCEPTION_BADREQUEST);
+                    }
+
+                    break;
+                }
+                case "replace": {
+                    Set<String> allowedFields = new HashSet<>(
+                            Arrays.asList("question", "correctIndex", "duration"));
+                    String query = makePatchDBQuerry("question", allowedFields, parameters, path);
+                    if (query != null) {
+                        PreparedStatement ps = conn.prepareStatement(query);
+                        ps.executeUpdate();
+                        ps.close();
+                    }
+                    break;
+                }
+                default: {
+                    throw new Exception(EXCEPTION_BADREQUEST);
+                }
+            }
+        }else{
+            throw new Exception(EXCEPTION_BADREQUEST);
+        }
+    }
+
+    private String makePatchDBQuerry(String tableName, Set<String> allowedFields, Map<String, Object> params, String guid){
+        StringBuilder statement = new StringBuilder("UPDATE ");
+        statement.append(tableName);
+        statement.append(" SET ");
+
+        boolean hasChange = false;
+
+        int startStatementLength = statement.length();
+
+        for(Map.Entry<String, Object> entry : params.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+
+            //check if field is modifiable
+            if (!allowedFields.contains(key)){
+                continue;
+            }
+
+            if (statement.length() > startStatementLength){
+                statement.append(",");
+            }
+
+            statement.append(key);
+            statement.append("='");
+            statement.append(value);
+            statement.append("'");
+
+            hasChange = true;
+        }
+
+        statement.append(" WHERE guid='");
+        statement.append(guid);
+        statement.append("'");
+
+        if (!hasChange){
+            return null;
+        }
+
+        return statement.toString();
     }
 }

@@ -5,19 +5,16 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureException;
+import org.joda.time.DateTime;
 
 import javax.mail.internet.*;
 
@@ -145,7 +142,27 @@ public class Utilities {
             }
             list.add(row);
         }
-
         return list;
+    }
+
+    public static void printLog(String message){
+        Date dt = new Date();
+        DateTime currentDate = new DateTime(dt);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        int hour = currentDate.getHourOfDay();
+        if (hour<10) {
+            stringBuilder.append("0");
+        }
+        stringBuilder.append(hour).append(":");
+
+        int minute = currentDate.getMinuteOfHour();
+        if (minute<10) {
+            stringBuilder.append("0");
+        }
+        stringBuilder.append(minute).append(" ");
+        stringBuilder.append(message);
+
+        System.out.println(stringBuilder.toString());
     }
 }

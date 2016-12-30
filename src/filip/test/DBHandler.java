@@ -325,29 +325,33 @@ public class DBHandler {
 
     List<HashMap<String,Object>> getLectureQuestions(Lecture lecture) throws Exception{
         StringBuilder statement = new StringBuilder("SELECT * FROM question WHERE guid='");
-        for (int i = 0; i < lecture.questionIds.size(); i++) {
-            if (i != 0) {
-                statement.append(" or guid='");
+        if (lecture.questionIds != null) {
+            for (int i = 0; i < lecture.questionIds.size(); i++) {
+                if (i != 0) {
+                    statement.append(" or guid='");
+                }
+                String lectureId = lecture.questionIds.get(i);
+                statement.append(lectureId);
+                statement.append("'");
             }
-            String lectureId = lecture.questionIds.get(i);
-            statement.append(lectureId);
-            statement.append("'");
+
+            PreparedStatement ps = conn.prepareStatement(statement.toString());
+            ResultSet rs = ps.executeQuery();
+
+            List<HashMap<String, Object>> questionsList = Utilities.convertResultSetToList(rs);
+            for (int i = 0; i < questionsList.size(); i++) {
+                HashMap<String, Object> question = questionsList.get(i);
+                PgArray answersDB = (PgArray) question.get("answers");
+                String[] answersStringArray = (String[]) answersDB.getArray();
+                ArrayList<String> questions = new ArrayList<>();
+                questions.addAll(Arrays.asList(answersStringArray));
+                question.put("answers", questions);
+            }
+
+            return questionsList;
+        }else {
+            return null;
         }
-
-        PreparedStatement ps = conn.prepareStatement(statement.toString());
-        ResultSet rs = ps.executeQuery();
-
-        List<HashMap<String,Object>> questionsList = Utilities.convertResultSetToList(rs);
-        for (int i=0; i<questionsList.size(); i++){
-            HashMap<String,Object> question = questionsList.get(i);
-            PgArray answersDB = (PgArray)question.get("answers");
-            String[] answersStringArray = (String[]) answersDB.getArray();
-            ArrayList<String> questions = new ArrayList<>();
-            questions.addAll(Arrays.asList(answersStringArray));
-            question.put("answers", questions);
-        }
-
-        return questionsList;
     }
 
     public Lecture getLecture(Object id) throws Exception {
@@ -484,37 +488,17 @@ public class DBHandler {
         Map<String, Object> parameters = (Map<String, Object>)params.get("parameters");
         if (op != null && path != null && parameters != null){
             switch (op) {
-                case "add": {
-                    String answer = (String)parameters.get("answer");
-                    if (answer != null) {
-                        PreparedStatement ps = conn.prepareStatement("update question set answers = array_append(answers, CAST (? AS TEXT )) where guid=?");
-                        ps.setString(1, answer);
-                        ps.setString(2, path);
-                        ps.executeUpdate();
-                        ps.close();
-                    }else {
-                        throw new Exception(EXCEPTION_BADREQUEST);
-                    }
-
-                    break;
-                }
-                case "remove": {
-                    String answer = (String)parameters.get("answer");
-                    if (answer != null) {
-                        PreparedStatement ps = conn.prepareStatement("update question set answers = array_remove(answers, CAST (? AS TEXT )) where guid=?");
-                        ps.setString(1, answer);
-                        ps.setString(2, path);
-                        ps.executeUpdate();
-                        ps.close();
-                    }else {
-                        throw new Exception(EXCEPTION_BADREQUEST);
-                    }
-
-                    break;
-                }
                 case "replace": {
+                    ArrayList<String> answers = (ArrayList<String>)parameters.get("answers");
+                    //update answer array
+                    if (answers != null && answers.size() > 0) {
+                        final String[] data = answers.toArray(new String[answers.size()]);
+                        final java.sql.Array sqlArray = conn.createArrayOf("VARCHAR", data);
+                        parameters.put("answers", sqlArray);
+                    }
+                    //now update fields
                     Set<String> allowedFields = new HashSet<>(
-                            Arrays.asList("question", "correctIndex", "duration"));
+                            Arrays.asList("question", "correctIndex", "duration", "answers"));
                     String query = makePatchDBQuerry("question", allowedFields, parameters, path);
                     if (query != null) {
                         PreparedStatement ps = conn.prepareStatement(query);

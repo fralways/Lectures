@@ -57,6 +57,7 @@ public class Server {
         server.createContext("/logs", new LogsHandler());
         server.createContext("/lecture", new LectureHandler());
         server.createContext("/question", new QuestionHandler());
+        server.createContext("/docs", new DocsHandler());
         server.setExecutor(null);
         server.start();
     }
@@ -107,30 +108,28 @@ public class Server {
             try {
                 switch (method){
                     case "POST": {
-                        System.out.println("Usao u create user");
+                        Utilities.printLog("User: create");
                         parameters = extractBodyParameters(he);
                         dbHandler.createUser(parameters);
                         break;
                     }
                     case "DELETE": {
-                        System.out.println("Usao u delete user");
+                        Utilities.printLog("User: delete");
                         verifyToken(he);
                         parameters = extractBodyParameters(he);
                         dbHandler.deleteUserByEmail(parameters.get("email"));
                         break;
                     }
                     case "GET": {
-                        System.out.println("Usao u get user");
+                        Utilities.printLog("User: get");
                         verifyToken(he);
                         parameters = extractURIParameters(he);
                         Object obj = dbHandler.getUserByEmail(parameters.get("email"));
-
                         response = makeResponse(obj);
-
                         break;
                     }
                     case "PATCH": {
-                        System.out.println("Usao u patch user");
+                        Utilities.printLog("User: patch");
                         Claims claims = verifyToken(he);
                         String userId = claims.getSubject();
                         parameters = extractBodyParameters(he);
@@ -142,11 +141,11 @@ public class Server {
                     }
                 }
                 handleResponseHeader(he, null);
-                System.out.println("success");
+                Utilities.printLog("User: success");
             } catch (Exception e){
                 response = makeResponse(e.toString());
                 handleResponseHeader(he, e);
-                System.out.println("error");
+                Utilities.printLog("User: error");
             } finally {
                 // send response
                 OutputStream os = he.getResponseBody();
@@ -165,7 +164,7 @@ public class Server {
             Map<String, Object> parameters;
             try {
                 if (method.equals("POST")) {
-                    System.out.println("Trying to login");
+                    Utilities.printLog("Login: wants to login");
                     parameters = extractBodyParameters(he);
                     String jwt = dbHandler.authenticateUser(parameters);
                     Headers headers = he.getResponseHeaders();
@@ -173,9 +172,10 @@ public class Server {
                 } else {
                     throw new RuntimeException(EXCEPTION_BADMETHOD);
                 }
-                System.out.println("success");
+                Utilities.printLog("Login: success");
                 handleResponseHeader(he, null);
             }catch (RuntimeException|SQLException|NoSuchAlgorithmException e){
+                Utilities.printLog("Login: error");
                 response = makeResponse(e.toString());
                 handleResponseHeader(he, e);
             }finally {
@@ -187,7 +187,6 @@ public class Server {
     }
 
     private class LogsHandler implements HttpHandler {
-
         @Override
         public void handle(HttpExchange he) throws IOException {
             String method = he.getRequestMethod();
@@ -198,7 +197,37 @@ public class Server {
                 if (method.equals("GET")) {
                     byte[] encoded = Files.readAllBytes(Paths.get("C:\\Users\\Filip\\Desktop\\serverOutput.txt"));
                     if (null == encoded){
-                        System.out.println("Cannot find log file");
+                        Utilities.printLog("Logs: cannot find log file");
+                    }else {
+                        response = new String(encoded, StandardCharsets.UTF_8);
+                    }
+                }else {
+                    throw new RuntimeException(EXCEPTION_BADMETHOD);
+                }
+                handleResponseHeader(he, null);
+            }catch (RuntimeException e){
+                response = makeResponse(e.toString());
+                handleResponseHeader(he, e);
+            }finally {
+                OutputStream os = he.getResponseBody();
+                os.write(response.getBytes());
+                os.close();
+            }
+        }
+    }
+
+    private class DocsHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange he) throws IOException {
+            String method = he.getRequestMethod();
+            String response = "";
+            Map<String, Object> parameters;
+
+            try {
+                if (method.equals("GET")) {
+                    byte[] encoded = Files.readAllBytes(Paths.get("C:\\Users\\Filip\\Desktop\\serverDoc.txt"));
+                    if (null == encoded){
+                        Utilities.printLog("Docs: cannot find doc file");
                     }else {
                         response = new String(encoded, StandardCharsets.UTF_8);
                     }
@@ -228,7 +257,7 @@ public class Server {
             try {
                 switch (method){
                     case "POST": {
-                        System.out.println("create new lecture");
+                        Utilities.printLog("Lecture: create");
                         parameters = extractBodyParameters(he);
                         Claims claims = verifyToken(he);
                         String userId = claims.getSubject();
@@ -239,7 +268,7 @@ public class Server {
                         break;
                     }
                     case "DELETE": {
-                        System.out.println("delete lecture");
+                        Utilities.printLog("Lecture: delete");
                         Claims claims = verifyToken(he);
                         String userId = claims.getSubject();
                         parameters = extractBodyParameters(he);
@@ -247,7 +276,7 @@ public class Server {
                         break;
                     }
                     case "GET": {
-                        System.out.println("get lecture");
+                        Utilities.printLog("Lecture: get");
                         verifyToken(he);
                         parameters = extractURIParameters(he);
                         Lecture lecture = dbHandler.getLecture(parameters.get("id"));
@@ -255,7 +284,7 @@ public class Server {
                         break;
                     }
                     case "PATCH": {
-                        System.out.println("patch lecture");
+                        Utilities.printLog("Lecture: patch");
                         verifyToken(he);
                         parameters = extractBodyParameters(he);
                         dbHandler.updateLectureWithParams(parameters);
@@ -266,11 +295,11 @@ public class Server {
                     }
                 }
                 handleResponseHeader(he, null);
-                System.out.println("success");
+                Utilities.printLog("Lecture: success");
             } catch (Exception e){
+                Utilities.printLog("Lecture: error");
                 response = makeResponse(e.toString());
                 handleResponseHeader(he, e);
-                System.out.println("error");
             } finally {
                 // send response
                 OutputStream os = he.getResponseBody();
@@ -291,7 +320,7 @@ public class Server {
             try {
                 switch (method){
                     case "POST": {
-                        System.out.println("create new question");
+                        Utilities.printLog("Question: create");
                         parameters = extractBodyParameters(he);
                         verifyToken(he);
                         String questionGuid = dbHandler.createQuestion(parameters);
@@ -301,7 +330,7 @@ public class Server {
                         break;
                     }
                     case "DELETE": {
-                        System.out.println("delete lecture");
+                        Utilities.printLog("Question: delete");
                         Claims claims = verifyToken(he);
                         String userId = claims.getSubject();
                         parameters = extractBodyParameters(he);
@@ -309,7 +338,7 @@ public class Server {
                         break;
                     }
                     case "GET": {
-                        System.out.println("get question");
+                        Utilities.printLog("Question: get");
                         verifyToken(he);
                         parameters = extractURIParameters(he);
                         Question question = dbHandler.getQuestion(parameters.get("id"));
@@ -317,7 +346,7 @@ public class Server {
                         break;
                     }
                     case "PATCH": {
-                        System.out.println("patch question");
+                        Utilities.printLog("Question: patch");
                         verifyToken(he);
                         parameters = extractBodyParameters(he);
                         dbHandler.updateQuestionWithParams(parameters);
@@ -328,11 +357,11 @@ public class Server {
                     }
                 }
                 handleResponseHeader(he, null);
-                System.out.println("success");
+                Utilities.printLog("Question: success");
             } catch (Exception e){
+                Utilities.printLog("Question: error");
                 response = makeResponse(e.toString());
                 handleResponseHeader(he, e);
-                System.out.println("error");
             } finally {
                 // send response
                 OutputStream os = he.getResponseBody();
@@ -361,8 +390,7 @@ public class Server {
         }else{
             Headers responseHeaders = he.getResponseHeaders();
             responseHeaders.set("Content-Type", "text/plain");
-            System.out.println("error message: " + ex.getMessage());
-
+            Utilities.printLog("Error: " + ex.getMessage());
             switch (ex.getMessage()){
                 case EXCEPTION_BADMETHOD:{
                     he.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, 0);
@@ -424,12 +452,12 @@ public class Server {
         return parameters;
     }
 
-    public Map<String, Object> readJsonApplication(String body){
+    private Map<String, Object> readJsonApplication(String body){
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         return gson.fromJson(body, Map.class);
     }
 
-    private static void parseQuery(String query, Map<String,
+    private void parseQuery(String query, Map<String,
             Object> parameters) throws UnsupportedEncodingException {
 
         if (query != null) {

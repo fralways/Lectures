@@ -80,12 +80,12 @@ public class Server {
                         break;
                     }
                     default:{
-                        throw new RuntimeException(EXCEPTION_BADMETHOD);
+                        throw new ExceptionHandler(EXCEPTION_METHODNOTSUPPORTED, HttpURLConnection.HTTP_BAD_METHOD);
                     }
                 }
                 handleResponseHeader(he, null);
-            } catch (Exception e){
-                response = makeResponse(e.toString());
+            } catch (ExceptionHandler e){
+                response = makeResponse(e);
                 handleResponseHeader(he, e);
             } finally {
                 // send response
@@ -137,13 +137,13 @@ public class Server {
                         break;
                     }
                     default:{
-                        throw new RuntimeException(EXCEPTION_BADMETHOD);
+                        throw new ExceptionHandler(EXCEPTION_METHODNOTSUPPORTED, HttpURLConnection.HTTP_BAD_METHOD);
                     }
                 }
                 handleResponseHeader(he, null);
                 Utilities.printLog("User: success");
-            } catch (Exception e){
-                response = makeResponse(e.toString());
+            } catch (ExceptionHandler e){
+                response = makeResponse(e);
                 handleResponseHeader(he, e);
                 Utilities.printLog("User: error");
             } finally {
@@ -170,13 +170,13 @@ public class Server {
                     Headers headers = he.getResponseHeaders();
                     headers.set("JWT", jwt);
                 } else {
-                    throw new RuntimeException(EXCEPTION_BADMETHOD);
+                    throw new ExceptionHandler(EXCEPTION_METHODNOTSUPPORTED, HttpURLConnection.HTTP_BAD_METHOD);
                 }
                 Utilities.printLog("Login: success");
                 handleResponseHeader(he, null);
-            }catch (RuntimeException|SQLException|NoSuchAlgorithmException e){
+            }catch (ExceptionHandler e){
                 Utilities.printLog("Login: error");
-                response = makeResponse(e.toString());
+                response = makeResponse(e);
                 handleResponseHeader(he, e);
             }finally {
                 OutputStream os = he.getResponseBody();
@@ -202,11 +202,11 @@ public class Server {
                         response = new String(encoded, StandardCharsets.UTF_8);
                     }
                 }else {
-                    throw new RuntimeException(EXCEPTION_BADMETHOD);
+                    throw new ExceptionHandler(EXCEPTION_METHODNOTSUPPORTED, HttpURLConnection.HTTP_BAD_METHOD);
                 }
                 handleResponseHeader(he, null);
-            }catch (RuntimeException e){
-                response = makeResponse(e.toString());
+            }catch (ExceptionHandler e){
+                response = makeResponse(e);
                 handleResponseHeader(he, e);
             }finally {
                 OutputStream os = he.getResponseBody();
@@ -232,11 +232,11 @@ public class Server {
                         response = new String(encoded, StandardCharsets.UTF_8);
                     }
                 }else {
-                    throw new RuntimeException(EXCEPTION_BADMETHOD);
+                    throw new ExceptionHandler(EXCEPTION_METHODNOTSUPPORTED, HttpURLConnection.HTTP_BAD_METHOD);
                 }
                 handleResponseHeader(he, null);
-            }catch (RuntimeException e){
-                response = makeResponse(e.toString());
+            }catch (ExceptionHandler e){
+                response = makeResponse(e);
                 handleResponseHeader(he, e);
             }finally {
                 OutputStream os = he.getResponseBody();
@@ -291,14 +291,14 @@ public class Server {
                         break;
                     }
                     default:{
-                        throw new RuntimeException(EXCEPTION_BADMETHOD);
+                        throw new ExceptionHandler(EXCEPTION_METHODNOTSUPPORTED, HttpURLConnection.HTTP_BAD_METHOD);
                     }
                 }
                 handleResponseHeader(he, null);
                 Utilities.printLog("Lecture: success");
-            } catch (Exception e){
+            } catch (ExceptionHandler e){
                 Utilities.printLog("Lecture: error");
-                response = makeResponse(e.toString());
+                response = makeResponse(e);
                 handleResponseHeader(he, e);
             } finally {
                 // send response
@@ -352,14 +352,14 @@ public class Server {
                         break;
                     }
                     default:{
-                        throw new RuntimeException(EXCEPTION_BADMETHOD);
+                        throw new ExceptionHandler(EXCEPTION_METHODNOTSUPPORTED, HttpURLConnection.HTTP_BAD_METHOD);
                     }
                 }
                 handleResponseHeader(he, null);
                 Utilities.printLog("Question: success");
-            } catch (Exception e){
+            } catch (ExceptionHandler e){
                 Utilities.printLog("Question: error");
-                response = makeResponse(e.toString());
+                response = makeResponse(e);
                 handleResponseHeader(he, e);
             } finally {
                 // send response
@@ -381,34 +381,15 @@ public class Server {
 
     //region Supporting methods
 
-    private void handleResponseHeader(HttpExchange he, Exception ex) throws IOException {
+    private void handleResponseHeader(HttpExchange he, ExceptionHandler ex) throws IOException {
         if (ex == null){
             Headers responseHeaders = he.getResponseHeaders();
             responseHeaders.set("Content-Type", "application/json");
             he.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
         }else{
             Headers responseHeaders = he.getResponseHeaders();
-            responseHeaders.set("Content-Type", "text/plain");
-            Utilities.printLog("Error: " + ex.getMessage());
-            switch (ex.getMessage()){
-                case EXCEPTION_BADMETHOD:{
-                    he.sendResponseHeaders(HttpURLConnection.HTTP_BAD_METHOD, 0);
-                    break;
-                }
-                case EXCEPTION_BADREQUEST:{
-                    he.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
-                    break;
-                }
-                case EXCEPTION_NOTAUTHORIZED:{
-                    he.sendResponseHeaders(HttpURLConnection.HTTP_UNAUTHORIZED, 0);
-                    break;
-                }
-                case EXCEPTION_INTERNAL:
-                default:{
-                    he.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, 0);
-                    break;
-                }
-            }
+            responseHeaders.set("Content-Type", "application/json");
+            he.sendResponseHeaders(ex.statusCode, 0);
         }
     }
 
@@ -495,10 +476,16 @@ public class Server {
     }
 
     private String makeResponse(Object messageObject){
-//        Map<String, Object> responseMap = new HashMap<>();
         String response;
         if (ResultSet.class.isInstance(messageObject)){
             response = Utilities.getFormattedResult((ResultSet)messageObject);
+        }else if (ExceptionHandler.class.isInstance(messageObject)){
+            ExceptionHandler eh = (ExceptionHandler)messageObject;
+            Map<String, String> responseMap = new HashMap<>();
+            responseMap.put("message", eh.message);
+            Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
+            response = gson.toJson(responseMap);
+            Utilities.printLog("Error: " + eh.message);
         }else{
             Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
             response = gson.toJson(messageObject);

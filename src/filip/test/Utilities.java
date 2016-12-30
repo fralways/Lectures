@@ -1,5 +1,6 @@
 package filip.test;
 
+import java.net.HttpURLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
@@ -76,7 +77,7 @@ public class Utilities {
         return sb.toString();
     }
 
-    public static Claims verifyToken(HttpExchange he) throws Exception {
+    public static Claims verifyToken(HttpExchange he) throws ExceptionHandler {
 
         Headers headers = he.getRequestHeaders();
 
@@ -85,16 +86,16 @@ public class Utilities {
             Claims claims = verifyToken(jwt);
             return claims;
         } catch (Exception e) {
-            throw new Exception(EXCEPTION_NOTAUTHORIZED);
+            throw new ExceptionHandler(EXCEPTION_BADTOKEN, HttpURLConnection.HTTP_UNAUTHORIZED);
         }
     }
 
-    public static Claims verifyToken(String jwt) throws Exception {
+    public static Claims verifyToken(String jwt) throws ExceptionHandler {
         try {
             byte[] key = JWT_SECRET.getBytes();
             return Jwts.parser().setSigningKey(key).parseClaimsJws(jwt).getBody();
         } catch (SignatureException e) {
-            throw new Exception(EXCEPTION_NOTAUTHORIZED);
+            throw new ExceptionHandler(EXCEPTION_BADTOKEN, HttpURLConnection.HTTP_UNAUTHORIZED);
         }
     }
 
@@ -160,7 +161,13 @@ public class Utilities {
         if (minute<10) {
             stringBuilder.append("0");
         }
-        stringBuilder.append(minute).append(" ");
+        stringBuilder.append(minute).append(":");
+
+        int second = currentDate.getSecondOfMinute();
+        if (second<10) {
+            stringBuilder.append("0");
+        }
+        stringBuilder.append(second).append(" ");
         stringBuilder.append(message);
 
         System.out.println(stringBuilder.toString());

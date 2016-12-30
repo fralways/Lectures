@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/filip/test/DBHandler.java" line="125" />
+    <bookmark url="file://$PROJECT_DIR$/src/filip/test/DBHandler.java" line="124" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="68fa7627-3112-4670-9e8f-548f505250b7" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Lectures/filip/test/DBHandler.class" afterPath="$PROJECT_DIR$/out/production/Lectures/filip/test/DBHandler.class" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/filip/test/ExceptionHandler.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Lectures/filip/test/Server$UserHandler.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Lectures/filip/test/Server.class" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/DBHandler.java" afterPath="$PROJECT_DIR$/src/filip/test/DBHandler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/Lecture.java" afterPath="$PROJECT_DIR$/src/filip/test/Lecture.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/Question.java" afterPath="$PROJECT_DIR$/src/filip/test/Question.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/Server.java" afterPath="$PROJECT_DIR$/src/filip/test/Server.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/StaticKeys.java" afterPath="$PROJECT_DIR$/src/filip/test/StaticKeys.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/Utilities.java" afterPath="$PROJECT_DIR$/src/filip/test/Utilities.java" />
     </list>
     <ignored path="Lectures.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -52,8 +58,8 @@
       <file leaf-file-name="Server.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/filip/test/Server.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
-              <caret line="299" column="0" lean-forward="false" selection-start-line="299" selection-start-column="0" selection-end-line="299" selection-end-column="0" />
+            <state relative-caret-position="214">
+              <caret line="391" column="53" lean-forward="true" selection-start-line="391" selection-start-column="53" selection-end-line="391" selection-end-column="53" />
               <folding />
             </state>
           </provider>
@@ -62,8 +68,8 @@
       <file leaf-file-name="Lecture.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/filip/test/Lecture.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="317">
-              <caret line="47" column="30" lean-forward="true" selection-start-line="47" selection-start-column="30" selection-end-line="47" selection-end-column="30" />
+            <state relative-caret-position="101">
+              <caret line="67" column="9" lean-forward="true" selection-start-line="63" selection-start-column="9" selection-end-line="67" selection-end-column="9" />
               <folding />
             </state>
           </provider>
@@ -72,8 +78,8 @@
       <file leaf-file-name="Question.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/filip/test/Question.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="31" column="41" lean-forward="true" selection-start-line="31" selection-start-column="41" selection-end-line="31" selection-end-column="41" />
+            <state relative-caret-position="432">
+              <caret line="63" column="48" lean-forward="false" selection-start-line="63" selection-start-column="48" selection-end-line="63" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -82,60 +88,72 @@
       <file leaf-file-name="StaticKeys.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/filip/test/StaticKeys.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="8" column="44" lean-forward="false" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="44" />
+            <state relative-caret-position="153">
+              <caret line="9" column="60" lean-forward="false" selection-start-line="9" selection-start-column="60" selection-end-line="9" selection-end-column="60" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DBHandler.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="DBHandler.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/filip/test/DBHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="299">
-              <caret line="544" column="0" lean-forward="true" selection-start-line="544" selection-start-column="0" selection-end-line="544" selection-end-column="0" />
+            <state relative-caret-position="137">
+              <caret line="109" column="13" lean-forward="true" selection-start-line="109" selection-start-column="13" selection-end-line="109" selection-end-column="13" />
               <folding>
-                <marker date="1483102215547" expanded="true" signature="1129:1143" ph=" SELECT statement (LECTURE_QUESTIONS)" />
-                <marker date="1483102215547" expanded="true" signature="1129:1151" ph=" SELECT statement (QUESTION)" />
-                <marker date="1483102215547" expanded="true" signature="2910:2945" ph="SELECT * FRO... users" />
-                <marker date="1483102215547" expanded="true" signature="3380:3435" ph="INSERT INTO users... " />
-                <marker date="1483102215547" expanded="true" signature="4063:4104" ph="UPDATE image... " />
-                <marker date="1483102215547" expanded="true" signature="4376:4393" ph="DELETE FROM " />
-                <marker date="1483102215547" expanded="true" signature="4624:4657" ph="DELETE FROM " />
-                <marker date="1483102215547" expanded="true" signature="5026:5061" ph="SELECT * FRO... users" />
-                <marker date="1483102215547" expanded="true" signature="8783:8808" ph="SELECT uuid_... " />
-                <marker date="1483102215547" expanded="true" signature="8928:8977" ph="INSERT INTO image... " />
-                <marker date="1483102215547" expanded="true" signature="9874:9926" ph="SELECT * FRO... users" />
-                <marker date="1483102215547" expanded="true" signature="11419:11444" ph=" SELECT statement" />
-                <marker date="1483102215547" expanded="true" signature="11618:11676" ph=" INSERT statement (LECTURES)" />
-                <marker date="1483102215547" expanded="true" signature="11618:11680" ph=" INSERT statement (LECTURES)" />
-                <marker date="1483102215547" expanded="true" signature="11894:11976" ph=" UPDATE statement (USERS)" />
-                <marker date="1483102215547" expanded="true" signature="12306:12388" ph=" UPDATE statement (USERS)" />
-                <marker date="1483102215547" expanded="true" signature="12567:12601" ph=" SELECT statement (LECTURE)" />
-                <marker date="1483102215547" expanded="true" signature="13424:13458" ph=" DELETE statement (LECTURE)" />
-                <marker date="1483102215547" expanded="true" signature="15167:15203" ph=" SELECT statement (LECTURE)" />
-                <marker date="1483102215547" expanded="true" signature="16537:16623" ph=" UPDATE statement (LECTURE)" />
-                <marker date="1483102215547" expanded="true" signature="17694:17780" ph=" UPDATE statement (LECTURE)" />
-                <marker date="1483102215547" expanded="true" signature="18048:18083" ph=" DELETE statement (QUESTION)" />
-                <marker date="1483102215547" expanded="true" signature="19410:19435" ph=" SELECT statement" />
-                <marker date="1483102215547" expanded="true" signature="19612:19704" ph=" INSERT statement (QUESTION)" />
-                <marker date="1483102215547" expanded="true" signature="20331:20368" ph=" SELECT statement (QUESTION)" />
-                <marker date="1483102215547" expanded="true" signature="22488:22574" ph=" UPDATE statement (LECTURE)" />
-                <marker date="1483102215547" expanded="true" signature="22764:22799" ph=" DELETE statement (QUESTION)" />
+                <marker date="1483115937525" expanded="true" signature="1164:1178" ph=" SELECT statement (LECTURE_QUESTIONS)" />
+                <marker date="1483115937525" expanded="true" signature="1164:1186" ph=" SELECT statement (QUESTION)" />
+                <marker date="1483115937525" expanded="true" signature="3008:3043" ph="SELECT * FRO... users" />
+                <marker date="1483115937525" expanded="true" signature="3562:3617" ph="INSERT INTO users... " />
+                <marker date="1483115937525" expanded="true" signature="4301:4342" ph="UPDATE image... " />
+                <marker date="1483115937525" expanded="true" signature="4885:4918" ph="DELETE FROM " />
+                <marker date="1483115937525" expanded="true" signature="5506:5541" ph="SELECT * FRO... users" />
+                <marker date="1483115937525" expanded="true" signature="8778:8803" ph="SELECT uuid_... " />
+                <marker date="1483115937525" expanded="true" signature="8923:8972" ph="INSERT INTO image... " />
+                <marker date="1483115937525" expanded="true" signature="9877:9929" ph="SELECT * FRO... users" />
+                <marker date="1483115937525" expanded="true" signature="11881:11906" ph=" SELECT statement" />
+                <marker date="1483115937525" expanded="true" signature="12096:12154" ph=" INSERT statement (LECTURES)" />
+                <marker date="1483115937525" expanded="true" signature="12096:12158" ph=" INSERT statement (LECTURES)" />
+                <marker date="1483115937525" expanded="true" signature="12396:12478" ph=" UPDATE statement (USERS)" />
+                <marker date="1483115937525" expanded="true" signature="13051:13133" ph=" UPDATE statement (USERS)" />
+                <marker date="1483115937525" expanded="true" signature="13332:13366" ph=" SELECT statement (LECTURE)" />
+                <marker date="1483115937525" expanded="true" signature="14257:14291" ph=" DELETE statement (LECTURE)" />
+                <marker date="1483115937525" expanded="true" signature="16537:16573" ph=" SELECT statement (LECTURE)" />
+                <marker date="1483115937525" expanded="true" signature="18213:18299" ph=" UPDATE statement (LECTURE)" />
+                <marker date="1483115937525" expanded="true" signature="19690:19776" ph=" UPDATE statement (LECTURE)" />
+                <marker date="1483115937525" expanded="true" signature="20064:20099" ph=" DELETE statement (QUESTION)" />
+                <marker date="1483115937525" expanded="true" signature="22045:22070" ph=" SELECT statement" />
+                <marker date="1483115937525" expanded="true" signature="22263:22355" ph=" INSERT statement (QUESTION)" />
+                <marker date="1483115937525" expanded="true" signature="23246:23283" ph=" SELECT statement (QUESTION)" />
+                <marker date="1483115937525" expanded="true" signature="26046:26132" ph=" UPDATE statement (LECTURE)" />
+                <marker date="1483115937525" expanded="true" signature="26344:26379" ph=" DELETE statement (QUESTION)" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Utilities.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ExceptionHandler.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/filip/test/ExceptionHandler.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="374">
+              <caret line="22" column="5" lean-forward="true" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
+              <folding>
+                <element signature="e#449#450#0" expanded="true" />
+                <element signature="e#493#494#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Utilities.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/filip/test/Utilities.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
-              <caret line="142" column="26" lean-forward="true" selection-start-line="142" selection-start-column="26" selection-end-line="142" selection-end-column="26" />
+            <state relative-caret-position="372">
+              <caret line="167" column="38" lean-forward="true" selection-start-line="167" selection-start-column="38" selection-end-line="167" selection-end-column="38" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <marker date="1483100092486" expanded="true" signature="28:42" ph="..." />
-                <marker date="1483100092486" expanded="true" signature="4001:4007" ph="{...}" />
+                <marker date="1483116149325" expanded="true" signature="63:77" ph="..." />
+                <marker date="1483116149325" expanded="true" signature="4128:4134" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -155,7 +173,10 @@
       <find>error message</find>
       <find>getLectureQuestions</find>
       <find>ResultSet rs</find>
+      <find>EXCEPTION_BADMETHOD</find>
       <find>ResultSet</find>
+      <find>catch</find>
+      <find>makeResponse</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -183,12 +204,13 @@
         <option value="$PROJECT_DIR$/src/filip/test/SocketHandler.java" />
         <option value="$PROJECT_DIR$/src/filip/test/ClientSocketHandler.java" />
         <option value="$PROJECT_DIR$/src/filip/test/Test.java" />
-        <option value="$PROJECT_DIR$/src/filip/test/StaticKeys.java" />
-        <option value="$PROJECT_DIR$/src/filip/test/Question.java" />
+        <option value="$PROJECT_DIR$/src/filip/test/ExceptionHandler.java" />
         <option value="$PROJECT_DIR$/src/filip/test/Lecture.java" />
-        <option value="$PROJECT_DIR$/src/filip/test/Utilities.java" />
-        <option value="$PROJECT_DIR$/src/filip/test/Server.java" />
+        <option value="$PROJECT_DIR$/src/filip/test/Question.java" />
+        <option value="$PROJECT_DIR$/src/filip/test/StaticKeys.java" />
         <option value="$PROJECT_DIR$/src/filip/test/DBHandler.java" />
+        <option value="$PROJECT_DIR$/src/filip/test/Server.java" />
+        <option value="$PROJECT_DIR$/src/filip/test/Utilities.java" />
       </list>
     </option>
   </component>
@@ -197,13 +219,6 @@
   <component name="JsGulpfileManager">
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
-  </component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="mavenHome" value="Bundled (Maven 3)" />
-      </MavenGeneralSettings>
-    </option>
   </component>
   <component name="MavenProjectNavigator">
     <treeState />
@@ -283,7 +298,7 @@
     <property name="Downloaded.Files.Path.Enabled" value="true" />
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
-    <property name="SearchEverywhereHistoryKey" value="convertResultSetToList&#9;PSI&#9;JAVA://filip.test.Utilities#convertResultSetToList" />
+    <property name="SearchEverywhereHistoryKey" value="isValidEmailAddress&#9;PSI&#9;JAVA://filip.test.Utilities#isValidEmailAddress&#10;convertResultSetToList&#9;PSI&#9;JAVA://filip.test.Utilities#convertResultSetToList" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -360,6 +375,34 @@
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
       <option name="PROGRAM_PARAMETERS" />
       <predefined_log_file id="idea.log" enabled="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android App">
+      <module name="" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
+      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="DEBUGGER_TYPE" value="Java" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <Java />
+      <Profilers>
+        <option name="ENABLE_ADVANCED_PROFILING" value="true" />
+        <option name="GAPID_ENABLED" value="false" />
+        <option name="GAPID_DISABLE_PCS" value="false" />
+        <option name="SUPPORT_LIB_ENABLED" value="true" />
+        <option name="INSTRUMENTATION_ENABLED" value="true" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
       <method />
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
@@ -676,7 +719,14 @@
       <option name="project" value="LOCAL" />
       <updated>1483100261816</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="delete question/lecture">
+      <created>1483102481843</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1483102481843</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -696,29 +746,30 @@
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32850778" sideWeight="0.49573562" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="DB Browser" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15396996" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32628062" sideWeight="0.49791667" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="DB Execution Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33407572" sideWeight="0.510661" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.21055438" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32850778" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3040089" sideWeight="0.48933902" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.32900432" sideWeight="0.49573562" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23122318" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22049356" sideWeight="0.83653843" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39198217" sideWeight="0.49573562" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32850778" sideWeight="0.49573562" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="DB Browser" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15396996" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32628062" sideWeight="0.49791667" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32850778" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3040089" sideWeight="0.48933902" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.32900432" sideWeight="0.49573562" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23122318" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32850778" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39198217" sideWeight="0.49573562" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -727,7 +778,6 @@
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.32900432" sideWeight="0.49573562" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21995708" sideWeight="0.16346154" order="9" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32850778" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -753,19 +803,12 @@
     <MESSAGE value="further work on questions" />
     <MESSAGE value="finished lectures/questions" />
     <MESSAGE value="cleanups, updated questions" />
-    <option name="LAST_COMMIT_MESSAGE" value="cleanups, updated questions" />
+    <MESSAGE value="delete question/lecture" />
+    <option name="LAST_COMMIT_MESSAGE" value="delete question/lecture" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/filip/test/DBHandler.java</url>
-          <line>331</line>
-          <properties />
-          <option name="timeStamp" value="176" />
-        </line-breakpoint>
-      </breakpoints>
-      <option name="time" value="177" />
+      <option name="time" value="183" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -774,13 +817,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_102/src.zip!/java/sql/DriverManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2941">
-          <caret line="204" column="29" lean-forward="false" selection-start-line="204" selection-start-column="29" selection-end-line="204" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/example/helloworld/HelloWorld.java" />
     <entry file="file://$PROJECT_DIR$/src/com/example/helloworld/HelloWorld.java" />
     <entry file="uml://DATABASE/8d20e011-728f-48cf-b4da-53e8de5b7568" />
@@ -963,14 +999,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/filip/test/StaticKeys.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="44" lean-forward="false" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/lib/json-20080701.jar!/org/json/JSONObject.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
@@ -979,74 +1007,92 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/filip/test/Question.java">
+    <entry file="file://$PROJECT_DIR$/src/filip/test/ExceptionHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="31" column="41" lean-forward="true" selection-start-line="31" selection-start-column="41" selection-end-line="31" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/filip/test/Utilities.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="142" column="26" lean-forward="true" selection-start-line="142" selection-start-column="26" selection-end-line="142" selection-end-column="26" />
+        <state relative-caret-position="374">
+          <caret line="22" column="5" lean-forward="true" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <marker date="1483100092486" expanded="true" signature="28:42" ph="..." />
-            <marker date="1483100092486" expanded="true" signature="4001:4007" ph="{...}" />
+            <element signature="e#449#450#0" expanded="true" />
+            <element signature="e#493#494#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/filip/test/Server.java">
+    <entry file="file://$PROJECT_DIR$/src/filip/test/Question.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="299" column="0" lean-forward="false" selection-start-line="299" selection-start-column="0" selection-end-line="299" selection-end-column="0" />
+        <state relative-caret-position="432">
+          <caret line="63" column="48" lean-forward="false" selection-start-line="63" selection-start-column="48" selection-end-line="63" selection-end-column="48" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/filip/test/Lecture.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="317">
-          <caret line="47" column="30" lean-forward="true" selection-start-line="47" selection-start-column="30" selection-end-line="47" selection-end-column="30" />
+        <state relative-caret-position="101">
+          <caret line="67" column="9" lean-forward="true" selection-start-line="63" selection-start-column="9" selection-end-line="67" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/filip/test/StaticKeys.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="60" lean-forward="false" selection-start-line="9" selection-start-column="60" selection-end-line="9" selection-end-column="60" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/filip/test/DBHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="544" column="0" lean-forward="true" selection-start-line="544" selection-start-column="0" selection-end-line="544" selection-end-column="0" />
+        <state relative-caret-position="137">
+          <caret line="109" column="13" lean-forward="true" selection-start-line="109" selection-start-column="13" selection-end-line="109" selection-end-column="13" />
           <folding>
-            <marker date="1483102215547" expanded="true" signature="1129:1143" ph=" SELECT statement (LECTURE_QUESTIONS)" />
-            <marker date="1483102215547" expanded="true" signature="1129:1151" ph=" SELECT statement (QUESTION)" />
-            <marker date="1483102215547" expanded="true" signature="2910:2945" ph="SELECT * FRO... users" />
-            <marker date="1483102215547" expanded="true" signature="3380:3435" ph="INSERT INTO users... " />
-            <marker date="1483102215547" expanded="true" signature="4063:4104" ph="UPDATE image... " />
-            <marker date="1483102215547" expanded="true" signature="4376:4393" ph="DELETE FROM " />
-            <marker date="1483102215547" expanded="true" signature="4624:4657" ph="DELETE FROM " />
-            <marker date="1483102215547" expanded="true" signature="5026:5061" ph="SELECT * FRO... users" />
-            <marker date="1483102215547" expanded="true" signature="8783:8808" ph="SELECT uuid_... " />
-            <marker date="1483102215547" expanded="true" signature="8928:8977" ph="INSERT INTO image... " />
-            <marker date="1483102215547" expanded="true" signature="9874:9926" ph="SELECT * FRO... users" />
-            <marker date="1483102215547" expanded="true" signature="11419:11444" ph=" SELECT statement" />
-            <marker date="1483102215547" expanded="true" signature="11618:11676" ph=" INSERT statement (LECTURES)" />
-            <marker date="1483102215547" expanded="true" signature="11618:11680" ph=" INSERT statement (LECTURES)" />
-            <marker date="1483102215547" expanded="true" signature="11894:11976" ph=" UPDATE statement (USERS)" />
-            <marker date="1483102215547" expanded="true" signature="12306:12388" ph=" UPDATE statement (USERS)" />
-            <marker date="1483102215547" expanded="true" signature="12567:12601" ph=" SELECT statement (LECTURE)" />
-            <marker date="1483102215547" expanded="true" signature="13424:13458" ph=" DELETE statement (LECTURE)" />
-            <marker date="1483102215547" expanded="true" signature="15167:15203" ph=" SELECT statement (LECTURE)" />
-            <marker date="1483102215547" expanded="true" signature="16537:16623" ph=" UPDATE statement (LECTURE)" />
-            <marker date="1483102215547" expanded="true" signature="17694:17780" ph=" UPDATE statement (LECTURE)" />
-            <marker date="1483102215547" expanded="true" signature="18048:18083" ph=" DELETE statement (QUESTION)" />
-            <marker date="1483102215547" expanded="true" signature="19410:19435" ph=" SELECT statement" />
-            <marker date="1483102215547" expanded="true" signature="19612:19704" ph=" INSERT statement (QUESTION)" />
-            <marker date="1483102215547" expanded="true" signature="20331:20368" ph=" SELECT statement (QUESTION)" />
-            <marker date="1483102215547" expanded="true" signature="22488:22574" ph=" UPDATE statement (LECTURE)" />
-            <marker date="1483102215547" expanded="true" signature="22764:22799" ph=" DELETE statement (QUESTION)" />
+            <marker date="1483115937525" expanded="true" signature="1164:1178" ph=" SELECT statement (LECTURE_QUESTIONS)" />
+            <marker date="1483115937525" expanded="true" signature="1164:1186" ph=" SELECT statement (QUESTION)" />
+            <marker date="1483115937525" expanded="true" signature="3008:3043" ph="SELECT * FRO... users" />
+            <marker date="1483115937525" expanded="true" signature="3562:3617" ph="INSERT INTO users... " />
+            <marker date="1483115937525" expanded="true" signature="4301:4342" ph="UPDATE image... " />
+            <marker date="1483115937525" expanded="true" signature="4885:4918" ph="DELETE FROM " />
+            <marker date="1483115937525" expanded="true" signature="5506:5541" ph="SELECT * FRO... users" />
+            <marker date="1483115937525" expanded="true" signature="8778:8803" ph="SELECT uuid_... " />
+            <marker date="1483115937525" expanded="true" signature="8923:8972" ph="INSERT INTO image... " />
+            <marker date="1483115937525" expanded="true" signature="9877:9929" ph="SELECT * FRO... users" />
+            <marker date="1483115937525" expanded="true" signature="11881:11906" ph=" SELECT statement" />
+            <marker date="1483115937525" expanded="true" signature="12096:12154" ph=" INSERT statement (LECTURES)" />
+            <marker date="1483115937525" expanded="true" signature="12096:12158" ph=" INSERT statement (LECTURES)" />
+            <marker date="1483115937525" expanded="true" signature="12396:12478" ph=" UPDATE statement (USERS)" />
+            <marker date="1483115937525" expanded="true" signature="13051:13133" ph=" UPDATE statement (USERS)" />
+            <marker date="1483115937525" expanded="true" signature="13332:13366" ph=" SELECT statement (LECTURE)" />
+            <marker date="1483115937525" expanded="true" signature="14257:14291" ph=" DELETE statement (LECTURE)" />
+            <marker date="1483115937525" expanded="true" signature="16537:16573" ph=" SELECT statement (LECTURE)" />
+            <marker date="1483115937525" expanded="true" signature="18213:18299" ph=" UPDATE statement (LECTURE)" />
+            <marker date="1483115937525" expanded="true" signature="19690:19776" ph=" UPDATE statement (LECTURE)" />
+            <marker date="1483115937525" expanded="true" signature="20064:20099" ph=" DELETE statement (QUESTION)" />
+            <marker date="1483115937525" expanded="true" signature="22045:22070" ph=" SELECT statement" />
+            <marker date="1483115937525" expanded="true" signature="22263:22355" ph=" INSERT statement (QUESTION)" />
+            <marker date="1483115937525" expanded="true" signature="23246:23283" ph=" SELECT statement (QUESTION)" />
+            <marker date="1483115937525" expanded="true" signature="26046:26132" ph=" UPDATE statement (LECTURE)" />
+            <marker date="1483115937525" expanded="true" signature="26344:26379" ph=" DELETE statement (QUESTION)" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/filip/test/Server.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="214">
+          <caret line="391" column="53" lean-forward="true" selection-start-line="391" selection-start-column="53" selection-end-line="391" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/filip/test/Utilities.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="372">
+          <caret line="167" column="38" lean-forward="true" selection-start-line="167" selection-start-column="38" selection-end-line="167" selection-end-column="38" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <marker date="1483116149325" expanded="true" signature="63:77" ph="..." />
+            <marker date="1483116149325" expanded="true" signature="4128:4134" ph="{...}" />
           </folding>
         </state>
       </provider>

@@ -2,7 +2,9 @@ package filip.test;
 
 import org.postgresql.jdbc.PgArray;
 
+import java.net.HttpURLConnection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +22,7 @@ public class Question {
     int correctIndex;
     int duration;
 
-    Question(Map<String, Object> parameters, String guid) throws Exception{
+    Question(Map<String, Object> parameters, String guid) throws ExceptionHandler{
         checkIfCorrectEntry(parameters);
         String question = (String) parameters.get("question");
         int correctIndex = Integer.parseInt((String)parameters.get("correctindex"));
@@ -33,31 +35,37 @@ public class Question {
         this.duration = duration;
     }
 
-    Question(ResultSet rs) throws Exception{
-        List<HashMap<String,Object>> questionDictionaryList = Utilities.convertResultSetToList(rs);
+    Question(ResultSet rs) throws ExceptionHandler{
+        try {
+            List<HashMap<String, Object>> questionDictionaryList = Utilities.convertResultSetToList(rs);
 
-        if (questionDictionaryList.size() == 0){
-            throw new Exception(EXCEPTION_BADREQUEST);
+            if (questionDictionaryList.size() == 0) {
+                throw new ExceptionHandler("Question: does not exist", HttpURLConnection.HTTP_INTERNAL_ERROR);
+            }
+
+            HashMap<String, Object> questionDictionary = questionDictionaryList.get(0);
+            String question = (String) questionDictionary.get("question");
+            int correctIndex = (Integer) questionDictionary.get("correctindex");
+            int duration = (Integer) questionDictionary.get("duration");
+
+            PgArray answersPgArray = (PgArray) questionDictionary.get("answers");
+            String[] answersStringArray = (String[]) answersPgArray.getArray();
+            ArrayList<String> answers = new ArrayList<>();
+            answers.addAll(Arrays.asList(answersStringArray));
+
+            this.guid = (String) questionDictionary.get("guid");
+            this.question = question;
+            this.answers = answers;
+            this.correctIndex = correctIndex;
+            this.duration = duration;
+        }catch (ExceptionHandler e){
+            throw e;
+        }catch (SQLException e){
+            throw new ExceptionHandler("Question: db error", HttpURLConnection.HTTP_INTERNAL_ERROR);
         }
-
-        HashMap<String,Object> questionDictionary = questionDictionaryList.get(0);
-        String question = (String) questionDictionary.get("question");
-        int correctIndex = (Integer)questionDictionary.get("correctindex");
-        int duration = (Integer) questionDictionary.get("duration");
-
-        PgArray answersPgArray = (PgArray)questionDictionary.get("answers");
-        String[] answersStringArray = (String[])answersPgArray.getArray();
-        ArrayList<String> answers = new ArrayList<>();
-        answers.addAll(Arrays.asList(answersStringArray));
-
-        this.guid = (String) questionDictionary.get("guid");
-        this.question = question;
-        this.answers = answers;
-        this.correctIndex = correctIndex;
-        this.duration = duration;
     }
 
-    void checkIfCorrectEntry(Map<String, Object> parameters) throws Exception {
+    void checkIfCorrectEntry(Map<String, Object> parameters) throws ExceptionHandler {
         boolean badEntry = true;
         if (String.class.isInstance(parameters.get("question")) && String.class.isInstance(parameters.get("duration")) &&
                 String.class.isInstance(parameters.get("correctindex")) && parameters.get("answers") != null){
@@ -83,7 +91,7 @@ public class Question {
         }
 
         if (badEntry) {
-            throw new Exception(EXCEPTION_BADREQUEST);
+            throw new ExceptionHandler("Question: bad params", HttpURLConnection.HTTP_BAD_REQUEST);
         }
     }
 }

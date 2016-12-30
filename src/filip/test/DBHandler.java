@@ -306,16 +306,35 @@ public class DBHandler {
         return lecture;
     }
 
-    public void deleteLecture(Object id, String userId) throws SQLException{
+    public void deleteLecture(Object id, String userId) throws Exception{
         if (String.class.isInstance(id)){
-            PreparedStatement ps = conn.prepareStatement("DELETE FROM lecture WHERE guid = ?");
-            ps.setString(1, (String) id);
+            PreparedStatement ps = conn.prepareStatement("update users set lectures = array_remove(lectures, CAST (? AS TEXT )) where guid=?");
+            ps.setString(1, (String)id);
+            ps.setString(2, userId);
             ps.executeUpdate();
             ps.close();
 
-            ps = conn.prepareStatement("update users set lectures = array_remove(lectures, CAST (? AS TEXT )) where guid=?");
+            ps = conn.prepareStatement("select * from lecture where guid=?");
             ps.setString(1, (String)id);
-            ps.setString(2, userId);
+            ResultSet rs = ps.executeQuery();
+
+            Lecture lecture = new Lecture(rs);
+            if (lecture != null && lecture.questionIds != null && lecture.questionIds.size() > 0) {
+                StringBuilder query = new StringBuilder("delete from question where guid in (");
+                for (int i = 0; i < lecture.questionIds.size(); i++) {
+                    if (i!=0){
+                        query.append(",");
+                    }
+                    query.append("'").append(lecture.questionIds.get(i)).append("'");
+                }
+                query.append(")");
+                ps = conn.prepareStatement(query.toString());
+                ps.executeUpdate();
+                ps.close();
+            }
+
+            ps = conn.prepareStatement("DELETE FROM lecture WHERE guid = ?");
+            ps.setString(1, (String) id);
             ps.executeUpdate();
             ps.close();
         }else {
@@ -513,6 +532,23 @@ public class DBHandler {
             }
         }else{
             throw new Exception(EXCEPTION_BADREQUEST);
+        }
+    }
+
+    public void deleteQuestion(Object id, Object lectureId) throws SQLException{
+        if (String.class.isInstance(id) && String.class.isInstance(lectureId)){
+            PreparedStatement ps = conn.prepareStatement("update lecture set questions = array_remove(questions, CAST (? AS TEXT )) where guid=?");
+            ps.setString(1, (String)id);
+            ps.setString(2, (String)lectureId);
+            ps.executeUpdate();
+            ps.close();
+
+            ps = conn.prepareStatement("DELETE FROM question WHERE guid = ?");
+            ps.setString(1, (String) id);
+            ps.executeUpdate();
+            ps.close();
+        }else {
+            throw new RuntimeException(EXCEPTION_BADREQUEST);
         }
     }
 

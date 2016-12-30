@@ -331,10 +331,9 @@ public class Server {
                     }
                     case "DELETE": {
                         Utilities.printLog("Question: delete");
-                        Claims claims = verifyToken(he);
-                        String userId = claims.getSubject();
+                        verifyToken(he);
                         parameters = extractBodyParameters(he);
-                        dbHandler.deleteLecture(parameters.get("id"), userId);
+                        dbHandler.deleteQuestion(parameters.get("id"), parameters.get("lectureId"));
                         break;
                     }
                     case "GET": {

@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.joda.time.DateTime;
 import org.postgresql.jdbc.PgArray;
 
+import javax.rmi.CORBA.Util;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.security.NoSuchAlgorithmException;
@@ -163,6 +164,8 @@ public class DBHandler {
                                 lecture.remove("questions");
                             }
                             user.put("lectures", results);
+                        }else{
+                            user.remove("lectures");
                         }
                     }
                     return user;
@@ -271,10 +274,23 @@ public class DBHandler {
             String guid = rs.getString(1);
             Lecture lecture = new Lecture(parameters, guid);
 
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO lecture(title, description, guid) VALUES (?, ?, ?)");
+
+            String uniqueid = Utilities.generateLectureString();
+            boolean exists;
+            do {
+                PreparedStatement ps = conn.prepareStatement("select exists(select 1 from lecture where unique_id = ?) AS \"exists\"");
+                ps.setString(1, uniqueid);
+                rs = ps.executeQuery();
+                List<HashMap<String,Object>> list = Utilities.convertResultSetToList(rs);
+                HashMap<String,Object> result = list.get(0);
+                exists = (Boolean) result.get("exists");
+            }while (exists);
+
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO lecture(title, description, guid, unique_id) VALUES (?, ?, ?, ?)");
             ps.setString(1, lecture.title);
             ps.setString(2, lecture.description);
             ps.setString(3, lecture.guid);
+            ps.setString(4, uniqueid);
             ps.executeUpdate();
             ps.close();
 

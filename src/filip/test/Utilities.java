@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.*;
+import java.security.SecureRandom;
+import java.math.BigInteger;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -116,6 +118,7 @@ public class Utilities {
         endpoints.put("lecture-get", sb.toString() + "lecture?id={id}");
         endpoints.put("question", sb.toString() + "question");
         endpoints.put("question-get", sb.toString() + "question?id={id}");
+        endpoints.put("docs", sb.toString() + "docs");
 
         return endpoints;
     }
@@ -171,5 +174,10 @@ public class Utilities {
         stringBuilder.append(message);
 
         System.out.println(stringBuilder.toString());
+    }
+
+    public static String generateLectureString(){
+        SecureRandom random = new SecureRandom();
+        return new BigInteger(30, random).toString(32);
     }
 }

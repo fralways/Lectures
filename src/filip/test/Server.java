@@ -25,6 +25,8 @@ import io.jsonwebtoken.Claims;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.rmi.CORBA.Util;
+
 import static filip.test.StaticKeys.*;
         import static filip.test.Utilities.*;
 
@@ -71,22 +73,23 @@ public class Server {
             // parse request
             String method = he.getRequestMethod();
             String response = "";
-
+            int statusCode = 0;
             try {
                 switch (method){
                     case "GET": {
                         Map<String, String> endpoints = Utilities.getEndpoints();
                         response = makeResponse(endpoints);
+                        statusCode = HttpURLConnection.HTTP_OK;
                         break;
                     }
                     default:{
                         throw new ExceptionHandler(EXCEPTION_METHODNOTSUPPORTED, HttpURLConnection.HTTP_BAD_METHOD);
                     }
                 }
-                handleResponseHeader(he, null);
+                handleResponseHeader(he, null, statusCode);
             } catch (ExceptionHandler e){
                 response = makeResponse(e);
-                handleResponseHeader(he, e);
+                handleResponseHeader(he, e, statusCode);
             } finally {
                 // send response
                 OutputStream os = he.getResponseBody();
@@ -104,13 +107,14 @@ public class Server {
             String method = he.getRequestMethod();
             String response = "";
             Map<String, Object> parameters;
-
+            int statusCode = 0;
             try {
                 switch (method){
                     case "POST": {
                         Utilities.printLog("User: create");
                         parameters = extractBodyParameters(he);
                         dbHandler.createUser(parameters);
+                        statusCode = HttpURLConnection.HTTP_CREATED;
                         break;
                     }
                     case "DELETE": {
@@ -118,6 +122,7 @@ public class Server {
                         verifyToken(he);
                         parameters = extractBodyParameters(he);
                         dbHandler.deleteUserByEmail(parameters.get("email"));
+                        statusCode = HttpURLConnection.HTTP_OK;
                         break;
                     }
                     case "GET": {
@@ -126,6 +131,7 @@ public class Server {
                         parameters = extractURIParameters(he);
                         Object obj = dbHandler.getUserByEmail(parameters.get("email"));
                         response = makeResponse(obj);
+                        statusCode = HttpURLConnection.HTTP_OK;
                         break;
                     }
                     case "PATCH": {
@@ -134,17 +140,18 @@ public class Server {
                         String userId = claims.getSubject();
                         parameters = extractBodyParameters(he);
                         dbHandler.updateUserWithParams(userId, parameters);
+                        statusCode = HttpURLConnection.HTTP_OK;
                         break;
                     }
                     default:{
                         throw new ExceptionHandler(EXCEPTION_METHODNOTSUPPORTED, HttpURLConnection.HTTP_BAD_METHOD);
                     }
                 }
-                handleResponseHeader(he, null);
+                handleResponseHeader(he, null, statusCode);
                 Utilities.printLog("User: success");
             } catch (ExceptionHandler e){
                 response = makeResponse(e);
-                handleResponseHeader(he, e);
+                handleResponseHeader(he, e, statusCode);
                 Utilities.printLog("User: error");
             } finally {
                 // send response
@@ -162,6 +169,7 @@ public class Server {
             String method = he.getRequestMethod();
             String response = "";
             Map<String, Object> parameters;
+            int statusCode = 0;
             try {
                 if (method.equals("POST")) {
                     Utilities.printLog("Login: wants to login");
@@ -169,15 +177,16 @@ public class Server {
                     String jwt = dbHandler.authenticateUser(parameters);
                     Headers headers = he.getResponseHeaders();
                     headers.set("JWT", jwt);
+                    statusCode = HttpURLConnection.HTTP_OK;
                 } else {
                     throw new ExceptionHandler(EXCEPTION_METHODNOTSUPPORTED, HttpURLConnection.HTTP_BAD_METHOD);
                 }
                 Utilities.printLog("Login: success");
-                handleResponseHeader(he, null);
+                handleResponseHeader(he, null, statusCode);
             }catch (ExceptionHandler e){
                 Utilities.printLog("Login: error");
                 response = makeResponse(e);
-                handleResponseHeader(he, e);
+                handleResponseHeader(he, e, statusCode);
             }finally {
                 OutputStream os = he.getResponseBody();
                 os.write(response.getBytes());
@@ -192,22 +201,24 @@ public class Server {
             String method = he.getRequestMethod();
             String response = "";
             Map<String, Object> parameters;
-
+            int statusCode = 0;
             try {
                 if (method.equals("GET")) {
                     byte[] encoded = Files.readAllBytes(Paths.get("C:\\Users\\Filip\\Desktop\\serverOutput.txt"));
                     if (null == encoded){
                         Utilities.printLog("Logs: cannot find log file");
+                        statusCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
                     }else {
                         response = new String(encoded, StandardCharsets.UTF_8);
+                        statusCode = HttpURLConnection.HTTP_OK;
                     }
                 }else {
                     throw new ExceptionHandler(EXCEPTION_METHODNOTSUPPORTED, HttpURLConnection.HTTP_BAD_METHOD);
                 }
-                handleResponseHeader(he, null);
+                handleResponseHeader(he, null, statusCode);
             }catch (ExceptionHandler e){
                 response = makeResponse(e);
-                handleResponseHeader(he, e);
+                handleResponseHeader(he, e, statusCode);
             }finally {
                 OutputStream os = he.getResponseBody();
                 os.write(response.getBytes());
@@ -222,22 +233,24 @@ public class Server {
             String method = he.getRequestMethod();
             String response = "";
             Map<String, Object> parameters;
-
+            int statusCode = 0;
             try {
                 if (method.equals("GET")) {
                     byte[] encoded = Files.readAllBytes(Paths.get("C:\\Users\\Filip\\Desktop\\serverDoc.txt"));
                     if (null == encoded){
                         Utilities.printLog("Docs: cannot find doc file");
+                        statusCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
                     }else {
                         response = new String(encoded, StandardCharsets.UTF_8);
+                        statusCode = HttpURLConnection.HTTP_OK;
                     }
                 }else {
                     throw new ExceptionHandler(EXCEPTION_METHODNOTSUPPORTED, HttpURLConnection.HTTP_BAD_METHOD);
                 }
-                handleResponseHeader(he, null);
+                handleResponseHeader(he, null, statusCode);
             }catch (ExceptionHandler e){
                 response = makeResponse(e);
-                handleResponseHeader(he, e);
+                handleResponseHeader(he, e, statusCode);
             }finally {
                 OutputStream os = he.getResponseBody();
                 os.write(response.getBytes());
@@ -253,7 +266,7 @@ public class Server {
             String method = he.getRequestMethod();
             String response = "";
             Map<String, Object> parameters;
-
+            int statusCode = 0;
             try {
                 switch (method){
                     case "POST": {
@@ -265,6 +278,7 @@ public class Server {
                         Map<String, String> jsonResponse = new HashMap<>();
                         jsonResponse.put("id", lecture.guid);
                         response = makeResponse(jsonResponse);
+                        statusCode = HttpURLConnection.HTTP_CREATED;
                         break;
                     }
                     case "DELETE": {
@@ -273,6 +287,7 @@ public class Server {
                         String userId = claims.getSubject();
                         parameters = extractBodyParameters(he);
                         dbHandler.deleteLecture(parameters.get("id"), userId);
+                        statusCode = HttpURLConnection.HTTP_OK;
                         break;
                     }
                     case "GET": {
@@ -281,6 +296,7 @@ public class Server {
                         parameters = extractURIParameters(he);
                         Lecture lecture = dbHandler.getLecture(parameters.get("id"));
                         response = makeResponse(lecture);
+                        statusCode = HttpURLConnection.HTTP_OK;
                         break;
                     }
                     case "PATCH": {
@@ -288,18 +304,19 @@ public class Server {
                         verifyToken(he);
                         parameters = extractBodyParameters(he);
                         dbHandler.updateLectureWithParams(parameters);
+                        statusCode = HttpURLConnection.HTTP_OK;
                         break;
                     }
                     default:{
                         throw new ExceptionHandler(EXCEPTION_METHODNOTSUPPORTED, HttpURLConnection.HTTP_BAD_METHOD);
                     }
                 }
-                handleResponseHeader(he, null);
+                handleResponseHeader(he, null, statusCode);
                 Utilities.printLog("Lecture: success");
             } catch (ExceptionHandler e){
                 Utilities.printLog("Lecture: error");
                 response = makeResponse(e);
-                handleResponseHeader(he, e);
+                handleResponseHeader(he, e, statusCode);
             } finally {
                 // send response
                 OutputStream os = he.getResponseBody();
@@ -316,7 +333,7 @@ public class Server {
             String method = he.getRequestMethod();
             String response = "";
             Map<String, Object> parameters;
-
+            int statusCode = 0;
             try {
                 switch (method){
                     case "POST": {
@@ -327,6 +344,7 @@ public class Server {
                         Map<String, String> jsonResponse = new HashMap<>();
                         jsonResponse.put("id", questionGuid);
                         response = makeResponse(jsonResponse);
+                        statusCode = HttpURLConnection.HTTP_CREATED;
                         break;
                     }
                     case "DELETE": {
@@ -334,6 +352,7 @@ public class Server {
                         verifyToken(he);
                         parameters = extractBodyParameters(he);
                         dbHandler.deleteQuestion(parameters.get("id"), parameters.get("lectureId"));
+                        statusCode = HttpURLConnection.HTTP_OK;
                         break;
                     }
                     case "GET": {
@@ -342,6 +361,7 @@ public class Server {
                         parameters = extractURIParameters(he);
                         Question question = dbHandler.getQuestion(parameters.get("id"));
                         response = makeResponse(question);
+                        statusCode = HttpURLConnection.HTTP_OK;
                         break;
                     }
                     case "PATCH": {
@@ -349,18 +369,19 @@ public class Server {
                         verifyToken(he);
                         parameters = extractBodyParameters(he);
                         dbHandler.updateQuestionWithParams(parameters);
+                        statusCode = HttpURLConnection.HTTP_OK;
                         break;
                     }
                     default:{
                         throw new ExceptionHandler(EXCEPTION_METHODNOTSUPPORTED, HttpURLConnection.HTTP_BAD_METHOD);
                     }
                 }
-                handleResponseHeader(he, null);
+                handleResponseHeader(he, null, statusCode);
                 Utilities.printLog("Question: success");
             } catch (ExceptionHandler e){
                 Utilities.printLog("Question: error");
                 response = makeResponse(e);
-                handleResponseHeader(he, e);
+                handleResponseHeader(he, e, statusCode);
             } finally {
                 // send response
                 OutputStream os = he.getResponseBody();
@@ -381,11 +402,11 @@ public class Server {
 
     //region Supporting methods
 
-    private void handleResponseHeader(HttpExchange he, ExceptionHandler ex) throws IOException {
+    private void handleResponseHeader(HttpExchange he, ExceptionHandler ex, int statusCode) throws IOException {
         if (ex == null){
             Headers responseHeaders = he.getResponseHeaders();
             responseHeaders.set("Content-Type", "application/json");
-            he.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+            he.sendResponseHeaders(statusCode, 0);
         }else{
             Headers responseHeaders = he.getResponseHeaders();
             responseHeaders.set("Content-Type", "application/json");

@@ -33,14 +33,14 @@ import static filip.test.StaticKeys.*;
 public class Server {
 
     private int port = 8000;
-    private DBHandler dbHandler;
+    static DBHandler dbHandler;
 
     public static void main(String[] args) {
         Server server = new Server();
 
         try {
             server.serverInit();
-            server.dbHandler = new DBHandler();
+            dbHandler = new DBHandler();
             SocketHandler socketServer = SocketHandler.INSTANCE;
             socketServer.start();
         } catch (IOException | ClassNotFoundException | SQLException e) {
@@ -428,7 +428,7 @@ public class Server {
                 InputStreamReader isr = new InputStreamReader(he.getRequestBody(), "utf-8");
                 BufferedReader br = new BufferedReader(isr);
                 String body = br.readLine();
-                parameters = readJsonApplication(body);
+                parameters = Utilities.readJsonApplication(body);
                 break;
             }
             case "application/x-www-form-urlencoded":
@@ -451,11 +451,6 @@ public class Server {
         parseQuery(query, parameters);
 
         return parameters;
-    }
-
-    private Map<String, Object> readJsonApplication(String body){
-        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
-        return gson.fromJson(body, Map.class);
     }
 
     private void parseQuery(String query, Map<String,
@@ -504,12 +499,10 @@ public class Server {
             ExceptionHandler eh = (ExceptionHandler)messageObject;
             Map<String, String> responseMap = new HashMap<>();
             responseMap.put("message", eh.message);
-            Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
-            response = gson.toJson(responseMap);
+            response = Utilities.mapToJson(responseMap);
             Utilities.printLog("Error: " + eh.message);
         }else{
-            Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
-            response = gson.toJson(messageObject);
+            response = Utilities.mapToJson(messageObject);
         }
 
         return response;

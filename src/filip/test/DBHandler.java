@@ -180,6 +180,23 @@ public class DBHandler {
         }
     }
 
+    Boolean checkIfUserExists(String guid) throws ExceptionHandler {
+        try {
+            if (guid != null) {
+                PreparedStatement ps = conn.prepareStatement("select exists(select 1 from users where guid = ?) AS \"exists\"");
+                ps.setString(1, guid);
+                ResultSet rs = ps.executeQuery();
+                List<HashMap<String,Object>> list = Utilities.convertResultSetToList(rs);
+                HashMap<String,Object> result = list.get(0);
+                return (Boolean) result.get("exists");
+            }else {
+                throw new ExceptionHandler("bad guid");
+            }
+        }catch (SQLException e){
+            throw new ExceptionHandler(e.toString());
+        }
+    }
+
     public void updateUserWithParams(String userId, Map<String, Object> params) throws ExceptionHandler {
 
         try {

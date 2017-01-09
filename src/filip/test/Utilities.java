@@ -11,7 +11,9 @@ import java.security.SecureRandom;
 import java.math.BigInteger;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import io.jsonwebtoken.Claims;
@@ -26,8 +28,8 @@ import static filip.test.StaticKeys.*;
 /**
  * Created by Filip on 8/8/2016.
  */
-public class Utilities {
-    public static String getFormattedResult(ResultSet rs) {
+class Utilities {
+    static String getFormattedResult(ResultSet rs) {
         List<JsonObject> resList = new ArrayList<JsonObject>();
         try {
             // get column names
@@ -67,7 +69,7 @@ public class Utilities {
         return new Gson().toJson(forConvert);
     }
 
-    public static String cryptWithMD5(String pass) throws NoSuchAlgorithmException {
+    static String cryptWithMD5(String pass) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("MD5");
         byte[] passBytes = pass.getBytes();
         md.reset();
@@ -79,7 +81,7 @@ public class Utilities {
         return sb.toString();
     }
 
-    public static Claims verifyToken(HttpExchange he) throws ExceptionHandler {
+    static Claims verifyToken(HttpExchange he) throws ExceptionHandler {
 
         Headers headers = he.getRequestHeaders();
 
@@ -92,7 +94,7 @@ public class Utilities {
         }
     }
 
-    public static Claims verifyToken(String jwt) throws ExceptionHandler {
+    static Claims verifyToken(String jwt) throws ExceptionHandler {
         try {
             byte[] key = JWT_SECRET.getBytes();
             return Jwts.parser().setSigningKey(key).parseClaimsJws(jwt).getBody();
@@ -101,7 +103,7 @@ public class Utilities {
         }
     }
 
-    public static Map<String, String> getEndpoints() {
+    static Map<String, String> getEndpoints() {
         Map<java.lang.String, java.lang.String> endpoints = new HashMap<>();
 
         String host = "http://89.216.252.17";
@@ -123,7 +125,7 @@ public class Utilities {
         return endpoints;
     }
 
-    public static boolean isValidEmailAddress(String email) {
+    static boolean isValidEmailAddress(String email) {
         boolean result = true;
         try {
             InternetAddress emailAddr = new InternetAddress(email);
@@ -134,7 +136,7 @@ public class Utilities {
         return result;
     }
 
-    public static List<HashMap<String,Object>> convertResultSetToList(ResultSet rs) throws SQLException {
+    static List<HashMap<String,Object>> convertResultSetToList(ResultSet rs) throws SQLException {
         ResultSetMetaData md = rs.getMetaData();
         int columns = md.getColumnCount();
         List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
@@ -149,7 +151,7 @@ public class Utilities {
         return list;
     }
 
-    public static void printLog(String message){
+    static void printLog(String message){
         Date dt = new Date();
         DateTime currentDate = new DateTime(dt);
 
@@ -176,8 +178,22 @@ public class Utilities {
         System.out.println(stringBuilder.toString());
     }
 
-    public static String generateLectureString(){
+     static String generateLectureString(){
         SecureRandom random = new SecureRandom();
         return new BigInteger(30, random).toString(32);
+    }
+
+    static Map<String, Object> readJsonApplication(String body){
+        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
+        try {
+            return gson.fromJson(body, Map.class);
+        }catch (JsonSyntaxException e){
+            return null;
+        }
+    }
+
+    static String mapToJson(Object object){
+        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
+        return gson.toJson(object);
     }
 }

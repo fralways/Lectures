@@ -190,10 +190,10 @@ public class DBHandler {
                 HashMap<String,Object> result = list.get(0);
                 return (Boolean) result.get("exists");
             }else {
-                throw new ExceptionHandler("bad guid");
+                throw new ExceptionHandler("bad guid", HttpURLConnection.HTTP_BAD_REQUEST);
             }
         }catch (SQLException e){
-            throw new ExceptionHandler(e.toString());
+            throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
         }
     }
 
@@ -209,6 +209,65 @@ public class DBHandler {
                 ps.executeUpdate();
             } else {
                 throw new ExceptionHandler("bad params", HttpURLConnection.HTTP_BAD_REQUEST);
+            }
+        }catch (SQLException e){
+            throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
+    }
+
+    void updateUserWithRunningLecture(String userId, String lectureId, boolean delete) throws ExceptionHandler{
+        try {
+            if (userId != null) {
+                if (delete) {
+                    PreparedStatement ps = conn.prepareStatement("UPDATE users SET runninglecture = null WHERE guid = ? and runninglecture = ?");
+                    ps.setString(1, userId);
+                    ps.setString(2, lectureId);
+                    ps.executeUpdate();
+                    ps.close();
+                }else {
+                    PreparedStatement ps = conn.prepareStatement("UPDATE users SET runninglecture = ? WHERE guid = ?");
+                    ps.setString(1, lectureId);
+                    ps.setString(2, userId);
+                    ps.executeUpdate();
+                    ps.close();
+                }
+            }else {
+                throw new ExceptionHandler("bad user", HttpURLConnection.HTTP_BAD_REQUEST);
+            }
+        }catch (SQLException e){
+            throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
+    }
+
+    Boolean checkIfUserHasRunningLecture(String userId) throws ExceptionHandler {
+        try {
+            if (userId != null) {
+                PreparedStatement ps = conn.prepareStatement("select exists(select 1 from users where runninglecture is not null and guid = ?) AS \"exists\"");
+                ps.setString(1, userId);
+                ResultSet rs = ps.executeQuery();
+                List<HashMap<String,Object>> list = Utilities.convertResultSetToList(rs);
+                HashMap<String,Object> result = list.get(0);
+                return (Boolean) result.get("exists");
+            }else {
+                throw new ExceptionHandler("bad guid", HttpURLConnection.HTTP_BAD_REQUEST);
+            }
+        }catch (SQLException e){
+            throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
+    }
+
+    Boolean checkIfUserIsOwnerOfLecture(String userId, String lectureId) throws ExceptionHandler {
+        try {
+            if (userId != null && lectureId != null) {
+                PreparedStatement ps = conn.prepareStatement("select exists(select 1 from lecture where owner = ? and guid = ?) AS \"exists\"");
+                ps.setString(1, userId);
+                ps.setString(2, lectureId);
+                ResultSet rs = ps.executeQuery();
+                List<HashMap<String,Object>> list = Utilities.convertResultSetToList(rs);
+                HashMap<String,Object> result = list.get(0);
+                return (Boolean) result.get("exists");
+            }else {
+                throw new ExceptionHandler("bad user or lecture id", HttpURLConnection.HTTP_BAD_REQUEST);
             }
         }catch (SQLException e){
             throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
@@ -303,11 +362,12 @@ public class DBHandler {
                 exists = (Boolean) result.get("exists");
             }while (exists);
 
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO lecture(title, description, guid, unique_id) VALUES (?, ?, ?, ?)");
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO lecture(title, description, guid, unique_id, owner) VALUES (?, ?, ?, ?, ?)");
             ps.setString(1, lecture.title);
             ps.setString(2, lecture.description);
             ps.setString(3, lecture.guid);
             ps.setString(4, uniqueid);
+            ps.setString(5, userId);
             ps.executeUpdate();
             ps.close();
 

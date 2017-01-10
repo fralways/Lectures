@@ -94,7 +94,7 @@ public class Test {
                 case "20": {
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
-                    params.put("id", "7aba4784-ae26-4424-8b43-5b89369bb0b5");
+                    params.put("id", "ed93aa47-c582-4c1b-9e85-407c99b940c7");
                     params.put("password", "nekipass");
                     message.put("method", "startLecture");
                     message.put("params", params);
@@ -106,7 +106,7 @@ public class Test {
                     //start without password
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
-                    params.put("id", "7aba4784-ae26-4424-8b43-5b89369bb0b5");
+                    params.put("id", "ed93aa47-c582-4c1b-9e85-407c99b940c7");
                     message.put("method", "startLecture");
                     message.put("params", params);
                     String json = Utilities.mapToJson(message);
@@ -114,6 +114,17 @@ public class Test {
                     break;
                 }
                 case "22": {
+                    //start without password another one
+                    Map<String, Object> message = new HashMap<>();
+                    Map<String, String> params = new HashMap<>();
+                    params.put("id", "c0c67630-ddd0-4f04-a860-c397ae34146e");
+                    message.put("method", "startLecture");
+                    message.put("params", params);
+                    String json = Utilities.mapToJson(message);
+                    out.println(json);
+                    break;
+                }
+                case "23": {
                     //bad method
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
@@ -124,7 +135,7 @@ public class Test {
                     out.println(json);
                     break;
                 }
-                case "23": {
+                case "24": {
                     //bad lecture id
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
@@ -136,7 +147,7 @@ public class Test {
                     out.println(json);
                     break;
                 }
-                case "24": {
+                case "25": {
                     //bad params (no params)
                     Map<String, Object> message = new HashMap<>();
                     message.put("method", "startLecture");
@@ -147,7 +158,18 @@ public class Test {
                 case "30": {
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
-                    params.put("id", "7aba4784-ae26-4424-8b43-5b89369bb0b5");
+                    params.put("id", "ed93aa47-c582-4c1b-9e85-407c99b940c7");
+                    message.put("method", "stopLecture");
+                    message.put("params", params);
+                    String json = Utilities.mapToJson(message);
+                    out.println(json);
+                    break;
+                }
+                case "31": {
+                    //stop other one
+                    Map<String, Object> message = new HashMap<>();
+                    Map<String, String> params = new HashMap<>();
+                    params.put("id", "c0c67630-ddd0-4f04-a860-c397ae34146e");
                     message.put("method", "stopLecture");
                     message.put("params", params);
                     String json = Utilities.mapToJson(message);
@@ -158,7 +180,7 @@ public class Test {
                     //listen without password
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
-                    params.put("id", "7aba4784-ae26-4424-8b43-5b89369bb0b5");
+                    params.put("id", "ed93aa47-c582-4c1b-9e85-407c99b940c7");
                     message.put("method", "listenLecture");
                     message.put("params", params);
                     String json = Utilities.mapToJson(message);
@@ -169,7 +191,7 @@ public class Test {
                     //listen with password
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
-                    params.put("id", "7aba4784-ae26-4424-8b43-5b89369bb0b5");
+                    params.put("id", "ed93aa47-c582-4c1b-9e85-407c99b940c7");
                     params.put("password", "nekipass");
                     message.put("method", "listenLecture");
                     message.put("params", params);
@@ -181,7 +203,7 @@ public class Test {
                     //bad id
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
-                    params.put("id", "7aba4784-ae26-4424-8b43-5b89369bb05");
+                    params.put("id", "ed93aa4");
                     params.put("password", "nekipass");
                     message.put("method", "listenLecture");
                     message.put("params", params);

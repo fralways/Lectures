@@ -6,7 +6,7 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public enum SocketHandler {
     INSTANCE;
@@ -16,8 +16,8 @@ public enum SocketHandler {
      * creating ClientSocketHandler threads for each client connected
      */
     private ServerSocket serverSocket;
-    private Map<String, ClientSocketHandler> clients;
-    private Map<String, Object> runningLectures;
+    private ConcurrentHashMap<String, ClientSocketHandler> clients;
+    private ConcurrentHashMap<String, Object> runningLectures;
 
     int port = 8210;
 
@@ -29,8 +29,8 @@ public enum SocketHandler {
     SocketHandler(){
         try {
             serverSocket = new ServerSocket(port);
-            clients = new HashMap<>();
-            runningLectures = new HashMap<>();
+            clients = new ConcurrentHashMap<>();
+            runningLectures = new ConcurrentHashMap<>();;
             System.out.println("Socket server started at " + port);
         } catch (IOException e) {
             e.printStackTrace();
@@ -53,7 +53,6 @@ public enum SocketHandler {
     }
 
     void addClient(ClientSocketHandler client, String guid) throws ExceptionHandler {
-
         if (clients.containsKey(guid)) {
             throw new ExceptionHandler("user already logged in");
         } else {
@@ -90,6 +89,10 @@ public enum SocketHandler {
             String id = (String) params.get("id");
             if (runningLectures.containsKey(id)){
                 throw new ExceptionHandler("lecture already started");
+            }else if (Server.dbHandler.checkIfUserHasRunningLecture(guid)){
+                throw new ExceptionHandler("user already has one lecture running");
+            }else if (!Server.dbHandler.checkIfUserIsOwnerOfLecture(guid, id)){
+                throw new ExceptionHandler("user is not owner of this lecture");
             }else {
                 String password = (String) params.get("password");
                 if (id != null){
@@ -101,8 +104,11 @@ public enum SocketHandler {
                         lectureEntry.put("password", password);
                     }
                     lectureEntry.put("listeners", users);
+
+                    Server.dbHandler.updateUserWithRunningLecture(guid, lecture.guid, false);
+
                     runningLectures.put(lecture.guid, lectureEntry);
-                    Utilities.printLog("SocketHandler: lecture started with id:" + lecture.guid);
+                    Utilities.printLog("SocketHandler: lecture started with id: " + lecture.guid);
                 }else {
                     throw new ExceptionHandler("bad params");
                 }
@@ -114,23 +120,32 @@ public enum SocketHandler {
         }
     }
 
-    void stopLecture(LinkedTreeMap params) throws ExceptionHandler {
+    void stopLecture(LinkedTreeMap params, String callerGuid) throws ExceptionHandler {
         try {
             String id = (String) params.get("id");
             if (runningLectures.containsKey(id)){
                 HashMap<String, Object> lectureEntry = (HashMap<String, Object>)runningLectures.get(id);
-                ArrayList<String> users = ( ArrayList<String>)lectureEntry.get("listeners");
-                for (int i=0; i<users.size(); i++){
-                    String listener = users.get(i);
-                    ClientSocketHandler listenerSocket = clients.get(listener);
-                    listenerSocket.pw.println(makeClientMessage(SocketMethods.STOPPEDLECTURE,"lecture stopped"));
-                    listenerSocket.listeningToTheLecture = null;
+                String ownerGuid = (String) lectureEntry.get("owner");
+                if (ownerGuid.equals(callerGuid)) {
+                    ArrayList<String> users = (ArrayList<String>) lectureEntry.get("listeners");
+                    for (int i = 0; i < users.size(); i++) {
+                        String listener = users.get(i);
+                        ClientSocketHandler listenerSocket = clients.get(listener);
+                        listenerSocket.pw.println(makeClientMessage(SocketMethods.STOPPEDLECTURE, "lecture stopped"));
+                        listenerSocket.listeningToTheLecture = null;
+                    }
+                    runningLectures.remove(id);
+
+                    Utilities.printLog("SocketHandler: lecture stopped with id: " + id);
+                }else {
+                    throw new ExceptionHandler("you are not allowed to stop this lecture");
                 }
-                runningLectures.remove(id);
-                Utilities.printLog("SocketHandler: lecture stopped with id: " + id);
             }else {
-                throw new ExceptionHandler("lecture isn't started or bad lecture id");
+                //do nothing
+//                throw new ExceptionHandler("lecture isn't started or bad lecture id");
             }
+            Server.dbHandler.updateUserWithRunningLecture(callerGuid, id, true);
+
         }catch (ExceptionHandler e){
             throw e;
         } catch (Exception e){

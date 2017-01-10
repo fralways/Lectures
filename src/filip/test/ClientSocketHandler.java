@@ -76,7 +76,7 @@ public class ClientSocketHandler implements Runnable{
                         case "stopLecture":{
                             if (message.get("params") instanceof LinkedTreeMap) {
                                 LinkedTreeMap params = (LinkedTreeMap) message.get("params");
-                                SocketHandler.INSTANCE.stopLecture(params);
+                                SocketHandler.INSTANCE.stopLecture(params, guid);
                                 pw.println(SocketHandler.makeClientResponse(true, "lecture stopped"));
                             }else {
                                 pw.println(SocketHandler.makeClientResponse(false, "bad params"));

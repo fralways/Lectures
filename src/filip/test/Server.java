@@ -31,7 +31,6 @@ import static filip.test.StaticKeys.*;
         import static filip.test.Utilities.*;
 
 public class Server {
-
     private int port = 8000;
     static DBHandler dbHandler;
 

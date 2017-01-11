@@ -94,4 +94,8 @@ public class Question {
             throw new ExceptionHandler("Question: bad params", HttpURLConnection.HTTP_BAD_REQUEST);
         }
     }
+
+    String questionToJson(){
+        return Utilities.mapToJson(this);
+    }
 }

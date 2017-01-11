@@ -23,7 +23,7 @@ public class DBHandler {
 
     private final Connection conn;
 
-    public DBHandler() throws ClassNotFoundException, SQLException {
+    DBHandler() throws ClassNotFoundException, SQLException {
         Class.forName("org.postgresql.Driver");
         String url = "jdbc:postgresql://localhost:5432/postgres";
         Properties props = new Properties();
@@ -33,6 +33,22 @@ public class DBHandler {
         props.setProperty("tcpKeepAlive", "true");
         props.put("autoReconnect", "true");
         conn = DriverManager.getConnection(url, props);
+
+        cleanupDB();
+    }
+
+    private void cleanupDB(){
+        Utilities.printLog("DB cleanup started");
+        Statement st = null;
+        try {
+            PreparedStatement ps = conn.prepareStatement("update users set runninglecture = null");
+            ps.executeUpdate();
+            ps.close();
+            Utilities.printLog("DB cleanup end");
+        } catch (SQLException e) {
+            Utilities.printLog(e.toString());
+        }
+
     }
 
     public void getAllFromDB() {
@@ -215,18 +231,18 @@ public class DBHandler {
         }
     }
 
-    void updateUserWithRunningLecture(String userId, String lectureId, boolean delete) throws ExceptionHandler{
+    void updateUserWithRunningLecture(String userId, String uniqueId, boolean delete) throws ExceptionHandler{
         try {
             if (userId != null) {
                 if (delete) {
                     PreparedStatement ps = conn.prepareStatement("UPDATE users SET runninglecture = null WHERE guid = ? and runninglecture = ?");
                     ps.setString(1, userId);
-                    ps.setString(2, lectureId);
+                    ps.setString(2, uniqueId);
                     ps.executeUpdate();
                     ps.close();
                 }else {
                     PreparedStatement ps = conn.prepareStatement("UPDATE users SET runninglecture = ? WHERE guid = ?");
-                    ps.setString(1, lectureId);
+                    ps.setString(1, uniqueId);
                     ps.setString(2, userId);
                     ps.executeUpdate();
                     ps.close();
@@ -256,12 +272,12 @@ public class DBHandler {
         }
     }
 
-    Boolean checkIfUserIsOwnerOfLecture(String userId, String lectureId) throws ExceptionHandler {
+    Boolean checkIfUserIsOwnerOfLecture(String userId, String uniqueId) throws ExceptionHandler {
         try {
-            if (userId != null && lectureId != null) {
-                PreparedStatement ps = conn.prepareStatement("select exists(select 1 from lecture where owner = ? and guid = ?) AS \"exists\"");
+            if (userId != null && uniqueId != null) {
+                PreparedStatement ps = conn.prepareStatement("select exists(select 1 from lecture where owner = ? and unique_id = ?) AS \"exists\"");
                 ps.setString(1, userId);
-                ps.setString(2, lectureId);
+                ps.setString(2, uniqueId);
                 ResultSet rs = ps.executeQuery();
                 List<HashMap<String,Object>> list = Utilities.convertResultSetToList(rs);
                 HashMap<String,Object> result = list.get(0);
@@ -484,6 +500,28 @@ public class DBHandler {
             throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
         }
     }
+
+    public Lecture getLectureFromUniqueId(Object uniqueid) throws ExceptionHandler {
+        try {
+            if (String.class.isInstance(uniqueid)) {
+                PreparedStatement ps = conn.prepareStatement("SELECT * FROM lecture WHERE unique_id = ?");
+                ps.setString(1, (String) uniqueid);
+                ResultSet rs = ps.executeQuery();
+
+                Lecture lecture = new Lecture(rs);
+                List<HashMap<String, Object>> questions = getLectureQuestions(lecture);
+                lecture.updateQuestionsWithPulledValues(questions);
+                return lecture;
+            } else {
+                throw new ExceptionHandler("bad params", HttpURLConnection.HTTP_BAD_REQUEST);
+            }
+        }catch (ExceptionHandler e){
+            throw e;
+        }catch (SQLException e){
+            throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
+    }
+
 
     public void updateLectureWithParams(Map<String, Object> params) throws ExceptionHandler {
         String op = (String) params.get("op");

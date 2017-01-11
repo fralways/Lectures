@@ -107,6 +107,56 @@ public class ClientSocketHandler implements Runnable{
                             }
                             break;
                         }
+                        case "sendQuestionToListeners":{
+                            if (message.get("params") instanceof LinkedTreeMap) {
+                                LinkedTreeMap params = (LinkedTreeMap) message.get("params");
+                                SocketHandler.INSTANCE.sendQuestionToListeners(params, guid);
+                                pw.println(SocketHandler.makeClientResponse(true, "sent question to the listeners"));
+                            }else {
+                                pw.println(SocketHandler.makeClientResponse(false, "bad params"));
+                            }
+                            break;
+                        }
+                        case "sendQuestionToLecturer":{
+                            if (message.get("params") instanceof LinkedTreeMap) {
+                                LinkedTreeMap params = (LinkedTreeMap) message.get("params");
+                                SocketHandler.INSTANCE.sendQuestionToLecturer(params, listeningToTheLecture);
+                                pw.println(SocketHandler.makeClientResponse(true, "sent question to the lecturer"));
+                            }else {
+                                pw.println(SocketHandler.makeClientResponse(false, "bad params"));
+                            }
+                            break;
+                        }
+                        case "sendListenerQuestionToListeners":{
+                            if (message.get("params") instanceof LinkedTreeMap) {
+                                LinkedTreeMap params = (LinkedTreeMap) message.get("params");
+                                SocketHandler.INSTANCE.sendListenerQuestionToListeners(params, guid);
+                                pw.println(SocketHandler.makeClientResponse(true, "sent listener's question to the listeners"));
+                            }else {
+                                pw.println(SocketHandler.makeClientResponse(false, "bad params"));
+                            }
+                            break;
+                        }
+                        case "sendAnswerToQuestion":{
+                            if (message.get("params") instanceof LinkedTreeMap) {
+                                LinkedTreeMap params = (LinkedTreeMap) message.get("params");
+                                SocketHandler.INSTANCE.sendAnswerToQuestion(params);
+                                pw.println(SocketHandler.makeClientResponse(true, "sent answer"));
+                            }else {
+                                pw.println(SocketHandler.makeClientResponse(false, "bad params"));
+                            }
+                            break;
+                        }
+                        case "getAnswersToQuestion":{
+                            if (message.get("params") instanceof LinkedTreeMap) {
+                                LinkedTreeMap params = (LinkedTreeMap) message.get("params");
+                                int[] answers = SocketHandler.INSTANCE.getAnswersToQuestion(params);
+                                pw.println(SocketHandler.makeClientResponse(true, answers));
+                            }else {
+                                pw.println(SocketHandler.makeClientResponse(false, "bad params"));
+                            }
+                            break;
+                        }
                         case "close":
                             Utilities.printLog("ClientHandler: client disconnected with guid: " + guid);
                             SocketHandler.INSTANCE.closeClient(this);

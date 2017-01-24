@@ -675,7 +675,7 @@ public class DBHandler {
                         }
                         //now update fields
                         Set<String> allowedFields = new HashSet<>(
-                                Arrays.asList("question", "correctIndex", "duration", "answers"));
+                                Arrays.asList("question", "correctindex", "duration", "answers"));
                         String query = makePatchDBQuerry("question", allowedFields, parameters, path);
                         if (query != null) {
                             PreparedStatement ps = conn.prepareStatement(query);
@@ -741,7 +741,11 @@ public class DBHandler {
 
             statement.append(key);
             statement.append("='");
-            statement.append(value);
+            if (value instanceof Double){
+                statement.append(((Double) value).intValue());
+            }else {
+                statement.append(value);
+            }
             statement.append("'");
 
             hasChange = true;

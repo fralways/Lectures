@@ -4,16 +4,13 @@ package filip.test;
  * Created by Filip on 10/4/2016.
  */
 
-
-
-        import java.io.BufferedReader;
-        import java.io.IOException;
-        import java.io.InputStreamReader;
-        import java.io.PrintWriter;
-        import java.net.Socket;
-        import java.util.HashMap;
-        import java.util.Map;
-        import java.util.Objects;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Test {
 
@@ -22,7 +19,7 @@ public class Test {
     PrintWriter out;
     BufferedReader userInputBR;
 
-    final String host = "localhost";
+    final String host = "89.216.252.17";
     final int portNumber = 8210;
     boolean badCommand = false;
 
@@ -44,7 +41,7 @@ public class Test {
                     if (responseMessage == null){
                         break;
                     }
-                }while (responseMessage.contains("\"type\":\"message\"") && responseMessage.contains("\"method\":"));
+                }while (responseMessage.contains("\"type\":\"message\"") && responseMessage.contains("\"LOGIN\":"));
             }
 
             badCommand = false;
@@ -77,21 +74,10 @@ public class Test {
                     break;
                 }
                 case "11": {
-                    //bad guid
+                    //login as listener11
                     Map<String, Object> message = new HashMap<>();
                     message.put("method", "login");
-                    message.put("params", "83528b7a13aff88491a7ddb6d22");
-                    String json = Utilities.mapToJson(message);
-                    out.println(json);
-                    break;
-                }
-                case "12": {
-                    //bad params
-                    Map<String, Object> message = new HashMap<>();
-                    Map<String, String> params = new HashMap<>();
-                    params.put("id", "7aba4784-ae26-4424-8b43-5b89369bb0b5");
-                    message.put("method", "login");
-                    message.put("params", params);
+                    message.put("params", "LISTENER");
                     String json = Utilities.mapToJson(message);
                     out.println(json);
                     break;

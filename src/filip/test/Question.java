@@ -3,13 +3,11 @@ package filip.test;
 import org.postgresql.jdbc.PgArray;
 
 import java.net.HttpURLConnection;
+import java.net.InterfaceAddress;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Arrays;
+import java.util.*;
+
 import static filip.test.StaticKeys.*;
 
 /**
@@ -25,14 +23,14 @@ public class Question {
     Question(Map<String, Object> parameters, String guid) throws ExceptionHandler{
         checkIfCorrectEntry(parameters);
         String question = (String) parameters.get("question");
-        int correctIndex = Integer.parseInt((String)parameters.get("correctindex"));
-        int duration = Integer.parseInt((String)parameters.get("duration"));
+        Double correctIndex = (Double)parameters.get("correctindex");
+        Double duration = (Double)parameters.get("duration");
         ArrayList<String> answers = (ArrayList<String>)parameters.get("answers");
         this.guid = guid;
         this.question = question;
         this.answers = answers;
-        this.correctIndex = correctIndex;
-        this.duration = duration;
+        this.correctIndex = correctIndex.intValue();
+        this.duration = duration.intValue();
     }
 
     Question(ResultSet rs) throws ExceptionHandler{
@@ -67,26 +65,27 @@ public class Question {
 
     void checkIfCorrectEntry(Map<String, Object> parameters) throws ExceptionHandler {
         boolean badEntry = true;
-        if (String.class.isInstance(parameters.get("question")) && String.class.isInstance(parameters.get("duration")) &&
-                String.class.isInstance(parameters.get("correctindex")) && parameters.get("answers") != null){
+        if (parameters.get("question") instanceof String && parameters.get("duration") instanceof Double &&
+            parameters.get("correctindex") instanceof Double && parameters.get("answers") instanceof ArrayList){
+
             ArrayList<String> answers = (ArrayList<String>)parameters.get("answers");
+            Double correctIndex = (Double) parameters.get("correctindex");
 
-            int correctIndex = Integer.parseInt((String) parameters.get("correctindex"));
-            Integer.parseInt((String) parameters.get("duration")); //just a check if its parsable
-
+            //check answers type
             if (answers.size() > 0) {
-                badEntry = false;
-                for (int i = 0; i < answers.size(); i++) {
-                    String answer = answers.get(i);
-                    if (!String.class.isInstance(answer)) {
+                for (String answer : answers) {
+                    badEntry = false;
+                    if (!(answer instanceof String)) {
                         badEntry = true;
                         break;
                     }
                 }
-            }//if else, then badEntry already = true
+            }else {
+                throw new ExceptionHandler("Question: need to provide at least one answer");
+            }
 
             if (correctIndex > answers.size() - 1 || correctIndex < 0){
-                badEntry = true;
+                throw new ExceptionHandler("Question: bad index");
             }
         }
 

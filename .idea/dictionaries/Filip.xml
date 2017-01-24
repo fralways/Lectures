@@ -4,6 +4,7 @@
       <w>badmethod</w>
       <w>badparam</w>
       <w>badrequest</w>
+      <w>disconected</w>
       <w>guid</w>
       <w>notauthorized</w>
     </words>

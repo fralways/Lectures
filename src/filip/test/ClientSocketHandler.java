@@ -1,11 +1,11 @@
 package filip.test;
 
 import com.google.gson.internal.LinkedTreeMap;
-
 import java.io.*;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.Map;
+
+import static filip.test.StaticKeys.*;
 
 /**
  * Created by Filip on 10/4/2016.
@@ -19,6 +19,8 @@ public class ClientSocketHandler implements Runnable{
     OutputStream os;
     PrintWriter pw;
     String listeningToTheLecture;
+    Boolean isListener;
+    private static long listenerNumber = 0;
 
     ClientSocketHandler(Socket socket){
         this.socket = socket;
@@ -33,47 +35,51 @@ public class ClientSocketHandler implements Runnable{
 
     @Override
     public void run() {
-
-        pw.println(SocketHandler.makeClientMessage(SocketHandler.SocketMethods.MESSAGE, "What is your guid?"));
-
+        pw.println(SocketHandler.makeClientMessage(SocketHandler.SocketMethods.LOGIN, "What is your guid?"));
         while (true) {
             try {
                 String clientMessage = br.readLine();
-
                 Map<String, Object> message;
                 try {
                     message = Utilities.readJsonApplication(clientMessage);
                     checkMessage(message);
                 }
                 catch (ExceptionHandler e){
-                    Utilities.printLog("ClientSocket: message not in good format: "+ clientMessage);
+                    Utilities.printLog("ClientHandler: user not logged in or message not in good format: "+ clientMessage);
                     pw.println(SocketHandler.makeClientResponse(false, e.message));
+                    if (clientMessage == null){
+                        Utilities.printLog("ClientHandler: client sent message = null - disconnected");
+                        Utilities.printLog("ClientHandler: client disconnected with guid: " + guid);
+                        SocketHandler.INSTANCE.closeClient(this);
+                        break;
+                    }
                     continue;
                 }
 
                 String method = (String) message.get("method");
                 try {
                     switch (method){
-                        case "login":
+                        case SOCKET_LOGIN:
                             if (message.get("params") instanceof String) {
                                 String guid = (String) message.get("params");
-                                SocketHandler.INSTANCE.addClient(this, guid);
-                                pw.println(SocketHandler.makeClientResponse(true, "Hello, " + guid + ". Select action"));
+                                SocketHandler.INSTANCE.loginClient(this, guid);
                                 this.guid = guid;
+                                pw.println(SocketHandler.makeClientResponse(true, "Hello, " + this.guid + ". Select action"));
+                                Utilities.printLog("ClientHandler: client logged in with guid " + this.guid);
                             }else {
                                 pw.println(SocketHandler.makeClientResponse(false, "bad params"));
                             }
                             break;
-                        case "startLecture":
+                        case SOCKET_STARTLECTURE:
                             if (message.get("params") instanceof LinkedTreeMap) {
                                 LinkedTreeMap params = (LinkedTreeMap) message.get("params");
                                 SocketHandler.INSTANCE.startLecture(params, guid);
                                 pw.println(SocketHandler.makeClientResponse(true, "lecture started"));
-                            }else {
+                            } else {
                                 pw.println(SocketHandler.makeClientResponse(false, "bad params"));
                             }
                             break;
-                        case "stopLecture":{
+                        case SOCKET_STOPLECTURE:{
                             if (message.get("params") instanceof LinkedTreeMap) {
                                 LinkedTreeMap params = (LinkedTreeMap) message.get("params");
                                 SocketHandler.INSTANCE.stopLecture(params, guid);
@@ -83,7 +89,7 @@ public class ClientSocketHandler implements Runnable{
                             }
                             break;
                         }
-                        case "listenLecture":{
+                        case SOCKET_LISTENLECTURE:{
                             if (message.get("params") instanceof LinkedTreeMap) {
                                 LinkedTreeMap params = (LinkedTreeMap) message.get("params");
                                 if (listeningToTheLecture != null){
@@ -97,7 +103,7 @@ public class ClientSocketHandler implements Runnable{
                             }
                             break;
                         }
-                        case "stopListenLecture":{
+                        case SOCKET_STOPLISTENLECTURE:{
                             if (listeningToTheLecture != null) {
                                 SocketHandler.INSTANCE.stopListenLecture(listeningToTheLecture, guid);
                                 listeningToTheLecture = null;
@@ -107,7 +113,7 @@ public class ClientSocketHandler implements Runnable{
                             }
                             break;
                         }
-                        case "sendQuestionToListeners":{
+                        case SOCKET_SENDQUESTIONTOLISTENERS:{
                             if (message.get("params") instanceof LinkedTreeMap) {
                                 LinkedTreeMap params = (LinkedTreeMap) message.get("params");
                                 SocketHandler.INSTANCE.sendQuestionToListeners(params, guid);
@@ -117,7 +123,7 @@ public class ClientSocketHandler implements Runnable{
                             }
                             break;
                         }
-                        case "sendQuestionToLecturer":{
+                        case SOCKET_SENDQUESTIONTOLECTURER:{
                             if (message.get("params") instanceof LinkedTreeMap) {
                                 LinkedTreeMap params = (LinkedTreeMap) message.get("params");
                                 SocketHandler.INSTANCE.sendQuestionToLecturer(params, listeningToTheLecture);
@@ -127,7 +133,7 @@ public class ClientSocketHandler implements Runnable{
                             }
                             break;
                         }
-                        case "sendListenerQuestionToListeners":{
+                        case SOCKET_SENDLISTENERQUESTIONTOLISTENERS:{
                             if (message.get("params") instanceof LinkedTreeMap) {
                                 LinkedTreeMap params = (LinkedTreeMap) message.get("params");
                                 SocketHandler.INSTANCE.sendListenerQuestionToListeners(params, guid);
@@ -137,7 +143,7 @@ public class ClientSocketHandler implements Runnable{
                             }
                             break;
                         }
-                        case "sendAnswerToQuestion":{
+                        case SOCKET_SENDANSWERTOQUESTION:{
                             if (message.get("params") instanceof LinkedTreeMap) {
                                 LinkedTreeMap params = (LinkedTreeMap) message.get("params");
                                 SocketHandler.INSTANCE.sendAnswerToQuestion(params);
@@ -147,7 +153,7 @@ public class ClientSocketHandler implements Runnable{
                             }
                             break;
                         }
-                        case "getAnswersToQuestion":{
+                        case SOCKET_GETANSWERSTOQUESTION:{
                             if (message.get("params") instanceof LinkedTreeMap) {
                                 LinkedTreeMap params = (LinkedTreeMap) message.get("params");
                                 int[] answers = SocketHandler.INSTANCE.getAnswersToQuestion(params);
@@ -157,9 +163,11 @@ public class ClientSocketHandler implements Runnable{
                             }
                             break;
                         }
-                        case "close":
+                        case SOCKET_CLOSE:
                             Utilities.printLog("ClientHandler: client disconnected with guid: " + guid);
                             SocketHandler.INSTANCE.closeClient(this);
+                            guid = null;
+                            listeningToTheLecture = null;
                             break;
                         default:
                             pw.println(SocketHandler.makeClientResponse(false, "method not found"));
@@ -170,8 +178,10 @@ public class ClientSocketHandler implements Runnable{
                 }
 
             } catch (IOException e) {
-                Utilities.printLog("ClientHandler: client disconnected with guid: " + guid);
-                SocketHandler.INSTANCE.closeClient(this);
+                if (guid != null) {
+                    Utilities.printLog("ClientHandler: client disconnected with guid: " + guid);
+                    SocketHandler.INSTANCE.closeClient(this);
+                }
                 break;
             }
         }
@@ -180,9 +190,23 @@ public class ClientSocketHandler implements Runnable{
     void checkMessage(Map<String, Object> message) throws ExceptionHandler {
         if (message != null && message.containsKey("method")) {
             if (guid != null){
-
+//                if (isListener) {
+//                    String method = (String) message.get("method");
+//                    switch (method) {
+//                        case SOCKET_LOGIN:
+//                        case SOCKET_CLOSE:
+//                        case SOCKET_LISTENLECTURE:
+//                        case SOCKET_SENDANSWERTOQUESTION:
+//                        case SOCKET_SENDQUESTIONTOLECTURER:
+//                        case SOCKET_STOPLISTENLECTURE:
+//                            //all good
+//                            break;
+//                        default:
+//                            throw new ExceptionHandler("you are not allowed to do this");
+//                    }
+//                }
             }else {
-                if (message.get("params") instanceof String && message.get("method").equals("login")) {
+                if (message.get("params") instanceof String && message.get("method").equals(SOCKET_LOGIN)) {
 
                 }else {
                     throw new ExceptionHandler("message not in good format or user not logged in");
@@ -193,5 +217,8 @@ public class ClientSocketHandler implements Runnable{
         }
     }
 
-
+    static long getNewListenerNumber(){
+        long num = listenerNumber++;
+        return num;
+    }
 }

@@ -4,28 +4,18 @@ package filip.test;
  */
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.URI;
-import java.net.URLDecoder;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.sql.*;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import io.jsonwebtoken.Claims;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import javax.rmi.CORBA.Util;
 
 import static filip.test.StaticKeys.*;
         import static filip.test.Utilities.*;
@@ -33,11 +23,11 @@ import static filip.test.StaticKeys.*;
 public class Server {
     private int port = 8000;
     static DBHandler dbHandler;
+    static HttpServer server;
 
     public static void main(String[] args) {
-        Server server = new Server();
-
         try {
+            Server server = new Server();
             server.serverInit();
             dbHandler = new DBHandler();
             SocketHandler socketServer = SocketHandler.INSTANCE;
@@ -47,9 +37,25 @@ public class Server {
         }
     }
 
+    static void start(){
+        SocketHandler.INSTANCE.initProperties();
+    }
+
+    static void restart(){
+        stop();
+        start();
+    }
+
+    static void stop(){
+//        dbHandler = null;
+        SocketHandler.INSTANCE.clean();
+//        server.stop(0);
+        Utilities.printLog("Server cleaned");
+    }
+
     private void serverInit() throws IOException {
         //server
-        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
+        server = HttpServer.create(new InetSocketAddress(port), 0);
         System.out.println("Server started at " + port);
         server.createContext("/user", new UserHandler());
         server.createContext("/login", new LoginHandler());
@@ -59,6 +65,7 @@ public class Server {
         server.createContext("/lecture", new LectureHandler());
         server.createContext("/question", new QuestionHandler());
         server.createContext("/docs", new DocsHandler());
+        server.createContext("/utilities", new UtilitiesHandler());
         server.setExecutor(null);
         server.start();
     }
@@ -258,6 +265,45 @@ public class Server {
         }
     }
 
+    private class UtilitiesHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange he) throws IOException {
+            String method = he.getRequestMethod();
+            String response = "";
+            Map<String, Object> parameters;
+            int statusCode = 0;
+            try {
+                if (method.equals("GET")) {
+                    parameters = extractURIParameters(he);
+                    if (parameters.get("util") != null){
+                        String util = (String)parameters.get("util");
+                        switch (util){
+                            case "restart":
+                                Utilities.printLog("Utilities: restart");
+                                Utilities.restartServer();
+                                statusCode = HttpURLConnection.HTTP_OK;
+                                break;
+                            default:
+                                throw new ExceptionHandler("util method not supported", HttpURLConnection.HTTP_BAD_METHOD);
+                        }
+                    }else {
+                        throw new ExceptionHandler("parameter 'util' doesn't exist", HttpURLConnection.HTTP_BAD_METHOD);
+                    }
+                }else {
+                    throw new ExceptionHandler(EXCEPTION_METHODNOTSUPPORTED, HttpURLConnection.HTTP_BAD_METHOD);
+                }
+                handleResponseHeader(he, null, statusCode);
+            }catch (ExceptionHandler e){
+                response = makeResponse(e);
+                handleResponseHeader(he, e, statusCode);
+            }finally {
+                OutputStream os = he.getResponseBody();
+                os.write(response.getBytes());
+                os.close();
+            }
+        }
+    }
+
     private class LectureHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange he) throws IOException {
@@ -413,7 +459,7 @@ public class Server {
         }
     }
 
-    private Map<String, Object> extractBodyParameters (HttpExchange he) throws IOException {
+    private Map<String, Object> extractBodyParameters (HttpExchange he) throws IOException,ExceptionHandler {
         Headers headers = he.getRequestHeaders();
 
         String contentType = "application/x-www-form-urlencoded";
@@ -428,6 +474,9 @@ public class Server {
                 BufferedReader br = new BufferedReader(isr);
                 String body = br.readLine();
                 parameters = Utilities.readJsonApplication(body);
+                if (parameters == null){
+                    throw new ExceptionHandler("Invalid json", HttpURLConnection.HTTP_BAD_REQUEST);
+                }
                 break;
             }
             case "application/x-www-form-urlencoded":
@@ -436,6 +485,9 @@ public class Server {
                 BufferedReader br = new BufferedReader(isr);
                 String query = br.readLine();
                 parseQuery(query, parameters);
+                if (parameters == null){
+                    throw new ExceptionHandler("Invalid json", HttpURLConnection.HTTP_BAD_REQUEST);
+                }
                 break;
             }
         }

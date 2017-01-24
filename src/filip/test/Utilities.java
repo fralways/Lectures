@@ -1,6 +1,8 @@
 package filip.test;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
@@ -121,6 +123,7 @@ class Utilities {
         endpoints.put("question", sb.toString() + "question");
         endpoints.put("question-get", sb.toString() + "question?id={id}");
         endpoints.put("docs", sb.toString() + "docs");
+        endpoints.put("utilities", sb.toString() + "utilities?util={util}");
 
         return endpoints;
     }
@@ -195,5 +198,9 @@ class Utilities {
     static String mapToJson(Object object){
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         return gson.toJson(object);
+    }
+
+    static void restartServer(){
+        Server.restart();
     }
 }

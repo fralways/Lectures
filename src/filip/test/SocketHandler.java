@@ -24,18 +24,18 @@ public enum SocketHandler {
 
     public enum SocketMethods {
         MESSAGE,
+        LOGIN, //server wants user to login
         STOPPEDLECTURE,
         LISTENERSENTQUESTION,
         LECTURERSENTQUESTION,
-        LECTURERSENTLISTENERQUESTION
+        LECTURERSENTLISTENERQUESTION,
+        CLOSE
     }
 
     SocketHandler(){
         try {
             serverSocket = new ServerSocket(port);
-            clients = new ConcurrentHashMap<>();
-            runningLectures = new ConcurrentHashMap<>();
-            answersToQuestions = new ConcurrentHashMap<>();
+            initProperties();
             System.out.println("Socket server started at " + port);
         } catch (IOException e) {
             e.printStackTrace();
@@ -43,9 +43,16 @@ public enum SocketHandler {
         }
     }
 
+    void initProperties() {
+        clients = new ConcurrentHashMap<>();
+        runningLectures = new ConcurrentHashMap<>();
+        answersToQuestions = new ConcurrentHashMap<>();
+    }
+
     void start() {
         while (true) try {
             Socket socket = serverSocket.accept();
+            Utilities.printLog("SocketHandler: new socket client started");
             ClientSocketHandler client = new ClientSocketHandler(socket);
             Thread t = new Thread(client);
             t.setDaemon(true);
@@ -57,16 +64,47 @@ public enum SocketHandler {
         }
     }
 
-    void addClient(ClientSocketHandler client, String guid) throws ExceptionHandler {
-        if (clients.containsKey(guid)) {
-            throw new ExceptionHandler("user already logged in");
-        } else {
-            Boolean exists = Server.dbHandler.checkIfUserExists(guid);
-            if (exists) {
-                clients.put(guid, client);
-            } else {
-                throw new ExceptionHandler("user doesn't exist");
+    void clean() {
+        try {
+            for (String key : clients.keySet()) {
+                ClientSocketHandler client = clients.get(key);
+                client.pw.println(makeClientMessage(SocketMethods.MESSAGE, "socket closed due to server restart"));
+                closeClient(client);
             }
+            clients = null;
+            runningLectures = null;
+            answersToQuestions = null;
+//            serverSocket.close();
+            Utilities.printLog("SocketHandler: server cleaned");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    void loginClient(ClientSocketHandler client, String guid) throws ExceptionHandler {
+        if (clients.containsKey(guid)) {
+            ClientSocketHandler oldClient = clients.get(guid);
+            oldClient.pw.println(makeClientMessage(SocketMethods.CLOSE, "You logged in from different place"));
+            closeClient(oldClient);
+//            throw new ExceptionHandler("user already logged in");
+        }
+
+        Boolean exists;
+        if (guid.equals("LISTENER")) {
+            exists = true;
+            client.isListener = true;
+        } else{
+            exists = Server.dbHandler.checkIfUserExists(guid);
+        }
+        if (exists) {
+            clients.put(guid, client);
+//            if (client.isListener){
+//                client.guid = "LISTENER" + ClientSocketHandler.getNewListenerNumber();
+//            }else {
+//                client.guid = guid;
+//            }
+        } else {
+            throw new ExceptionHandler("user doesn't exist");
         }
     }
 
@@ -97,7 +135,7 @@ public enum SocketHandler {
             }else if (Server.dbHandler.checkIfUserHasRunningLecture(guid)){
                 throw new ExceptionHandler("user already has one lecture running");
             }else if (!Server.dbHandler.checkIfUserIsOwnerOfLecture(guid, id)){
-                throw new ExceptionHandler("user is not owner of this lecture");
+                throw new ExceptionHandler("user is not owner of this lecture or lecture does not exist");
             }else {
                 String password = (String) params.get("password");
                 if (id != null){

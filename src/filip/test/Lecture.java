@@ -16,6 +16,7 @@ public class Lecture {
     String guid;
     String title;
     String description;
+    String unique_id;
     ArrayList<String> questionIds;
     List<HashMap<String,Object>> questions;
 
@@ -23,9 +24,11 @@ public class Lecture {
         checkIfCorrectEntry(parameters);
         String title = (String) parameters.get("title");
         String description = (String) parameters.get("description");
+        String unique_id = (String) parameters.get("unique_id");
         this.guid = guid;
         this.title = title;
         this.description = description;
+        this.unique_id = unique_id;
     }
 
     Lecture(Map<String, Object> parameters) throws ExceptionHandler{
@@ -33,9 +36,11 @@ public class Lecture {
         String title = (String) parameters.get("title");
         String description = (String) parameters.get("description");
         String guid = (String) parameters.get("guid");
+        String unique_id = (String) parameters.get("unique_id");
         this.guid = guid;
         this.title = title;
         this.description = description;
+        this.unique_id = unique_id;
     }
 
     Lecture(ResultSet rs) throws ExceptionHandler{
@@ -49,6 +54,7 @@ public class Lecture {
             HashMap<String,Object> questionDictionary = questionDictionaryList.get(0);
             String title = (String) questionDictionary.get("title");
             String description = (String) questionDictionary.get("description");
+            String unique_id = (String) questionDictionary.get("unique_id");
 
             PgArray answersPgArray = (PgArray)questionDictionary.get("questions");
             if (answersPgArray != null) {
@@ -61,6 +67,7 @@ public class Lecture {
             this.guid = (String) questionDictionary.get("guid");
             this.title = title;
             this.description = description;
+            this.unique_id = unique_id;
         }catch (ExceptionHandler e){
             throw e;
         }catch (SQLException e){

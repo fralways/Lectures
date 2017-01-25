@@ -97,12 +97,14 @@ public enum SocketHandler {
             exists = Server.dbHandler.checkIfUserExists(guid);
         }
         if (exists) {
-            clients.put(guid, client);
-//            if (client.isListener){
-//                client.guid = "LISTENER" + ClientSocketHandler.getNewListenerNumber();
-//            }else {
-//                client.guid = guid;
-//            }
+            if (client.isListener){
+                client.guid = "LISTENER" + ClientSocketHandler.getNewListenerNumber();
+            }else {
+                client.guid = guid;
+            }
+
+            clients.put(client.guid, client);
+
         } else {
             throw new ExceptionHandler("user doesn't exist");
         }

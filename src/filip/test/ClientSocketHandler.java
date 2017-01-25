@@ -19,7 +19,7 @@ public class ClientSocketHandler implements Runnable{
     OutputStream os;
     PrintWriter pw;
     String listeningToTheLecture;
-    Boolean isListener;
+    boolean isListener;
     private static long listenerNumber = 0;
 
     ClientSocketHandler(Socket socket){
@@ -63,7 +63,7 @@ public class ClientSocketHandler implements Runnable{
                             if (message.get("params") instanceof String) {
                                 String guid = (String) message.get("params");
                                 SocketHandler.INSTANCE.loginClient(this, guid);
-                                this.guid = guid;
+//                                this.guid = guid;
                                 pw.println(SocketHandler.makeClientResponse(true, "Hello, " + this.guid + ". Select action"));
                                 Utilities.printLog("ClientHandler: client logged in with guid " + this.guid);
                             }else {
@@ -190,21 +190,21 @@ public class ClientSocketHandler implements Runnable{
     void checkMessage(Map<String, Object> message) throws ExceptionHandler {
         if (message != null && message.containsKey("method")) {
             if (guid != null){
-//                if (isListener) {
-//                    String method = (String) message.get("method");
-//                    switch (method) {
-//                        case SOCKET_LOGIN:
-//                        case SOCKET_CLOSE:
-//                        case SOCKET_LISTENLECTURE:
-//                        case SOCKET_SENDANSWERTOQUESTION:
-//                        case SOCKET_SENDQUESTIONTOLECTURER:
-//                        case SOCKET_STOPLISTENLECTURE:
-//                            //all good
-//                            break;
-//                        default:
-//                            throw new ExceptionHandler("you are not allowed to do this");
-//                    }
-//                }
+                if (isListener) {
+                    String method = (String) message.get("method");
+                    switch (method) {
+                        case SOCKET_LOGIN:
+                        case SOCKET_CLOSE:
+                        case SOCKET_LISTENLECTURE:
+                        case SOCKET_SENDANSWERTOQUESTION:
+                        case SOCKET_SENDQUESTIONTOLECTURER:
+                        case SOCKET_STOPLISTENLECTURE:
+                            //all good
+                            break;
+                        default:
+                            throw new ExceptionHandler("you are not allowed to do this");
+                    }
+                }
             }else {
                 if (message.get("params") instanceof String && message.get("method").equals(SOCKET_LOGIN)) {
 

@@ -5,21 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="68fa7627-3112-4670-9e8f-548f505250b7" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Lectures/filip/test/DBHandler.class" afterPath="$PROJECT_DIR$/out/production/Lectures/filip/test/DBHandler.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Lectures/filip/test/Server$UserHandler.class" afterPath="$PROJECT_DIR$/out/production/Lectures/filip/test/Server$UserHandler.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Lectures/filip/test/Server.class" afterPath="$PROJECT_DIR$/out/production/Lectures/filip/test/Server.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Lectures/filip/test/Utilities.class" afterPath="$PROJECT_DIR$/out/production/Lectures/filip/test/Utilities.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/Filip.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/Filip.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/ClientSocketHandler.java" afterPath="$PROJECT_DIR$/src/filip/test/ClientSocketHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/DBHandler.java" afterPath="$PROJECT_DIR$/src/filip/test/DBHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/Lecture.java" afterPath="$PROJECT_DIR$/src/filip/test/Lecture.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/Question.java" afterPath="$PROJECT_DIR$/src/filip/test/Question.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/Server.java" afterPath="$PROJECT_DIR$/src/filip/test/Server.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/SocketHandler.java" afterPath="$PROJECT_DIR$/src/filip/test/SocketHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/StaticKeys.java" afterPath="$PROJECT_DIR$/src/filip/test/StaticKeys.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/Test.java" afterPath="$PROJECT_DIR$/src/filip/test/Test.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/filip/test/Utilities.java" afterPath="$PROJECT_DIR$/src/filip/test/Utilities.java" />
     </list>
     <ignored path="Lectures.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -66,28 +55,30 @@
       <file leaf-file-name="Server.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/filip/test/Server.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1275">
-              <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="162">
+              <caret line="170" column="18" lean-forward="false" selection-start-line="170" selection-start-column="18" selection-end-line="170" selection-end-column="18" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SocketHandler.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="SocketHandler.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/filip/test/SocketHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="254">
-              <caret line="103" column="37" lean-forward="true" selection-start-line="103" selection-start-column="18" selection-end-line="103" selection-end-column="37" />
+            <state relative-caret-position="203">
+              <caret line="96" column="62" lean-forward="true" selection-start-line="96" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ClientSocketHandler.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ClientSocketHandler.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/filip/test/ClientSocketHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="104">
-              <caret line="61" column="42" lean-forward="true" selection-start-line="61" selection-start-column="42" selection-end-line="61" selection-end-column="42" />
+            <state relative-caret-position="-272">
+              <caret line="74" column="51" lean-forward="false" selection-start-line="74" selection-start-column="51" selection-end-line="74" selection-end-column="51" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -98,8 +89,8 @@
       <file leaf-file-name="Test.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/filip/test/Test.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="79" column="39" lean-forward="false" selection-start-line="79" selection-start-column="33" selection-end-line="79" selection-end-column="39" />
+            <state relative-caret-position="340">
+              <caret line="65" column="42" lean-forward="true" selection-start-line="65" selection-start-column="42" selection-end-line="65" selection-end-column="42" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -181,8 +172,8 @@
         <option value="$PROJECT_DIR$/src/filip/test/Server.java" />
         <option value="$PROJECT_DIR$/src/filip/test/StaticKeys.java" />
         <option value="$PROJECT_DIR$/src/filip/test/Test.java" />
-        <option value="$PROJECT_DIR$/src/filip/test/SocketHandler.java" />
         <option value="$PROJECT_DIR$/src/filip/test/ClientSocketHandler.java" />
+        <option value="$PROJECT_DIR$/src/filip/test/SocketHandler.java" />
       </list>
     </option>
   </component>
@@ -739,7 +730,14 @@
       <option name="project" value="LOCAL" />
       <updated>1484144763882</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="various updates">
+      <created>1485302047318</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1485302047318</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -823,11 +821,12 @@
     <MESSAGE value="add/remove lecture listeners, some other updates" />
     <MESSAGE value="threading support in sockets, added couple of checks (only one lecture running at a time, etc)" />
     <MESSAGE value="finished main use case with lectures on socket" />
-    <option name="LAST_COMMIT_MESSAGE" value="finished main use case with lectures on socket" />
+    <MESSAGE value="various updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="various updates" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="290" />
+      <option name="time" value="293" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -980,6 +979,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
           <caret line="22" column="5" lean-forward="false" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
+          <folding>
+            <element signature="e#449#450#0" expanded="false" />
+            <element signature="e#493#494#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1138,10 +1141,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/filip/test/ClientSocketHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-272">
+          <caret line="74" column="51" lean-forward="false" selection-start-line="74" selection-start-column="51" selection-end-line="74" selection-end-column="51" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/filip/test/Test.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="79" column="39" lean-forward="false" selection-start-line="79" selection-start-column="33" selection-end-line="79" selection-end-column="39" />
+        <state relative-caret-position="340">
+          <caret line="65" column="42" lean-forward="true" selection-start-line="65" selection-start-column="42" selection-end-line="65" selection-end-column="42" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1150,27 +1163,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/filip/test/Server.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1275">
-          <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="162">
+          <caret line="170" column="18" lean-forward="false" selection-start-line="170" selection-start-column="18" selection-end-line="170" selection-end-column="18" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/filip/test/SocketHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="254">
-          <caret line="103" column="37" lean-forward="true" selection-start-line="103" selection-start-column="18" selection-end-line="103" selection-end-column="37" />
+        <state relative-caret-position="203">
+          <caret line="96" column="62" lean-forward="true" selection-start-line="96" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/filip/test/ClientSocketHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="61" column="42" lean-forward="true" selection-start-line="61" selection-start-column="42" selection-end-line="61" selection-end-column="42" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>

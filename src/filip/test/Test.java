@@ -62,6 +62,10 @@ public class Test {
             System.out.println("999: read new line from server (could freeze client)");
 
             String userInput = userInputBR.readLine();
+
+//            String lectureId = "ilc69h";
+            String lectureId = "litq4l";
+
             switch (userInput){
                 case "999":
                     break; // skip
@@ -74,7 +78,7 @@ public class Test {
                     break;
                 }
                 case "11": {
-                    //login as listener11
+                    //login as listener
                     Map<String, Object> message = new HashMap<>();
                     message.put("method", "login");
                     message.put("params", "LISTENER");
@@ -85,7 +89,7 @@ public class Test {
                 case "20": {
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
-                    params.put("id", "ilc69h");
+                    params.put("id", lectureId);
                     params.put("password", "nekipass");
                     message.put("method", "startLecture");
                     message.put("params", params);
@@ -97,51 +101,9 @@ public class Test {
                     //start without password
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
-                    params.put("id", "ilc69h");
+                    params.put("id", lectureId);
                     message.put("method", "startLecture");
                     message.put("params", params);
-                    String json = Utilities.mapToJson(message);
-                    out.println(json);
-                    break;
-                }
-                case "22": {
-                    //start without password another one
-                    Map<String, Object> message = new HashMap<>();
-                    Map<String, String> params = new HashMap<>();
-                    params.put("id", "kmttmu");
-                    message.put("method", "startLecture");
-                    message.put("params", params);
-                    String json = Utilities.mapToJson(message);
-                    out.println(json);
-                    break;
-                }
-                case "23": {
-                    //bad method
-                    Map<String, Object> message = new HashMap<>();
-                    Map<String, String> params = new HashMap<>();
-                    params.put("id", "0000");
-                    message.put("method", "startle");
-                    message.put("params", params);
-                    String json = Utilities.mapToJson(message);
-                    out.println(json);
-                    break;
-                }
-                case "24": {
-                    //bad lecture id
-                    Map<String, Object> message = new HashMap<>();
-                    Map<String, String> params = new HashMap<>();
-                    params.put("id", "0000");
-                    params.put("password", "nekipass");
-                    message.put("method", "startLecture");
-                    message.put("params", params);
-                    String json = Utilities.mapToJson(message);
-                    out.println(json);
-                    break;
-                }
-                case "25": {
-                    //bad params (no params)
-                    Map<String, Object> message = new HashMap<>();
-                    message.put("method", "startLecture");
                     String json = Utilities.mapToJson(message);
                     out.println(json);
                     break;
@@ -149,18 +111,7 @@ public class Test {
                 case "30": {
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
-                    params.put("id", "ilc69h");
-                    message.put("method", "stopLecture");
-                    message.put("params", params);
-                    String json = Utilities.mapToJson(message);
-                    out.println(json);
-                    break;
-                }
-                case "31": {
-                    //stop other one
-                    Map<String, Object> message = new HashMap<>();
-                    Map<String, String> params = new HashMap<>();
-                    params.put("id", "kmttmu");
+                    params.put("id", lectureId);
                     message.put("method", "stopLecture");
                     message.put("params", params);
                     String json = Utilities.mapToJson(message);
@@ -171,7 +122,8 @@ public class Test {
                     //listen with password
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
-                    params.put("id", "ilc69h");
+//                    params.put("id", "ilc69h");
+                    params.put("id", lectureId);
                     params.put("password", "nekipass");
                     message.put("method", "listenLecture");
                     message.put("params", params);
@@ -183,19 +135,7 @@ public class Test {
                     //listen without password
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
-                    params.put("id", "ilc69h");
-                    message.put("method", "listenLecture");
-                    message.put("params", params);
-                    String json = Utilities.mapToJson(message);
-                    out.println(json);
-                    break;
-                }
-                case "402": {
-                    //bad id
-                    Map<String, Object> message = new HashMap<>();
-                    Map<String, String> params = new HashMap<>();
-                    params.put("id", "ed93aa4");
-                    params.put("password", "nekipass");
+                    params.put("id", lectureId);
                     message.put("method", "listenLecture");
                     message.put("params", params);
                     String json = Utilities.mapToJson(message);
@@ -212,32 +152,8 @@ public class Test {
                 case "500": {
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
-                    params.put("lectureId", "ilc69h");
+                    params.put("lectureId", lectureId);
                     params.put("questionId", "8377a0c6-882a-48f1-91d4-09165b7b5154");
-                    message.put("method", "sendQuestionToListeners");
-                    message.put("params", params);
-                    String json = Utilities.mapToJson(message);
-                    out.println(json);
-                    break;
-                }
-                case "501": {
-                    //bad lecture id
-                    Map<String, Object> message = new HashMap<>();
-                    Map<String, String> params = new HashMap<>();
-                    params.put("lectureId", "ilc69");
-                    params.put("questionId", "8377a0c6-882a-48f1-91d4-09165b7b5154");
-                    message.put("method", "sendQuestionToListeners");
-                    message.put("params", params);
-                    String json = Utilities.mapToJson(message);
-                    out.println(json);
-                    break;
-                }
-                case "502": {
-                    //bad question id
-                    Map<String, Object> message = new HashMap<>();
-                    Map<String, String> params = new HashMap<>();
-                    params.put("lectureId", "ilc69h");
-                    params.put("questionId", "8377a0c6-882a-48f1-91d4-09165b7b515");
                     message.put("method", "sendQuestionToListeners");
                     message.put("params", params);
                     String json = Utilities.mapToJson(message);
@@ -247,7 +163,7 @@ public class Test {
                 case "510": {
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
-                    params.put("lectureId", "ilc69h");
+                    params.put("lectureId", lectureId);
                     params.put("questionText", "Some text here is inserted");
                     message.put("method", "sendQuestionToLecturer");
                     message.put("params", params);
@@ -258,7 +174,7 @@ public class Test {
                 case "520": {
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
-                    params.put("lectureId", "ilc69h");
+                    params.put("lectureId", lectureId);
                     params.put("questionText", "Some text here is inserted");
                     message.put("method", "sendListenerQuestionToListeners");
                     message.put("params", params);

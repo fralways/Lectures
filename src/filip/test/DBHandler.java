@@ -38,13 +38,20 @@ public class DBHandler {
     }
 
     private void cleanupDB(){
-        Utilities.printLog("DB cleanup started");
+        Utilities.printLog(this, "DB cleanup started");
         Statement st = null;
         try {
             PreparedStatement ps = conn.prepareStatement("update users set runninglecture = null");
             ps.executeUpdate();
             ps.close();
-            Utilities.printLog("DB cleanup end");
+            Utilities.printLog(this, "cleaned users");
+
+            ps = conn.prepareStatement("delete from question where owner IS null");
+            int count = ps.executeUpdate();
+            ps.close();
+            Utilities.printLog(this, "cleaned questions: " + count);
+
+            Utilities.printLog(this, "DB cleanup end");
         } catch (SQLException e) {
             Utilities.printLog(e.toString());
         }
@@ -130,15 +137,29 @@ public class DBHandler {
         }
     }
 
-    public void deleteUserByEmail(Object email) throws ExceptionHandler {
+    public void deleteUserByGuid(String guid) throws ExceptionHandler {
         try {
-            if (String.class.isInstance(email)) {
-                PreparedStatement ps = conn.prepareStatement("DELETE FROM users WHERE email = ?");
-                ps.setString(1, (String) email);
+            PreparedStatement ps = conn.prepareStatement("select * FROM users WHERE guid = ?");
+            ps.setString(1, guid);
+            ResultSet rs = ps.executeQuery();
+
+            List<HashMap<String,Object>> userList = Utilities.convertResultSetToList(rs);
+            if (userList.size() > 0){
+                HashMap<String,Object> user = userList.get(0);
+                String userId = (String) user.get("guid");
+                PgArray lectures = (PgArray)user.get("lectures");
+                String[] lecturesArray = (String[]) lectures.getArray();
+                for (String lectureId : lecturesArray){
+                    deleteLecture(lectureId, userId);
+                }
+
+                ps = conn.prepareStatement("DELETE FROM users WHERE guid = ?");
+                ps.setString(1, guid);
                 ps.executeUpdate();
                 ps.close();
-            } else {
-                throw new ExceptionHandler("bad params", HttpURLConnection.HTTP_BAD_REQUEST);
+
+            }else {
+                throw new ExceptionHandler("user does not exist", HttpURLConnection.HTTP_NOT_FOUND);
             }
         }catch (SQLException e){
             throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
@@ -186,7 +207,7 @@ public class DBHandler {
                     }
                     return user;
                 }else {
-                    throw new ExceptionHandler("user does not exist", HttpURLConnection.HTTP_BAD_REQUEST);
+                    throw new ExceptionHandler("user does not exist", HttpURLConnection.HTTP_NOT_FOUND);
                 }
             } else {
                 throw new ExceptionHandler("bad params", HttpURLConnection.HTTP_BAD_REQUEST);
@@ -543,6 +564,12 @@ public class DBHandler {
                                 PreparedStatement ps = conn.prepareStatement("update lecture set questions = array_append(questions, CAST (? AS TEXT )) where guid=?");
                                 ps.setString(1, question.guid);
                                 ps.setString(2, lecture.guid);
+                                ps.executeUpdate();
+                                ps.close();
+
+                                ps = conn.prepareStatement("update question set owner = ? where guid = ?");
+                                ps.setString(1, lecture.guid);
+                                ps.setString(2, question.guid);
                                 ps.executeUpdate();
                                 ps.close();
                             }catch (SQLException e){

@@ -48,9 +48,9 @@ public class ClientSocketHandler implements Runnable{
                     Utilities.printLog("ClientHandler: user not logged in or message not in good format: "+ clientMessage);
                     pw.println(SocketHandler.makeClientResponse(false, e.message));
                     if (clientMessage == null){
-                        Utilities.printLog("ClientHandler: client sent message = null - disconnected");
-                        Utilities.printLog("ClientHandler: client disconnected with guid: " + guid);
+                        Utilities.printLog("ClientHandler: client sent message = null - disconnecting");
                         SocketHandler.INSTANCE.closeClient(this);
+                        Utilities.printLog("ClientHandler: client disconnected with guid: " + guid);
                         break;
                     }
                     continue;

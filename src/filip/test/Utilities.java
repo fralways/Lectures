@@ -181,6 +181,38 @@ class Utilities {
         System.out.println(stringBuilder.toString());
     }
 
+    static void printLog(Object callerClass, String message){
+        String fullClassName = callerClass.getClass().getName();
+        String[] parts = fullClassName.split("\\.");
+        String className = parts[parts.length - 1];
+
+        Date dt = new Date();
+        DateTime currentDate = new DateTime(dt);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        int hour = currentDate.getHourOfDay();
+        if (hour<10) {
+            stringBuilder.append("0");
+        }
+        stringBuilder.append(hour).append(":");
+
+        int minute = currentDate.getMinuteOfHour();
+        if (minute<10) {
+            stringBuilder.append("0");
+        }
+        stringBuilder.append(minute).append(":");
+
+        int second = currentDate.getSecondOfMinute();
+        if (second<10) {
+            stringBuilder.append("0");
+        }
+        stringBuilder.append(second).append(" ");
+        stringBuilder.append(className).append(": ");
+        stringBuilder.append(message);
+
+        System.out.println(stringBuilder.toString());
+    }
+
      static String generateLectureString(){
         SecureRandom random = new SecureRandom();
         return new BigInteger(30, random).toString(32);

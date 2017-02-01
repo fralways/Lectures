@@ -27,9 +27,9 @@ public class Server {
 
     public static void main(String[] args) {
         try {
+            dbHandler = new DBHandler();
             Server server = new Server();
             server.serverInit();
-            dbHandler = new DBHandler();
             SocketHandler socketServer = SocketHandler.INSTANCE;
             socketServer.start();
         } catch (IOException | ClassNotFoundException | SQLException e) {
@@ -50,13 +50,12 @@ public class Server {
 //        dbHandler = null;
         SocketHandler.INSTANCE.clean();
 //        server.stop(0);
-        Utilities.printLog("Server cleaned");
+        Utilities.printLog("Server: cleaned");
     }
 
     private void serverInit() throws IOException {
         //server
         server = HttpServer.create(new InetSocketAddress(port), 0);
-        System.out.println("Server started at " + port);
         server.createContext("/user", new UserHandler());
         server.createContext("/login", new LoginHandler());
         server.createContext("/home", new HomeHandler());
@@ -68,6 +67,8 @@ public class Server {
         server.createContext("/utilities", new UtilitiesHandler());
         server.setExecutor(null);
         server.start();
+
+        Utilities.printLog(this, "started at " + port);
     }
 
     //region Handlers
@@ -125,9 +126,9 @@ public class Server {
                     }
                     case "DELETE": {
                         Utilities.printLog("User: delete");
-                        verifyToken(he);
-                        parameters = extractBodyParameters(he);
-                        dbHandler.deleteUserByEmail(parameters.get("email"));
+                        Claims claims = verifyToken(he);
+                        String userId = claims.getSubject();
+                        dbHandler.deleteUserByGuid(userId);
                         statusCode = HttpURLConnection.HTTP_OK;
                         break;
                     }

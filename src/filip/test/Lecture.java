@@ -48,7 +48,7 @@ public class Lecture {
             List<HashMap<String,Object>> questionDictionaryList = Utilities.convertResultSetToList(rs);
 
             if (questionDictionaryList.size() == 0){
-                throw new ExceptionHandler("Lecture: does not exist", HttpURLConnection.HTTP_INTERNAL_ERROR);
+                throw new ExceptionHandler("Lecture: does not exist", HttpURLConnection.HTTP_NOT_FOUND);
             }
 
             HashMap<String,Object> questionDictionary = questionDictionaryList.get(0);

@@ -36,10 +36,10 @@ public enum SocketHandler {
         try {
             serverSocket = new ServerSocket(port);
             initProperties();
-            System.out.println("Socket server started at " + port);
+            Utilities.printLog("SocketHandler: started at " + port);
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Failed to start socket server at " + port);
+            Utilities.printLog("SocketHandler: failed to start at " + port);
         }
     }
 
@@ -154,7 +154,7 @@ public enum SocketHandler {
                     Server.dbHandler.updateUserWithRunningLecture(guid, id, false);
 
                     runningLectures.put(id, lectureEntry);
-                    Utilities.printLog("SocketHandler: lecture started with id: " + lecture.guid);
+                    Utilities.printLog("SocketHandler: lecture started with id: " + lecture.unique_id);
                 }else {
                     throw new ExceptionHandler("bad params");
                 }
@@ -388,7 +388,6 @@ public enum SocketHandler {
         HashMap <String, Object> response = new HashMap<>();
         response.put("type", "response");
         response.put("ok", ok);
-
         if (message != null) {
             response.put("message", message);
         }

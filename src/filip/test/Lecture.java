@@ -81,7 +81,6 @@ public class Lecture {
     }
 
     void checkIfCorrectEntry(Map<String, Object> parameters) throws ExceptionHandler {
-        boolean badEntry = true;
         if (String.class.isInstance(parameters.get("title")) && String.class.isInstance(parameters.get("description"))){
             //all good
         }else {

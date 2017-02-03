@@ -5,7 +5,9 @@ import com.google.gson.internal.LinkedTreeMap;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public enum SocketHandler {
@@ -149,7 +151,7 @@ public enum SocketHandler {
                         lectureEntry.put("password", password);
                     }
                     lectureEntry.put("listeners", users);
-                    lectureEntry.put("questions", new ArrayList<String>());
+                    lectureEntry.put("questions", Collections.synchronizedList(new ArrayList()));
 
                     Server.dbHandler.updateUserWithRunningLecture(guid, id, false);
 
@@ -182,10 +184,15 @@ public enum SocketHandler {
                     }
 
                     //cleanup
-                    ArrayList<String> questions = (ArrayList<String>)lectureEntry.get("questions");
-                    for (String questionId : questions) {
-                        if (answersToQuestions.containsKey(questionId)){
-                            answersToQuestions.remove(questionId);
+                    ArrayList<Object> questions = (ArrayList<Object>)lectureEntry.get("questions");
+                    synchronized (questions) {
+                        for (Object question : questions) {
+                            if (question instanceof Question) {
+                                Question q = (Question) question;
+                                if (answersToQuestions.containsKey(q.guid)) {
+                                    answersToQuestions.remove(q.guid);
+                                }
+                            }
                         }
                     }
 
@@ -280,8 +287,8 @@ public enum SocketHandler {
                     ///////
 
                     //update lectures
-                    ArrayList<String> questions = (ArrayList<String>)lectureEntry.get("questions");
-                    questions.add(questionId);
+                    List<Object> questions = (List<Object>)lectureEntry.get("questions");
+                    questions.add(question);
                     ////////
 
                 }else {
@@ -327,7 +334,7 @@ public enum SocketHandler {
     void sendListenerQuestionToListeners(LinkedTreeMap params, String senderId) throws ExceptionHandler {
         try {
             String lectureId = (String) params.get("lectureId");
-            String questionText = (String) params.get("questionText");
+            Object questionText = params.get("questionText");
             if (runningLectures.containsKey(lectureId)){
                 HashMap<String, Object> lectureEntry = (HashMap<String, Object>)runningLectures.get(lectureId);
                 String owner = (String) lectureEntry.get("owner");
@@ -337,6 +344,12 @@ public enum SocketHandler {
                         ClientSocketHandler listenerSocket = clients.get(listenerGuid);
                         listenerSocket.pw.println(makeClientMessage(SocketMethods.LECTURERSENTLISTENERQUESTION, questionText));
                     }
+
+                    //update lectures
+                    List<Object> questions = (List<Object>)lectureEntry.get("questions");
+                    questions.add(questionText);
+                    ////////
+
                 }else {
                     throw new ExceptionHandler("you are not allowed to do this");
                 }
@@ -381,6 +394,22 @@ public enum SocketHandler {
             throw e;
         } catch (Exception e){
             throw new ExceptionHandler("bad params");
+        }
+    }
+
+    Object getLastQuestion(String lectureId) throws ExceptionHandler {
+        if (runningLectures.containsKey(lectureId)) {
+            HashMap<String, Object> lectureEntry = (HashMap<String, Object>) runningLectures.get(lectureId);
+            List<Object> questions = (List<Object>)lectureEntry.get("questions");
+            synchronized (questions) {
+                if (questions.size() > 0) {
+                    return questions.get(questions.size() - 1);
+                } else {
+                    return null;
+                }
+            }
+        }else {
+            throw new ExceptionHandler("lecture isn't started or bad lecture id");
         }
     }
 

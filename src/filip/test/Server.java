@@ -23,7 +23,7 @@ import static filip.test.StaticKeys.*;
 public class Server {
     private int port = 8000;
     static DBHandler dbHandler;
-    static HttpServer server;
+    private static HttpServer server;
 
     public static void main(String[] args) {
         try {
@@ -37,7 +37,7 @@ public class Server {
         }
     }
 
-    static void start(){
+    private static void start(){
         SocketHandler.INSTANCE.initProperties();
     }
 
@@ -46,7 +46,7 @@ public class Server {
         start();
     }
 
-    static void stop(){
+    private static void stop(){
 //        dbHandler = null;
         SocketHandler.INSTANCE.clean();
 //        server.stop(0);
@@ -207,7 +207,6 @@ public class Server {
         public void handle(HttpExchange he) throws IOException {
             String method = he.getRequestMethod();
             String response = "";
-            Map<String, Object> parameters;
             int statusCode = 0;
             try {
                 if (method.equals("GET")) {
@@ -239,7 +238,6 @@ public class Server {
         public void handle(HttpExchange he) throws IOException {
             String method = he.getRequestMethod();
             String response = "";
-            Map<String, Object> parameters;
             int statusCode = 0;
             try {
                 if (method.equals("GET")) {
@@ -486,9 +484,6 @@ public class Server {
                 BufferedReader br = new BufferedReader(isr);
                 String query = br.readLine();
                 parseQuery(query, parameters);
-                if (parameters == null){
-                    throw new ExceptionHandler("Invalid json", HttpURLConnection.HTTP_BAD_REQUEST);
-                }
                 break;
             }
         }

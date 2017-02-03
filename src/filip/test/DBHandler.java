@@ -55,11 +55,10 @@ public class DBHandler {
         } catch (SQLException e) {
             Utilities.printLog(e.toString());
         }
-
     }
 
     public void getAllFromDB() {
-        Statement st = null;
+        Statement st;
         try {
             st = conn.createStatement();
 
@@ -555,7 +554,7 @@ public class DBHandler {
                     String questionId = (String) parameters.get("questionId");
 
                     if (lectureId != null && questionId != null) {
-                        //provera se da li postoje na ovaj nacin
+                        //proverava se da li postoje na ovaj nacin
                         Lecture lecture = getLecture(lectureId);
                         Question question = getQuestion(questionId);
 

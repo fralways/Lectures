@@ -163,6 +163,15 @@ public class ClientSocketHandler implements Runnable{
                             }
                             break;
                         }
+                        case SOCKET_GETLASTQUESTION:{
+                            if (listeningToTheLecture != null) {
+                                Object question = SocketHandler.INSTANCE.getLastQuestion(listeningToTheLecture);
+                                pw.println(SocketHandler.makeClientResponse(true, question));
+                            }else {
+                                pw.println(SocketHandler.makeClientResponse(false, "user is not listening to any lecture"));
+                            }
+                            break;
+                        }
                         case SOCKET_CLOSE:
                             Utilities.printLog("ClientHandler: client disconnected with guid: " + guid);
                             SocketHandler.INSTANCE.closeClient(this);
@@ -199,6 +208,7 @@ public class ClientSocketHandler implements Runnable{
                         case SOCKET_SENDANSWERTOQUESTION:
                         case SOCKET_SENDQUESTIONTOLECTURER:
                         case SOCKET_STOPLISTENLECTURE:
+                        case SOCKET_GETLASTQUESTION:
                             //all good
                             break;
                         default:

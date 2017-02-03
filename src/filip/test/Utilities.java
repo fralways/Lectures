@@ -1,8 +1,6 @@
 package filip.test;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;

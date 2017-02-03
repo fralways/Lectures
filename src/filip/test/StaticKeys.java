@@ -23,6 +23,7 @@ class StaticKeys {
     final static String SOCKET_SENDLISTENERQUESTIONTOLISTENERS = "sendListenerQuestionToListeners";
     final static String SOCKET_SENDANSWERTOQUESTION = "sendAnswerToQuestion";
     final static String SOCKET_GETANSWERSTOQUESTION = "getAnswersToQuestion";
+    final static String SOCKET_GETLASTQUESTION = "getLastQuestion";
     final static String SOCKET_CLOSE = "close";
 
 

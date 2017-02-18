@@ -172,6 +172,20 @@ public class ClientSocketHandler implements Runnable{
                             }
                             break;
                         }
+                        case SOCKET_GETLISTENERQUESTIONS:{
+                            if (!isListener) {
+                                if (message.get("params") instanceof LinkedTreeMap) {
+                                    LinkedTreeMap params = (LinkedTreeMap) message.get("params");
+                                    Object questions = SocketHandler.INSTANCE.getListenerQuestions(params, this.guid);
+                                    pw.println(SocketHandler.makeClientResponse(true, questions));
+                                }else {
+                                    pw.println(SocketHandler.makeClientResponse(false, "bad params"));
+                                }
+                            }else {
+                                pw.println(SocketHandler.makeClientResponse(false, "listener is not allowed to do this"));
+                            }
+                            break;
+                        }
                         case SOCKET_CLOSE:
                             Utilities.printLog("ClientHandler: client disconnected with guid: " + guid);
                             SocketHandler.INSTANCE.closeClient(this);

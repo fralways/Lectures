@@ -24,6 +24,7 @@ class StaticKeys {
     final static String SOCKET_SENDANSWERTOQUESTION = "sendAnswerToQuestion";
     final static String SOCKET_GETANSWERSTOQUESTION = "getAnswersToQuestion";
     final static String SOCKET_GETLASTQUESTION = "getLastQuestion";
+    final static String SOCKET_GETLISTENERQUESTIONS = "getListenerQuestions";
     final static String SOCKET_CLOSE = "close";
 
 

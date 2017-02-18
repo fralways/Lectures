@@ -58,6 +58,7 @@ public class Test {
             System.out.println("53x: send answer to question");
             System.out.println("54x: get answers");
             System.out.println("55x: get last question lecturer sent");
+            System.out.println("56x: get questions listeners sent");
             System.out.println("900: close socket");
             System.out.println("901: open socket");
             System.out.println("999: read new line from server (could freeze client)");
@@ -207,6 +208,16 @@ public class Test {
                 case "550": {
                     Map<String, Object> message = new HashMap<>();
                     message.put("method", "getLastQuestion");
+                    String json = Utilities.mapToJson(message);
+                    out.println(json);
+                    break;
+                }
+                case "560": {
+                    Map<String, Object> message = new HashMap<>();
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("lectureId", lectureId);
+                    message.put("method", "getListenerQuestions");
+                    message.put("params", params);
                     String json = Utilities.mapToJson(message);
                     out.println(json);
                     break;

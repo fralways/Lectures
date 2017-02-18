@@ -151,7 +151,10 @@ public enum SocketHandler {
                         lectureEntry.put("password", password);
                     }
                     lectureEntry.put("listeners", users);
+                    //questions that lecturer sends to the listeners
                     lectureEntry.put("questions", Collections.synchronizedList(new ArrayList()));
+                    //questions that listener sends to the lecturer
+                    lectureEntry.put("listenerQuestions", Collections.synchronizedList(new ArrayList()));
 
                     Server.dbHandler.updateUserWithRunningLecture(guid, id, false);
 
@@ -184,7 +187,7 @@ public enum SocketHandler {
                     }
 
                     //cleanup
-                    ArrayList<Object> questions = (ArrayList<Object>)lectureEntry.get("questions");
+                    List<Object> questions = (List<Object>)lectureEntry.get("questions");
                     synchronized (questions) {
                         for (Object question : questions) {
                             if (question instanceof Question) {
@@ -311,6 +314,12 @@ public enum SocketHandler {
             if (runningLectures.containsKey(lectureId)){
                 if (listeningToTheLecture != null && listeningToTheLecture.equals(lectureId)) {
                     HashMap<String, Object> lectureEntry = (HashMap<String, Object>) runningLectures.get(lectureId);
+
+                    //add question to the array
+                    List<Object> listenerQuestions = (List<Object>) lectureEntry.get("listenerQuestions");
+                    listenerQuestions.add(questionText);
+                    ////
+
                     String owner = (String) lectureEntry.get("owner");
                     ClientSocketHandler ownerSocker = clients.get(owner);
                     if (ownerSocker != null) {
@@ -410,6 +419,27 @@ public enum SocketHandler {
             }
         }else {
             throw new ExceptionHandler("lecture isn't started or bad lecture id");
+        }
+    }
+
+    Object getListenerQuestions(LinkedTreeMap params, String guid) throws ExceptionHandler {
+        try {
+            String lectureId = (String) params.get("lectureId");
+            if (runningLectures.containsKey(lectureId)){
+                HashMap<String, Object> lectureEntry = (HashMap<String, Object>) runningLectures.get(lectureId);
+                String owner = (String) lectureEntry.get("owner");
+                if (owner.equals(guid)){
+                    return  lectureEntry.get("listenerQuestions");
+                }else {
+                    throw new ExceptionHandler("you are not owner of this lecture");
+                }
+            }else {
+                throw new ExceptionHandler("lecture isn't started or bad lecture id");
+            }
+        }catch (ExceptionHandler e){
+            throw e;
+        } catch (Exception e){
+            throw new ExceptionHandler("bad params");
         }
     }
 

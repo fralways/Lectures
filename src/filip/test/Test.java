@@ -19,7 +19,7 @@ public class Test {
     PrintWriter out;
     BufferedReader userInputBR;
 
-    final String host = "http://24.135.52.131";
+    final String host = "24.135.52.131";
     final int portNumber = 8210;
     boolean badCommand = false;
 

@@ -146,6 +146,7 @@ public class Server {
                         Claims claims = verifyToken(he);
                         String userId = claims.getSubject();
                         parameters = extractBodyParameters(he);
+                        parameters = extractBodyParameters(he);
                         dbHandler.updateUserWithParams(userId, parameters);
                         statusCode = HttpURLConnection.HTTP_OK;
                         break;
@@ -210,7 +211,7 @@ public class Server {
             int statusCode = 0;
             try {
                 if (method.equals("GET")) {
-                    byte[] encoded = Files.readAllBytes(Paths.get("C:\\Users\\jENOV\\Desktop\\serverOutput.txt"));
+                    byte[] encoded = Files.readAllBytes(Paths.get("src\\filip\\test\\resources\\serverOutput.txt"));
                     if (null == encoded){
                         Utilities.printLog("Logs: cannot find log file");
                         statusCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
@@ -241,7 +242,7 @@ public class Server {
             int statusCode = 0;
             try {
                 if (method.equals("GET")) {
-                    byte[] encoded = Files.readAllBytes(Paths.get("C:\\Users\\Filip\\Desktop\\serverDoc.txt"));
+                    byte[] encoded = Files.readAllBytes(Paths.get("src\\filip\\test\\resources\\serverDoc.txt"));
                     if (null == encoded){
                         Utilities.printLog("Docs: cannot find doc file");
                         statusCode = HttpURLConnection.HTTP_INTERNAL_ERROR;

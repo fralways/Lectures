@@ -647,7 +647,7 @@ public class DBHandler {
             String guid = rs.getString(1);
             Question question = new Question(parameters, guid);
 
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO question(guid, question, correct_index, duration, answers) VALUES (?, ?, ?, ?, ?)");
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO question(guid, question, correctindex, duration, answers) VALUES (?, ?, ?, ?, ?)");
             ps.setString(1, question.guid);
             ps.setString(2, question.question);
             ps.setInt(3, question.correctIndex);
@@ -701,7 +701,7 @@ public class DBHandler {
                         }
                         //now update fields
                         Set<String> allowedFields = new HashSet<>(
-                                Arrays.asList("question", "correct_index", "duration", "answers"));
+                                Arrays.asList("question", "correctindex", "duration", "answers"));
                         String query = makePatchDBQuerry("question", allowedFields, parameters, path);
                         if (query != null) {
                             PreparedStatement ps = conn.prepareStatement(query);

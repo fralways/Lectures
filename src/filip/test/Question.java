@@ -44,7 +44,7 @@ public class Question {
             HashMap<String, Object> questionDictionary = questionDictionaryList.get(0);
             String question = (String) questionDictionary.get("question");
             int correctIndex = (Integer) questionDictionary.get("correctindex");
-            int duration = (Integer) questionDictionary.get("duration");
+            Double duration = (Double) questionDictionary.get("duration");
 
             PgArray answersPgArray = (PgArray) questionDictionary.get("answers");
             String[] answersStringArray = (String[]) answersPgArray.getArray();
@@ -55,7 +55,7 @@ public class Question {
             this.question = question;
             this.answers = answers;
             this.correctIndex = correctIndex;
-            this.duration = duration;
+            this.duration = duration.intValue();
         }catch (ExceptionHandler e){
             throw e;
         }catch (SQLException e){

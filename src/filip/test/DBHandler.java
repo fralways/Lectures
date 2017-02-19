@@ -22,10 +22,10 @@ import static filip.test.StaticKeys.*;
 public class DBHandler {
 
     private final Connection conn;
-
     DBHandler() throws ClassNotFoundException, SQLException {
         Class.forName("org.postgresql.Driver");
-        String url = "jdbc:postgresql://localhost:5432/postgres";
+//        String url = "jdbc:postgresql://localhost:5432/postgres";
+        String url = "jdbc:postgresql://localhost:5432/postgres?currentSchema=lectures";
         Properties props = new Properties();
         props.setProperty("user","postgres");
         props.setProperty("password","filip123");
@@ -647,7 +647,7 @@ public class DBHandler {
             String guid = rs.getString(1);
             Question question = new Question(parameters, guid);
 
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO question(guid, question, correctIndex, duration, answers) VALUES (?, ?, ?, ?, ?)");
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO question(guid, question, correct_index, duration, answers) VALUES (?, ?, ?, ?, ?)");
             ps.setString(1, question.guid);
             ps.setString(2, question.question);
             ps.setInt(3, question.correctIndex);
@@ -701,7 +701,7 @@ public class DBHandler {
                         }
                         //now update fields
                         Set<String> allowedFields = new HashSet<>(
-                                Arrays.asList("question", "correctindex", "duration", "answers"));
+                                Arrays.asList("question", "correct_index", "duration", "answers"));
                         String query = makePatchDBQuerry("question", allowedFields, parameters, path);
                         if (query != null) {
                             PreparedStatement ps = conn.prepareStatement(query);

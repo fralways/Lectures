@@ -59,7 +59,7 @@ public class Question {
         }catch (ExceptionHandler e){
             throw e;
         }catch (SQLException e){
-            throw new ExceptionHandler("Question: db error", HttpURLConnection.HTTP_INTERNAL_ERROR);
+            throw new ExceptionHandler("Question: dbmigration error", HttpURLConnection.HTTP_INTERNAL_ERROR);
         }
     }
 

@@ -1,0 +1,9 @@
+psql -Upostgres ako treba da se promeni user na postgres
+
+psql (connection options here) postgres(ime db)< yourbackup.sql
+ili ako smo u postgres shellu - postgres=# \i C:/Users/jENOV/Desktop/test/test.sql (primeti /)
+
+
+backup db:
+desni klik na bazu - backup
+izaberi lokaciju, izaberi format:plain, i dump option:only schema

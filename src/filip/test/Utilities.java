@@ -106,7 +106,7 @@ class Utilities {
     static Map<String, String> getEndpoints() {
         Map<java.lang.String, java.lang.String> endpoints = new HashMap<>();
 
-        String host = "http://89.216.252.17";
+        String host = "http://24.135.42.105";
         String port = "8000";
 
         StringBuffer sb = new StringBuffer(host);

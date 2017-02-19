@@ -210,7 +210,7 @@ public class Server {
             int statusCode = 0;
             try {
                 if (method.equals("GET")) {
-                    byte[] encoded = Files.readAllBytes(Paths.get("C:\\Users\\Filip\\Desktop\\serverOutput.txt"));
+                    byte[] encoded = Files.readAllBytes(Paths.get("C:\\Users\\jENOV\\Desktop\\serverOutput.txt"));
                     if (null == encoded){
                         Utilities.printLog("Logs: cannot find log file");
                         statusCode = HttpURLConnection.HTTP_INTERNAL_ERROR;

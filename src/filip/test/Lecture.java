@@ -71,7 +71,7 @@ public class Lecture {
         }catch (ExceptionHandler e){
             throw e;
         }catch (SQLException e){
-            throw new ExceptionHandler("Lecture: db error", HttpURLConnection.HTTP_INTERNAL_ERROR);
+            throw new ExceptionHandler("Lecture: dbmigration error", HttpURLConnection.HTTP_INTERNAL_ERROR);
         }
     }
 

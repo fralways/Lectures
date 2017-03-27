@@ -5,7 +5,7 @@
 -- Dumped from database version 9.6.2
 -- Dumped by pg_dump version 9.6.2
 
--- Started on 2017-02-19 01:59:06
+-- Started on 2017-02-21 12:27:00
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -132,7 +132,7 @@ ALTER TABLE lecture OWNER TO postgres;
 CREATE TABLE question (
     guid text NOT NULL,
     question text,
-    correct_index integer,
+    correctindex integer,
     duration double precision,
     answers text[],
     owner text
@@ -209,7 +209,7 @@ ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (guid);
 
 
--- Completed on 2017-02-19 01:59:06
+-- Completed on 2017-02-21 12:27:00
 
 --
 -- PostgreSQL database dump complete

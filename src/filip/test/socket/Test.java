@@ -1,8 +1,10 @@
-package filip.test;
+package filip.test.socket;
 
 /**
  * Created by Filip on 10/4/2016.
  */
+
+import filip.test.Utilities;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,7 +21,7 @@ public class Test {
     PrintWriter out;
     BufferedReader userInputBR;
 
-    final String host = "24.135.52.131";
+    final String host = "24.135.51.251";
     final int portNumber = 8210;
     boolean badCommand = false;
 
@@ -65,8 +67,8 @@ public class Test {
 
             String userInput = userInputBR.readLine();
 
-            String lectureId = "ilc69h";
-//            String lectureId = "litq4l";
+//            String lectureId = "ilc69h";
+            String lectureId = "ukbmja";
             String questionId = "0af09df9-ae07-4099-b20e-e6ca7a43cb83";
             switch (userInput){
                 case "999":

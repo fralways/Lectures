@@ -1,7 +1,9 @@
-package filip.test;
+package filip.test.socket;
 
 import com.google.gson.internal.LinkedTreeMap;
+import filip.test.*;
 
+import javax.rmi.CORBA.Util;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
@@ -45,13 +47,13 @@ public enum SocketHandler {
         }
     }
 
-    void initProperties() {
+    public void initProperties() {
         clients = new ConcurrentHashMap<>();
         runningLectures = new ConcurrentHashMap<>();
         answersToQuestions = new ConcurrentHashMap<>();
     }
 
-    void start() {
+    public void start() {
         while (true) try {
             Socket socket = serverSocket.accept();
             Utilities.printLog("SocketHandler: new socket client started");
@@ -66,7 +68,7 @@ public enum SocketHandler {
         }
     }
 
-    void clean() {
+    public void clean() {
         try {
             for (String key : clients.keySet()) {
                 ClientSocketHandler client = clients.get(key);
@@ -96,7 +98,7 @@ public enum SocketHandler {
             exists = true;
             client.isListener = true;
         } else{
-            exists = Server.dbHandler.checkIfUserExists(guid);
+            exists = Server.getDbHandler().checkIfUserExists(guid);
         }
         if (exists) {
             if (client.isListener){
@@ -136,14 +138,14 @@ public enum SocketHandler {
             String id = (String) params.get("id");
             if (runningLectures.containsKey(id)){
                 throw new ExceptionHandler("lecture already started");
-            }else if (Server.dbHandler.checkIfUserHasRunningLecture(guid)){
+            }else if (Server.getDbHandler().checkIfUserHasRunningLecture(guid)){
                 throw new ExceptionHandler("user already has one lecture running");
-            }else if (!Server.dbHandler.checkIfUserIsOwnerOfLecture(guid, id)){
+            }else if (!Server.getDbHandler().checkIfUserIsOwnerOfLecture(guid, id)){
                 throw new ExceptionHandler("user is not owner of this lecture or lecture does not exist");
             }else {
                 String password = (String) params.get("password");
                 if (id != null){
-                    Lecture lecture = Server.dbHandler.getLectureFromUniqueId(id);
+                    Lecture lecture = Server.getDbHandler().getLectureFromUniqueId(id);
                     HashMap<String, Object> lectureEntry = new HashMap<>();
                     ArrayList<String> users = new ArrayList<>();
                     lectureEntry.put("owner", guid);
@@ -156,10 +158,10 @@ public enum SocketHandler {
                     //questions that listener sends to the lecturer
                     lectureEntry.put("listenerQuestions", Collections.synchronizedList(new ArrayList()));
 
-                    Server.dbHandler.updateUserWithRunningLecture(guid, id, false);
+                    Server.getDbHandler().updateUserWithRunningLecture(guid, id, false);
 
                     runningLectures.put(id, lectureEntry);
-                    Utilities.printLog("SocketHandler: lecture started with id: " + lecture.unique_id);
+                    Utilities.printLog("SocketHandler: lecture started with id: " + lecture.getUnique_id());
                 }else {
                     throw new ExceptionHandler("bad params");
                 }
@@ -192,8 +194,8 @@ public enum SocketHandler {
                         for (Object question : questions) {
                             if (question instanceof Question) {
                                 Question q = (Question) question;
-                                if (answersToQuestions.containsKey(q.guid)) {
-                                    answersToQuestions.remove(q.guid);
+                                if (answersToQuestions.containsKey(q.getGuid())) {
+                                    answersToQuestions.remove(q.getGuid());
                                 }
                             }
                         }
@@ -209,7 +211,7 @@ public enum SocketHandler {
                 //do nothing
 //                throw new ExceptionHandler("lecture isn't started or bad lecture id");
             }
-            Server.dbHandler.updateUserWithRunningLecture(callerGuid, id, true);
+            Server.getDbHandler().updateUserWithRunningLecture(callerGuid, id, true);
 
         }catch (ExceptionHandler e){
             throw e;
@@ -272,7 +274,7 @@ public enum SocketHandler {
             String lectureId = (String) params.get("lectureId");
             String questionId = (String) params.get("questionId");
             if (runningLectures.containsKey(lectureId)){
-                Question question = Server.dbHandler.getQuestion(questionId);
+                Question question = Server.getDbHandler().getQuestion(questionId);
 
                 HashMap<String, Object> lectureEntry = (HashMap<String, Object>)runningLectures.get(lectureId);
                 String owner = (String) lectureEntry.get("owner");
@@ -284,7 +286,7 @@ public enum SocketHandler {
                     }
 
                     //add entry to the answersToQuestions object
-                    int count = question.answers.size();
+                    int count = question.getAnswers().size();
                     int [] answersArray = new int[count];
                     answersToQuestions.put(questionId, answersArray);
                     ///////
@@ -450,6 +452,7 @@ public enum SocketHandler {
         if (message != null) {
             response.put("message", message);
         }
+        Utilities.printLog("SocketHandler: Server sent to client: " + response);
         return Utilities.mapToJson(response);
     }
 

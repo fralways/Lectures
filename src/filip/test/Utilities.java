@@ -28,8 +28,8 @@ import static filip.test.StaticKeys.*;
 /**
  * Created by Filip on 8/8/2016.
  */
-class Utilities {
-    static String getFormattedResult(ResultSet rs) {
+public class Utilities {
+    public static String getFormattedResult(ResultSet rs) {
         List<JsonObject> resList = new ArrayList<JsonObject>();
         try {
             // get column names
@@ -69,7 +69,7 @@ class Utilities {
         return new Gson().toJson(forConvert);
     }
 
-    static String cryptWithMD5(String pass) throws NoSuchAlgorithmException {
+    public static String cryptWithMD5(String pass) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("MD5");
         byte[] passBytes = pass.getBytes();
         md.reset();
@@ -81,7 +81,7 @@ class Utilities {
         return sb.toString();
     }
 
-    static Claims verifyToken(HttpExchange he) throws ExceptionHandler {
+    public static Claims verifyToken(HttpExchange he) throws ExceptionHandler {
 
         Headers headers = he.getRequestHeaders();
 
@@ -94,7 +94,7 @@ class Utilities {
         }
     }
 
-    static Claims verifyToken(String jwt) throws ExceptionHandler {
+    public static Claims verifyToken(String jwt) throws ExceptionHandler {
         try {
             byte[] key = JWT_SECRET.getBytes();
             return Jwts.parser().setSigningKey(key).parseClaimsJws(jwt).getBody();
@@ -103,7 +103,7 @@ class Utilities {
         }
     }
 
-    static Map<String, String> getEndpoints() {
+    public static Map<String, String> getEndpoints() {
         Map<java.lang.String, java.lang.String> endpoints = new HashMap<>();
 
         String host = "http://24.135.42.105";
@@ -126,7 +126,7 @@ class Utilities {
         return endpoints;
     }
 
-    static boolean isValidEmailAddress(String email) {
+    public static boolean isValidEmailAddress(String email) {
         boolean result = true;
         try {
             InternetAddress emailAddr = new InternetAddress(email);
@@ -137,7 +137,7 @@ class Utilities {
         return result;
     }
 
-    static List<HashMap<String,Object>> convertResultSetToList(ResultSet rs) throws SQLException {
+    public static List<HashMap<String,Object>> convertResultSetToList(ResultSet rs) throws SQLException {
         ResultSetMetaData md = rs.getMetaData();
         int columns = md.getColumnCount();
         List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
@@ -152,7 +152,7 @@ class Utilities {
         return list;
     }
 
-    static void printLog(String message){
+    public static void printLog(String message){
         Date dt = new Date();
         DateTime currentDate = new DateTime(dt);
 
@@ -179,7 +179,7 @@ class Utilities {
         System.out.println(stringBuilder.toString());
     }
 
-    static void printLog(Object callerClass, String message){
+    public static void printLog(Object callerClass, String message){
         String fullClassName = callerClass.getClass().getName();
         String[] parts = fullClassName.split("\\.");
         String className = parts[parts.length - 1];
@@ -211,12 +211,12 @@ class Utilities {
         System.out.println(stringBuilder.toString());
     }
 
-     static String generateLectureString(){
+    public static String generateLectureString(){
         SecureRandom random = new SecureRandom();
         return new BigInteger(30, random).toString(32);
     }
 
-    static Map<String, Object> readJsonApplication(String body){
+    public static Map<String, Object> readJsonApplication(String body){
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         try {
             return gson.fromJson(body, Map.class);
@@ -225,12 +225,12 @@ class Utilities {
         }
     }
 
-    static String mapToJson(Object object){
+    public static String mapToJson(Object object){
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         return gson.toJson(object);
     }
 
-    static void restartServer(){
+    public static void restartServer(){
         Server.restart();
     }
 }

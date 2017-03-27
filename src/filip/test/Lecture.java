@@ -13,12 +13,28 @@ import static filip.test.StaticKeys.EXCEPTION_BADREQUEST;
  * Created by Filip on 12/27/2016.
  */
 public class Lecture {
-    String guid;
-    String title;
-    String description;
-    String unique_id;
+    private String guid;
+    private String title;
+    private String description;
+    private  String unique_id;
     ArrayList<String> questionIds;
     List<HashMap<String,Object>> questions;
+
+    public String getGuid() {
+        return guid;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getUnique_id() {
+        return unique_id;
+    }
 
     Lecture(Map<String, Object> parameters, String guid) throws ExceptionHandler{
         checkIfCorrectEntry(parameters);

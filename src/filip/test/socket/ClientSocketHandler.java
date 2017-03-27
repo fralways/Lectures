@@ -1,6 +1,9 @@
-package filip.test;
+package filip.test.socket;
 
 import com.google.gson.internal.LinkedTreeMap;
+import filip.test.ExceptionHandler;
+import filip.test.Utilities;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.Map;
@@ -41,12 +44,13 @@ public class ClientSocketHandler implements Runnable{
                 String clientMessage = br.readLine();
                 Map<String, Object> message;
                 try {
+                    Utilities.printLog("ClientSocketHandler: Client sent: " + clientMessage);
                     message = Utilities.readJsonApplication(clientMessage);
                     checkMessage(message);
                 }
                 catch (ExceptionHandler e){
                     Utilities.printLog("ClientHandler: user not logged in or message not in good format: "+ clientMessage);
-                    pw.println(SocketHandler.makeClientResponse(false, e.message));
+                    pw.println(SocketHandler.makeClientResponse(false, e.getMessage()));
                     if (clientMessage == null){
                         Utilities.printLog("ClientHandler: client sent message = null - disconnecting");
                         SocketHandler.INSTANCE.closeClient(this);
@@ -197,7 +201,7 @@ public class ClientSocketHandler implements Runnable{
                             break;
                     }
                 }catch (ExceptionHandler e) {
-                    pw.println(SocketHandler.makeClientResponse(false, e.message));
+                    pw.println(SocketHandler.makeClientResponse(false, e.getMessage()));
                 }
 
             } catch (IOException e) {

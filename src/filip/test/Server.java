@@ -15,6 +15,7 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import filip.test.socket.SocketHandler;
 import io.jsonwebtoken.Claims;
 
 import static filip.test.StaticKeys.*;
@@ -22,12 +23,16 @@ import static filip.test.StaticKeys.*;
 
 public class Server {
     private int port = 8000;
-    static DBHandler dbHandler;
+    private static DBHandler dbHandler;
     private static HttpServer server;
 
     public static void main(String[] args) {
         try {
-            dbHandler = new DBHandler();
+            if (args.length > 0){
+                dbHandler = new DBHandler(args[0], Integer.parseInt(args[1]));
+            }else {
+                dbHandler = new DBHandler();
+            }
             Server server = new Server();
             server.serverInit();
             SocketHandler socketServer = SocketHandler.INSTANCE;
@@ -69,6 +74,10 @@ public class Server {
         server.start();
 
         Utilities.printLog(this, "started at " + port);
+    }
+
+    public static DBHandler getDbHandler(){
+        return dbHandler;
     }
 
     //region Handlers
@@ -145,7 +154,6 @@ public class Server {
                         Utilities.printLog("User: patch");
                         Claims claims = verifyToken(he);
                         String userId = claims.getSubject();
-                        parameters = extractBodyParameters(he);
                         parameters = extractBodyParameters(he);
                         dbHandler.updateUserWithParams(userId, parameters);
                         statusCode = HttpURLConnection.HTTP_OK;
@@ -321,7 +329,7 @@ public class Server {
                         String userId = claims.getSubject();
                         Lecture lecture = dbHandler.createLecture(parameters, userId);
                         Map<String, String> jsonResponse = new HashMap<>();
-                        jsonResponse.put("id", lecture.guid);
+                        jsonResponse.put("id", lecture.getGuid());
                         response = makeResponse(jsonResponse);
                         statusCode = HttpURLConnection.HTTP_CREATED;
                         break;
@@ -463,7 +471,7 @@ public class Server {
         Headers headers = he.getRequestHeaders();
 
         String contentType = "application/x-www-form-urlencoded";
-        if (headers.containsKey("Content-type")){
+        if (headers.containsKey("Content-Type")){
             contentType = headers.getFirst("Content-Type");
         }
 

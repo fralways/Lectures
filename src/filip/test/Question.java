@@ -14,11 +14,31 @@ import static filip.test.StaticKeys.*;
  * Created by Filip on 12/27/2016.
  */
 public class Question {
-    String guid;
-    String question;
-    ArrayList<String> answers;
-    int correctIndex;
-    int duration;
+    private String guid;
+    private String question;
+    private ArrayList<String> answers;
+    private int correctIndex;
+    private int duration;
+
+    public String getGuid() {
+        return guid;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public int getCorrectIndex() {
+        return correctIndex;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public ArrayList<String> getAnswers() {
+        return answers;
+    }
 
     Question(Map<String, Object> parameters, String guid) throws ExceptionHandler{
         checkIfCorrectEntry(parameters);

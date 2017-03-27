@@ -21,11 +21,26 @@ import static filip.test.StaticKeys.*;
  */
 public class DBHandler {
 
-    private final Connection conn;
+    String host = "localhost";
+    int port = 5432;
+
+    private Connection conn;
+
     DBHandler() throws ClassNotFoundException, SQLException {
+        connect(host, port);
+        cleanupDB();
+    }
+
+    DBHandler(String host, int port) throws ClassNotFoundException, SQLException {
+        this.port = port;
+        this.host = host;
+        connect(host, port);
+        cleanupDB();
+    }
+
+    private void connect(String host, int port) throws ClassNotFoundException, SQLException{
         Class.forName("org.postgresql.Driver");
-//        String url = "jdbc:postgresql://localhost:5432/postgres";
-        String url = "jdbc:postgresql://localhost:5432/postgres?currentSchema=lectures";
+        String url = "jdbc:postgresql://"+ host + ":" + port + "/postgres?currentSchema=lectures";
         Properties props = new Properties();
         props.setProperty("user","postgres");
         props.setProperty("password","filip123");
@@ -33,13 +48,10 @@ public class DBHandler {
         props.setProperty("tcpKeepAlive", "true");
         props.put("autoReconnect", "true");
         conn = DriverManager.getConnection(url, props);
-
-        cleanupDB();
     }
 
     private void cleanupDB(){
         Utilities.printLog(this, "DB cleanup started");
-        Statement st = null;
         try {
             PreparedStatement ps = conn.prepareStatement("update users set runninglecture = null");
             ps.executeUpdate();
@@ -104,7 +116,7 @@ public class DBHandler {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 rs.close();
-                throw new ExceptionHandler("internal error", HttpURLConnection.HTTP_INTERNAL_ERROR);
+                throw new ExceptionHandler("user already exist", HttpURLConnection.HTTP_INTERNAL_ERROR);
             } else {
                 String cryptPassword = Utilities.cryptWithMD5((String) password);
                 String guid = Utilities.cryptWithMD5((String) email);
@@ -216,7 +228,7 @@ public class DBHandler {
         }
     }
 
-    Boolean checkIfUserExists(String guid) throws ExceptionHandler {
+    public Boolean checkIfUserExists(String guid) throws ExceptionHandler {
         try {
             if (guid != null) {
                 PreparedStatement ps = conn.prepareStatement("select exists(select 1 from users where guid = ?) AS \"exists\"");
@@ -251,7 +263,7 @@ public class DBHandler {
         }
     }
 
-    void updateUserWithRunningLecture(String userId, String uniqueId, boolean delete) throws ExceptionHandler{
+    public void updateUserWithRunningLecture(String userId, String uniqueId, boolean delete) throws ExceptionHandler{
         try {
             if (userId != null) {
                 if (delete) {
@@ -275,7 +287,7 @@ public class DBHandler {
         }
     }
 
-    Boolean checkIfUserHasRunningLecture(String userId) throws ExceptionHandler {
+    public Boolean checkIfUserHasRunningLecture(String userId) throws ExceptionHandler {
         try {
             if (userId != null) {
                 PreparedStatement ps = conn.prepareStatement("select exists(select 1 from users where runninglecture is not null and guid = ?) AS \"exists\"");
@@ -292,7 +304,7 @@ public class DBHandler {
         }
     }
 
-    Boolean checkIfUserIsOwnerOfLecture(String userId, String uniqueId) throws ExceptionHandler {
+    public Boolean checkIfUserIsOwnerOfLecture(String userId, String uniqueId) throws ExceptionHandler {
         try {
             if (userId != null && uniqueId != null) {
                 PreparedStatement ps = conn.prepareStatement("select exists(select 1 from lecture where owner = ? and unique_id = ?) AS \"exists\"");
@@ -399,16 +411,16 @@ public class DBHandler {
             }while (exists);
 
             PreparedStatement ps = conn.prepareStatement("INSERT INTO lecture(title, description, guid, unique_id, owner) VALUES (?, ?, ?, ?, ?)");
-            ps.setString(1, lecture.title);
-            ps.setString(2, lecture.description);
-            ps.setString(3, lecture.guid);
+            ps.setString(1, lecture.getTitle());
+            ps.setString(2, lecture.getDescription());
+            ps.setString(3, lecture.getGuid());
             ps.setString(4, uniqueid);
             ps.setString(5, userId);
             ps.executeUpdate();
             ps.close();
 
             ps = conn.prepareStatement("update users set lectures = array_append(lectures, CAST (? AS TEXT )) where guid=?");
-            ps.setString(1, lecture.guid);
+            ps.setString(1, lecture.getGuid());
             ps.setString(2, userId);
             ps.executeUpdate();
             ps.close();
@@ -561,14 +573,14 @@ public class DBHandler {
                         if (lecture != null && question != null) {
                             try {
                                 PreparedStatement ps = conn.prepareStatement("update lecture set questions = array_append(questions, CAST (? AS TEXT )) where guid=?");
-                                ps.setString(1, question.guid);
-                                ps.setString(2, lecture.guid);
+                                ps.setString(1, question.getGuid());
+                                ps.setString(2, lecture.getGuid());
                                 ps.executeUpdate();
                                 ps.close();
 
                                 ps = conn.prepareStatement("update question set owner = ? where guid = ?");
-                                ps.setString(1, lecture.guid);
-                                ps.setString(2, question.guid);
+                                ps.setString(1, lecture.getGuid());
+                                ps.setString(2, question.getGuid());
                                 ps.executeUpdate();
                                 ps.close();
                             }catch (SQLException e){
@@ -595,13 +607,13 @@ public class DBHandler {
                         if (lecture != null && question != null) {
                             try {
                                 PreparedStatement ps = conn.prepareStatement("update lecture set questions = array_remove(questions, CAST (? AS TEXT )) where guid=?");
-                                ps.setString(1, question.guid);
-                                ps.setString(2, lecture.guid);
+                                ps.setString(1, question.getGuid());
+                                ps.setString(2, lecture.getGuid());
                                 ps.executeUpdate();
                                 ps.close();
 
                                 ps = conn.prepareStatement("DELETE FROM question WHERE guid = ?");
-                                ps.setString(1, question.guid);
+                                ps.setString(1, question.getGuid());
                                 ps.executeUpdate();
                                 ps.close();
                             }catch (SQLException e){
@@ -629,6 +641,8 @@ public class DBHandler {
                     }catch (SQLException e){
                         throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
                     }
+
+                    break;
                 }
                 default: {
                     throw new ExceptionHandler("op method not supported", HttpURLConnection.HTTP_BAD_REQUEST);
@@ -648,17 +662,17 @@ public class DBHandler {
             Question question = new Question(parameters, guid);
 
             PreparedStatement ps = conn.prepareStatement("INSERT INTO question(guid, question, correctindex, duration, answers) VALUES (?, ?, ?, ?, ?)");
-            ps.setString(1, question.guid);
-            ps.setString(2, question.question);
-            ps.setInt(3, question.correctIndex);
-            ps.setInt(4, question.duration);
+            ps.setString(1, question.getGuid());
+            ps.setString(2, question.getQuestion());
+            ps.setInt(3, question.getCorrectIndex());
+            ps.setInt(4, question.getDuration());
 
-            final String[] data = question.answers.toArray(new String[question.answers.size()]);
+            final String[] data = question.getAnswers().toArray(new String[question.getAnswers().size()]);
             final java.sql.Array sqlArray = conn.createArrayOf("VARCHAR", data);
             ps.setArray(5, sqlArray);
             ps.executeUpdate();
             ps.close();
-            return question.guid;
+            return question.getGuid();
         }catch (ExceptionHandler e){
             throw e;
         }catch (SQLException e) {

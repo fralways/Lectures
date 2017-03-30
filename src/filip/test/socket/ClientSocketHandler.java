@@ -190,6 +190,15 @@ public class ClientSocketHandler implements Runnable{
                             }
                             break;
                         }
+                        case SOCKET_GETNUMOFLISTENERS:
+                            if (message.get("params") instanceof LinkedTreeMap) {
+                                LinkedTreeMap params = (LinkedTreeMap) message.get("params");
+                                int num = SocketHandler.INSTANCE.getNumOfListeners(params);
+                                pw.println(SocketHandler.makeClientResponse(true, num));
+                            }else {
+                                pw.println(SocketHandler.makeClientResponse(false, "bad params"));
+                            }
+                            break;
                         case SOCKET_CLOSE:
                             Utilities.printLog("ClientHandler: client disconnected with guid: " + guid);
                             SocketHandler.INSTANCE.closeClient(this);
@@ -227,6 +236,7 @@ public class ClientSocketHandler implements Runnable{
                         case SOCKET_SENDQUESTIONTOLECTURER:
                         case SOCKET_STOPLISTENLECTURE:
                         case SOCKET_GETLASTQUESTION:
+                        case SOCKET_GETNUMOFLISTENERS:
                             //all good
                             break;
                         default:

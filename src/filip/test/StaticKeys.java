@@ -25,6 +25,7 @@ public class StaticKeys {
     public final static String SOCKET_GETANSWERSTOQUESTION = "getAnswersToQuestion";
     public final static String SOCKET_GETLASTQUESTION = "getLastQuestion";
     public final static String SOCKET_GETLISTENERQUESTIONS = "getListenerQuestions";
+    public final static String SOCKET_GETNUMOFLISTENERS = "getNumOfListeners";
     public final static String SOCKET_CLOSE = "close";
 
 

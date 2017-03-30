@@ -61,15 +61,16 @@ public class Test {
             System.out.println("54x: get answers");
             System.out.println("55x: get last question lecturer sent");
             System.out.println("56x: get questions listeners sent");
+            System.out.println("57x: get number of listeners");
             System.out.println("900: close socket");
             System.out.println("901: open socket");
             System.out.println("999: read new line from server (could freeze client)");
 
             String userInput = userInputBR.readLine();
 
-//            String lectureId = "ilc69h";
-            String lectureId = "ukbmja";
-            String questionId = "0af09df9-ae07-4099-b20e-e6ca7a43cb83";
+            String lectureId = "a6psc5";
+//            String lectureId = "ukbmja";
+            String questionId = "4988ae3f-5af3-4de1-9452-597d03d7ff80";
             switch (userInput){
                 case "999":
                     break; // skip
@@ -219,6 +220,16 @@ public class Test {
                     Map<String, Object> params = new HashMap<>();
                     params.put("lectureId", lectureId);
                     message.put("method", "getListenerQuestions");
+                    message.put("params", params);
+                    String json = Utilities.mapToJson(message);
+                    out.println(json);
+                    break;
+                }
+                case "570": {
+                    Map<String, Object> message = new HashMap<>();
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("lectureId", lectureId);
+                    message.put("method", "getNumOfListeners");
                     message.put("params", params);
                     String json = Utilities.mapToJson(message);
                     out.println(json);

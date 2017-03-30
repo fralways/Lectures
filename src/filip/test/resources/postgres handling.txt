@@ -20,3 +20,9 @@ docker commit ac2b1eab409b(ovo je id kontejnera sto ima u docker ps -a) postgres
 za bash i docker start:
 docker run -i -t f424490974dd /bin/bash
 docker build -t newimagename .
+
+
+LECTURES JAR
+
+
+#ne zaboravi da uradis build + build artifacts da se update jar fajl i posle ga prebaci iz out/artifacts u ovaj folder

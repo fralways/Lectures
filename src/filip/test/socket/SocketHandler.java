@@ -424,7 +424,7 @@ public enum SocketHandler {
         }
     }
 
-    Object getListenerQuestions(LinkedTreeMap params, String guid) throws ExceptionHandler {
+    Object getListenerQuestions(LinkedTreeMap params, String guid) throws ExceptionHandler{
         try {
             String lectureId = (String) params.get("lectureId");
             if (runningLectures.containsKey(lectureId)){
@@ -441,6 +441,23 @@ public enum SocketHandler {
         }catch (ExceptionHandler e){
             throw e;
         } catch (Exception e){
+            throw new ExceptionHandler("bad params");
+        }
+    }
+
+    int getNumOfListeners(LinkedTreeMap params) throws ExceptionHandler{
+        try {
+            String lectureId = (String) params.get("lectureId");
+            if (runningLectures.containsKey(lectureId)) {
+                HashMap<String, Object> lectureEntry = (HashMap<String, Object>) runningLectures.get(lectureId);
+                ArrayList<String> users = (ArrayList<String>) lectureEntry.get("listeners");
+                return users.size();
+            } else {
+                throw new ExceptionHandler("lecture isn't started or bad lecture id");
+            }
+        }catch (ExceptionHandler e){
+            throw e;
+        }catch (Exception e){
             throw new ExceptionHandler("bad params");
         }
     }

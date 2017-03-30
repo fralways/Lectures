@@ -115,10 +115,7 @@ public class Test {
                 }
                 case "30": {
                     Map<String, Object> message = new HashMap<>();
-                    Map<String, String> params = new HashMap<>();
-                    params.put("id", lectureId);
                     message.put("method", "stopLecture");
-                    message.put("params", params);
                     String json = Utilities.mapToJson(message);
                     out.println(json);
                     break;
@@ -127,7 +124,6 @@ public class Test {
                     //listen with password
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
-//                    params.put("id", "ilc69h");
                     params.put("id", lectureId);
                     params.put("password", "nekipass");
                     message.put("method", "listenLecture");
@@ -157,7 +153,6 @@ public class Test {
                 case "500": {
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
-                    params.put("lectureId", lectureId);
                     params.put("questionId", questionId);
                     message.put("method", "sendQuestionToListeners");
                     message.put("params", params);
@@ -168,7 +163,6 @@ public class Test {
                 case "510": {
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
-                    params.put("lectureId", lectureId);
                     params.put("questionText", "Some text here is ins");
                     message.put("method", "sendQuestionToLecturer");
                     message.put("params", params);
@@ -179,7 +173,6 @@ public class Test {
                 case "520": {
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
-                    params.put("lectureId", lectureId);
                     params.put("questionText", "Some text here is inserted");
                     message.put("method", "sendListenerQuestionToListeners");
                     message.put("params", params);
@@ -218,9 +211,7 @@ public class Test {
                 case "560": {
                     Map<String, Object> message = new HashMap<>();
                     Map<String, Object> params = new HashMap<>();
-                    params.put("lectureId", lectureId);
                     message.put("method", "getListenerQuestions");
-                    message.put("params", params);
                     String json = Utilities.mapToJson(message);
                     out.println(json);
                     break;
@@ -228,9 +219,7 @@ public class Test {
                 case "570": {
                     Map<String, Object> message = new HashMap<>();
                     Map<String, Object> params = new HashMap<>();
-                    params.put("lectureId", lectureId);
                     message.put("method", "getNumOfListeners");
-                    message.put("params", params);
                     String json = Utilities.mapToJson(message);
                     out.println(json);
                     break;

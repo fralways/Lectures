@@ -4,6 +4,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import filip.test.ExceptionHandler;
 import filip.test.Utilities;
 
+import javax.rmi.CORBA.Util;
 import java.io.*;
 import java.net.Socket;
 import java.util.Map;
@@ -15,15 +16,47 @@ import static filip.test.StaticKeys.*;
  */
 public class ClientSocketHandler implements Runnable{
 
-    Socket socket;
-    Thread runningOnThread;
-    String guid;
-    BufferedReader br;
-    OutputStream os;
-    PrintWriter pw;
-    String listeningToTheLecture;
-    boolean isListener;
+    private Socket socket;
+    private Thread runningOnThread;
+    private String guid;
+    private BufferedReader br;
+    private OutputStream os;
+    private PrintWriter pw;
+    private boolean isListener;
+    private String lectureId;
     private static long listenerNumber = 0;
+
+    public void setRunningOnThread(Thread t){
+        runningOnThread = t;
+    }
+
+    public PrintWriter getPW(){
+        return pw;
+    }
+
+    public boolean getIsListener() {
+        return isListener;
+    }
+
+    public void setIsListener(boolean listener) {
+        isListener = listener;
+    }
+
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String id) {
+        guid = id;
+    }
+
+    public String getLectureId() {
+        return lectureId;
+    }
+
+    public void setLectureId(String id) {
+        lectureId = id;
+    }
 
     ClientSocketHandler(Socket socket){
         this.socket = socket;
@@ -67,7 +100,6 @@ public class ClientSocketHandler implements Runnable{
                             if (message.get("params") instanceof String) {
                                 String guid = (String) message.get("params");
                                 SocketHandler.INSTANCE.loginClient(this, guid);
-//                                this.guid = guid;
                                 pw.println(SocketHandler.makeClientResponse(true, "Hello, " + this.guid + ". Select action"));
                                 Utilities.printLog("ClientHandler: client logged in with guid " + this.guid);
                             }else {
@@ -77,30 +109,30 @@ public class ClientSocketHandler implements Runnable{
                         case SOCKET_STARTLECTURE:
                             if (message.get("params") instanceof LinkedTreeMap) {
                                 LinkedTreeMap params = (LinkedTreeMap) message.get("params");
-                                SocketHandler.INSTANCE.startLecture(params, guid);
+                                lectureId = SocketHandler.INSTANCE.startLecture(params, guid);
                                 pw.println(SocketHandler.makeClientResponse(true, "lecture started"));
                             } else {
                                 pw.println(SocketHandler.makeClientResponse(false, "bad params"));
                             }
                             break;
                         case SOCKET_STOPLECTURE:{
-                            if (message.get("params") instanceof LinkedTreeMap) {
-                                LinkedTreeMap params = (LinkedTreeMap) message.get("params");
-                                SocketHandler.INSTANCE.stopLecture(params, guid);
-                                pw.println(SocketHandler.makeClientResponse(true, "lecture stopped"));
-                            }else {
-                                pw.println(SocketHandler.makeClientResponse(false, "bad params"));
-                            }
+                            LinkedTreeMap params = (LinkedTreeMap) message.get("params");
+                            SocketHandler.INSTANCE.stopLecture(this);
+                            pw.println(SocketHandler.makeClientResponse(true, "lecture stopped"));
                             break;
                         }
                         case SOCKET_LISTENLECTURE:{
                             if (message.get("params") instanceof LinkedTreeMap) {
                                 LinkedTreeMap params = (LinkedTreeMap) message.get("params");
-                                if (listeningToTheLecture != null){
-                                    pw.println(SocketHandler.makeClientResponse(false, "user already listens to the lecture"));
+                                if (isListener) {
+                                    if (lectureId != null) {
+                                        pw.println(SocketHandler.makeClientResponse(false, "user already listens to the lecture"));
+                                    } else {
+                                        SocketHandler.INSTANCE.listenLecture(params, this);
+                                        pw.println(SocketHandler.makeClientResponse(true, "added to lecture"));
+                                    }
                                 }else {
-                                    SocketHandler.INSTANCE.listenLecture(params, this);
-                                    pw.println(SocketHandler.makeClientResponse(true, "added to lecture"));
+                                    pw.println(SocketHandler.makeClientResponse(true, "lecturer cannot listen to lecture"));
                                 }
                             }else {
                                 pw.println(SocketHandler.makeClientResponse(false, "bad params"));
@@ -108,10 +140,14 @@ public class ClientSocketHandler implements Runnable{
                             break;
                         }
                         case SOCKET_STOPLISTENLECTURE:{
-                            if (listeningToTheLecture != null) {
-                                SocketHandler.INSTANCE.stopListenLecture(listeningToTheLecture, guid);
-                                listeningToTheLecture = null;
-                                pw.println(SocketHandler.makeClientResponse(true, "stopped listening lecture"));
+                            if (lectureId != null) {
+                                if (isListener) {
+                                    SocketHandler.INSTANCE.stopListenLecture(lectureId, guid);
+                                    lectureId = null;
+                                    pw.println(SocketHandler.makeClientResponse(true, "stopped listening lecture"));
+                                }else {
+                                    pw.println(SocketHandler.makeClientResponse(true, "lecturer cannot stop listen to lecture"));
+                                }
                             }else {
                                 pw.println(SocketHandler.makeClientResponse(false, "client is not listening to any lecture"));
                             }
@@ -120,7 +156,7 @@ public class ClientSocketHandler implements Runnable{
                         case SOCKET_SENDQUESTIONTOLISTENERS:{
                             if (message.get("params") instanceof LinkedTreeMap) {
                                 LinkedTreeMap params = (LinkedTreeMap) message.get("params");
-                                SocketHandler.INSTANCE.sendQuestionToListeners(params, guid);
+                                SocketHandler.INSTANCE.sendQuestionToListeners(params, this);
                                 pw.println(SocketHandler.makeClientResponse(true, "sent question to the listeners"));
                             }else {
                                 pw.println(SocketHandler.makeClientResponse(false, "bad params"));
@@ -130,7 +166,7 @@ public class ClientSocketHandler implements Runnable{
                         case SOCKET_SENDQUESTIONTOLECTURER:{
                             if (message.get("params") instanceof LinkedTreeMap) {
                                 LinkedTreeMap params = (LinkedTreeMap) message.get("params");
-                                SocketHandler.INSTANCE.sendQuestionToLecturer(params, listeningToTheLecture);
+                                SocketHandler.INSTANCE.sendQuestionToLecturer(params, this);
                                 pw.println(SocketHandler.makeClientResponse(true, "sent question to the lecturer"));
                             }else {
                                 pw.println(SocketHandler.makeClientResponse(false, "bad params"));
@@ -140,7 +176,7 @@ public class ClientSocketHandler implements Runnable{
                         case SOCKET_SENDLISTENERQUESTIONTOLISTENERS:{
                             if (message.get("params") instanceof LinkedTreeMap) {
                                 LinkedTreeMap params = (LinkedTreeMap) message.get("params");
-                                SocketHandler.INSTANCE.sendListenerQuestionToListeners(params, guid);
+                                SocketHandler.INSTANCE.sendListenerQuestionToListeners(params, this);
                                 pw.println(SocketHandler.makeClientResponse(true, "sent listener's question to the listeners"));
                             }else {
                                 pw.println(SocketHandler.makeClientResponse(false, "bad params"));
@@ -150,7 +186,7 @@ public class ClientSocketHandler implements Runnable{
                         case SOCKET_SENDANSWERTOQUESTION:{
                             if (message.get("params") instanceof LinkedTreeMap) {
                                 LinkedTreeMap params = (LinkedTreeMap) message.get("params");
-                                SocketHandler.INSTANCE.sendAnswerToQuestion(params);
+                                SocketHandler.INSTANCE.sendAnswerToQuestion(params, this);
                                 pw.println(SocketHandler.makeClientResponse(true, "sent answer"));
                             }else {
                                 pw.println(SocketHandler.makeClientResponse(false, "bad params"));
@@ -168,8 +204,8 @@ public class ClientSocketHandler implements Runnable{
                             break;
                         }
                         case SOCKET_GETLASTQUESTION:{
-                            if (listeningToTheLecture != null) {
-                                Object question = SocketHandler.INSTANCE.getLastQuestion(listeningToTheLecture);
+                            if (lectureId != null) {
+                                Object question = SocketHandler.INSTANCE.getLastQuestion(lectureId);
                                 pw.println(SocketHandler.makeClientResponse(true, question));
                             }else {
                                 pw.println(SocketHandler.makeClientResponse(false, "user is not listening to any lecture"));
@@ -178,32 +214,22 @@ public class ClientSocketHandler implements Runnable{
                         }
                         case SOCKET_GETLISTENERQUESTIONS:{
                             if (!isListener) {
-                                if (message.get("params") instanceof LinkedTreeMap) {
-                                    LinkedTreeMap params = (LinkedTreeMap) message.get("params");
-                                    Object questions = SocketHandler.INSTANCE.getListenerQuestions(params, this.guid);
-                                    pw.println(SocketHandler.makeClientResponse(true, questions));
-                                }else {
-                                    pw.println(SocketHandler.makeClientResponse(false, "bad params"));
-                                }
+                                Object questions = SocketHandler.INSTANCE.getListenerQuestions(this);
+                                pw.println(SocketHandler.makeClientResponse(true, questions));
                             }else {
                                 pw.println(SocketHandler.makeClientResponse(false, "listener is not allowed to do this"));
                             }
                             break;
                         }
                         case SOCKET_GETNUMOFLISTENERS:
-                            if (message.get("params") instanceof LinkedTreeMap) {
-                                LinkedTreeMap params = (LinkedTreeMap) message.get("params");
-                                int num = SocketHandler.INSTANCE.getNumOfListeners(params);
-                                pw.println(SocketHandler.makeClientResponse(true, num));
-                            }else {
-                                pw.println(SocketHandler.makeClientResponse(false, "bad params"));
-                            }
+                            int num = SocketHandler.INSTANCE.getNumOfListeners(this);
+                            pw.println(SocketHandler.makeClientResponse(true, num));
                             break;
                         case SOCKET_CLOSE:
                             Utilities.printLog("ClientHandler: client disconnected with guid: " + guid);
                             SocketHandler.INSTANCE.closeClient(this);
                             guid = null;
-                            listeningToTheLecture = null;
+                            lectureId = null;
                             break;
                         default:
                             pw.println(SocketHandler.makeClientResponse(false, "method not found"));
@@ -253,6 +279,19 @@ public class ClientSocketHandler implements Runnable{
         }else {
             throw new ExceptionHandler("message not in good format");
         }
+    }
+
+    void closeSocket(){
+        try {
+            socket.close();
+        }catch (IOException e) {
+            pw.println(SocketHandler.makeClientResponse(false, "failed to close socket"));
+            Utilities.printLog("ClientSocketHandler: Failed to close socket");
+        }
+    }
+
+    void interruptThread(){
+        runningOnThread.interrupt();
     }
 
     static long getNewListenerNumber(){

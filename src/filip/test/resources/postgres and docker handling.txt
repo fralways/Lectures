@@ -26,7 +26,6 @@ docker run -i -t f424490974dd /bin/bash
 LECTURES JAR
 
 docker build -t gcr.io/lectures-145120/server_with_jar .
-docker build -t gcr.io/lectures-145120/server_with_jar_test .
 
 #ne zaboravi da uradis build + build artifacts da se update jar fajl i posle ga prebaci iz out/artifacts u ovaj folder
 

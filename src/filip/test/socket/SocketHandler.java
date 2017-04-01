@@ -2,13 +2,12 @@ package filip.test.socket;
 
 import com.google.gson.internal.LinkedTreeMap;
 import filip.test.*;
+import org.joda.time.DateTime;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public enum SocketHandler {
@@ -25,8 +24,8 @@ public enum SocketHandler {
         private String owner;
         private String password;
         private final List<String> listeners;
-        private final List<Object> lecturerQuestions;    //questions that lecturer sends to the listeners
-        private final List<Object> listenerQuestions;    //questions that listener sends to the lecturer
+        private final List<SocketQuestion> lecturerQuestions;    //questions that lecturer sends to the listeners
+        private final List<SocketQuestion> listenerQuestions;    //questions that listener sends to the lecturer
         private final ConcurrentHashMap<String, int []> answersToQuestions;
 
         public String getLectureId() {
@@ -102,23 +101,27 @@ public enum SocketHandler {
             return found;
         }
 
-        private void addLecturerQuestion(Question question){
-            lecturerQuestions.add(question);
+        private SocketQuestion addLecturerQuestion(Question question){
+            SocketQuestion squestion = new SocketQuestion(question);
+            lecturerQuestions.add(squestion);
+            return squestion;
         }
 
-        private void addLecturerQuestion(String question){
-            lecturerQuestions.add(question);
+        private SocketQuestion addLecturerQuestion(String question){
+            SocketQuestion squestion = new SocketQuestion(question);
+            lecturerQuestions.add(squestion);
+            return squestion;
         }
 
         //lecturer sends his question to listeners
         void sendQuestionToListeners(Question question){
-            addLecturerQuestion(question);
+            SocketQuestion squestion = addLecturerQuestion(question);
 
             //send question to listeners
             synchronized (listeners) {
                 for (String listenerGuid : listeners) {
                     ClientSocketHandler listenerSocket = clients.get(listenerGuid);
-                    listenerSocket.getPW().println(makeClientMessage(SocketMethods.LECTURERSENTQUESTION, question));
+                    listenerSocket.getPW().println(makeClientMessage(SocketMethods.LECTURERSENTQUESTION, squestion.getQuestion()));
                 }
             }
 
@@ -130,32 +133,34 @@ public enum SocketHandler {
 
         //lecturer sends listener question to listeners
         void sendQuestionToListeners(String question){
-            addLecturerQuestion(question);
+            SocketQuestion squestion = addLecturerQuestion(question);
 
             //send question to listeners
             for (String listenerGuid : listeners) {
                 ClientSocketHandler listenerSocket = clients.get(listenerGuid);
-                listenerSocket.getPW().println(makeClientMessage(SocketMethods.LECTURERSENTLISTENERQUESTION, question));
+                listenerSocket.getPW().println(makeClientMessage(SocketMethods.LECTURERSENTLISTENERQUESTION, squestion.getQuestion()));
             }
         }
 
-        private void addListenerQuestion(String question){
-            listenerQuestions.add(question);
+        private SocketQuestion addListenerQuestion(String question){
+            SocketQuestion squestion = new SocketQuestion(question);
+            listenerQuestions.add(squestion);
+            return squestion;
         }
 
         void sendQuestionToLecturer(String question){
-            addListenerQuestion(question);
+            SocketQuestion squestion = addListenerQuestion(question);
 
             ClientSocketHandler ownerSocker = clients.get(owner);
             if (ownerSocker != null) {
-                ownerSocker.getPW().println(makeClientMessage(SocketMethods.LISTENERSENTQUESTION, question));
+                ownerSocker.getPW().println(makeClientMessage(SocketMethods.LISTENERSENTQUESTION, squestion.getQuestion()));
             }
 //            else {
                 //owner is disconnected, currently do nothing
 //            }
         }
 
-        Object getLastLecturerQuestion(){
+        SocketQuestion getLastLecturerQuestion(){
             synchronized (lecturerQuestions) {
                 if (lecturerQuestions.size() > 0) {
                     return lecturerQuestions.get(lecturerQuestions.size() - 1);
@@ -165,8 +170,14 @@ public enum SocketHandler {
             }
         }
 
-        Object getListenerQuestions(){
-            return listenerQuestions;
+        ArrayList<Object> getListenerQuestions(){
+            ArrayList<Object> questions = new ArrayList<>();
+            synchronized (listenerQuestions) {
+                for (SocketQuestion squestion : listenerQuestions) {
+                    questions.add(squestion.getQuestion());
+                }
+            }
+            return questions;
         }
 
         int getListenersCount(){
@@ -546,7 +557,7 @@ public enum SocketHandler {
     Object getLastQuestion(String lectureId) throws ExceptionHandler {
         if (runningLectures.containsKey(lectureId)) {
             RunningLecture rlecture = runningLectures.get(lectureId);
-            return rlecture.getLastLecturerQuestion();
+            return rlecture.getLastLecturerQuestion().getQuestion();
         }else {
             throw new ExceptionHandler("lecture isn't started or bad lecture id");
         }

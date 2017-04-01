@@ -184,7 +184,7 @@ public class Test {
                     Map<String, Object> message = new HashMap<>();
                     Map<String, Object> params = new HashMap<>();
                     params.put("questionId", questionId);
-                    params.put("answerIndex", 1);
+                    params.put("answerIndex", 0);
                     message.put("method", "sendAnswerToQuestion");
                     message.put("params", params);
                     String json = Utilities.mapToJson(message);

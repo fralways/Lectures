@@ -3,7 +3,6 @@ package filip.test.socket;
 import com.google.gson.internal.LinkedTreeMap;
 import filip.test.*;
 
-import javax.rmi.CORBA.Util;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
@@ -19,11 +18,187 @@ public enum SocketHandler {
      * unique (INSTANCE)
      * creating ClientSocketHandler threads for each client connected
      */
+
+    class RunningLecture {
+
+        private String lectureId;
+        private String owner;
+        private String password;
+        private final List<String> listeners;
+        private final List<Object> lecturerQuestions;    //questions that lecturer sends to the listeners
+        private final List<Object> listenerQuestions;    //questions that listener sends to the lecturer
+        private final ConcurrentHashMap<String, int []> answersToQuestions;
+
+        public String getLectureId() {
+            return lectureId;
+        }
+
+        public String getOwner() {
+            return owner;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        RunningLecture(String id, String password, String owner){
+            lectureId = id;
+            this.owner = owner;
+            this.password = password;
+            listeners = Collections.synchronizedList(new ArrayList());
+            lecturerQuestions = Collections.synchronizedList(new ArrayList());
+            listenerQuestions = Collections.synchronizedList(new ArrayList());
+            answersToQuestions = new ConcurrentHashMap<>();
+        }
+
+        void addListener(String guid){
+            synchronized (listeners) {
+                listeners.add(guid);
+            }
+        }
+
+        private void notifyListenersLectureStopped(){
+            synchronized (listeners) {
+                for (String listener : listeners) {
+                    ClientSocketHandler listenerSocket = clients.get(listener);
+                    listenerSocket.getPW().println(makeClientMessage(SocketMethods.STOPPEDLECTURE, "lecture stopped"));
+                    listenerSocket.setLectureId(null);
+                }
+            }
+        }
+
+        private void removeQuestionsFromAnswersToQuestions(){
+            synchronized (lecturerQuestions) {
+                for (Object question : lecturerQuestions) {
+                    if (question instanceof Question) {
+                        Question q = (Question) question;
+                        if (answersToQuestions.containsKey(q.getGuid())) {
+                            answersToQuestions.remove(q.getGuid());
+                        }
+                    }
+                }
+            }
+        }
+
+        void notifyListenersLectureStoppedAndRemoveUsedQuestions(){
+            notifyListenersLectureStopped();
+            removeQuestionsFromAnswersToQuestions();
+        }
+
+        boolean removeListenerWithId(String guid){
+            boolean found = false;
+
+            synchronized (listeners) {
+                for (int i = 0; i < listeners.size(); i++) {
+                    String userGuid = listeners.get(i);
+                    if (userGuid.equals(guid)) {
+                        listeners.remove(i);
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            return found;
+        }
+
+        private void addLecturerQuestion(Question question){
+            lecturerQuestions.add(question);
+        }
+
+        private void addLecturerQuestion(String question){
+            lecturerQuestions.add(question);
+        }
+
+        //lecturer sends his question to listeners
+        void sendQuestionToListeners(Question question){
+            addLecturerQuestion(question);
+
+            //send question to listeners
+            synchronized (listeners) {
+                for (String listenerGuid : listeners) {
+                    ClientSocketHandler listenerSocket = clients.get(listenerGuid);
+                    listenerSocket.getPW().println(makeClientMessage(SocketMethods.LECTURERSENTQUESTION, question));
+                }
+            }
+
+            //add entry to the answersToQuestions object
+            int count = question.getAnswers().size();
+            int[] answersArray = new int[count];
+            answersToQuestions.put(question.getGuid(), answersArray);
+        }
+
+        //lecturer sends listener question to listeners
+        void sendQuestionToListeners(String question){
+            addLecturerQuestion(question);
+
+            //send question to listeners
+            for (String listenerGuid : listeners) {
+                ClientSocketHandler listenerSocket = clients.get(listenerGuid);
+                listenerSocket.getPW().println(makeClientMessage(SocketMethods.LECTURERSENTLISTENERQUESTION, question));
+            }
+        }
+
+        private void addListenerQuestion(String question){
+            listenerQuestions.add(question);
+        }
+
+        void sendQuestionToLecturer(String question){
+            addListenerQuestion(question);
+
+            ClientSocketHandler ownerSocker = clients.get(owner);
+            if (ownerSocker != null) {
+                ownerSocker.getPW().println(makeClientMessage(SocketMethods.LISTENERSENTQUESTION, question));
+            }
+//            else {
+                //owner is disconnected, currently do nothing
+//            }
+        }
+
+        Object getLastLecturerQuestion(){
+            synchronized (lecturerQuestions) {
+                if (lecturerQuestions.size() > 0) {
+                    return lecturerQuestions.get(lecturerQuestions.size() - 1);
+                } else {
+                    return null;
+                }
+            }
+        }
+
+        Object getListenerQuestions(){
+            return listenerQuestions;
+        }
+
+        int getListenersCount(){
+            return listeners.size();
+        }
+
+        void updateAnswersToQuestion(String questionId, Double answerIndex) throws Exception{
+            if (answersToQuestions.containsKey(questionId)){
+                int[] answersArray = answersToQuestions.get(questionId);
+                if (answerIndex < answersArray.length){
+                    answersArray[answerIndex.intValue()]++;
+                }else {
+                    throw new ExceptionHandler("index greater than number of questions");
+                }
+            }else {
+                throw new ExceptionHandler("question not asked");
+            }
+        }
+
+        int [] getAnswersToQuestion(String questionId) throws Exception{
+            if (answersToQuestions.containsKey(questionId)){
+                return answersToQuestions.get(questionId);
+            }else {
+                throw new ExceptionHandler("question not asked or bad question id");
+            }
+        }
+    }
+
     private ServerSocket serverSocket;
     private ConcurrentHashMap<String, ClientSocketHandler> clients;
-    private ConcurrentHashMap<String, Object> runningLectures;
+    private ConcurrentHashMap<String, RunningLecture> runningLectures;
     private ConcurrentHashMap<String, String> usersRunningLectures; //links users with running lectures
-    private ConcurrentHashMap<String, int []> answersToQuestions;
 
     int port = 8210;
 
@@ -51,7 +226,6 @@ public enum SocketHandler {
     public void initProperties() {
         clients = new ConcurrentHashMap<>();
         runningLectures = new ConcurrentHashMap<>();
-        answersToQuestions = new ConcurrentHashMap<>();
         usersRunningLectures = new ConcurrentHashMap<>();
     }
 
@@ -79,7 +253,6 @@ public enum SocketHandler {
             }
             clients = null;
             runningLectures = null;
-            answersToQuestions = null;
             usersRunningLectures = null;
 //            serverSocket.close();
             Utilities.printLog("SocketHandler: server cleaned");
@@ -152,31 +325,21 @@ public enum SocketHandler {
                 throw new ExceptionHandler("user is not owner of this lecture or lecture does not exist");
             }else {
                 String password = (String) params.get("password");
-                if (id != null){
-                    Lecture lecture = Server.getDbHandler().getLectureFromUniqueId(id);
-                    HashMap<String, Object> lectureEntry = new HashMap<>();
-                    ArrayList<String> users = new ArrayList<>();
-                    lectureEntry.put("owner", guid);
-                    if (password != null) {
-                        lectureEntry.put("password", password);
-                    }
-                    lectureEntry.put("listeners", users);
-                    //questions that lecturer sends to the listeners
-                    lectureEntry.put("questions", Collections.synchronizedList(new ArrayList()));
-                    //questions that listener sends to the lecturer
-                    lectureEntry.put("listenerQuestions", Collections.synchronizedList(new ArrayList()));
 
-                    Server.getDbHandler().updateUserWithRunningLecture(guid, id, false);
+                //check if lecture exist, otherwise throw error
+                Server.getDbHandler().getLectureFromUniqueId(id);
+                /////
 
-                    runningLectures.put(id, lectureEntry);
-                    usersRunningLectures.put(guid, id);
+                RunningLecture rlecture = new RunningLecture(id, password, guid);
+                runningLectures.put(id, rlecture);
+                usersRunningLectures.put(guid, id);
 
-                    Utilities.printLog("SocketHandler: lecture started with id: " + lecture.getUnique_id());
+                Server.getDbHandler().updateUserWithRunningLecture(guid, id, false);
 
-                    return id;
-                }else {
-                    throw new ExceptionHandler("bad params");
-                }
+                Utilities.printLog("SocketHandler: lecture started with id: " + id);
+
+
+                return id;
             }
         }catch (ExceptionHandler e){
             throw e;
@@ -187,44 +350,30 @@ public enum SocketHandler {
 
     void stopLecture(ClientSocketHandler lecturer) throws ExceptionHandler {
         try {
-            if (runningLectures.containsKey(lecturer.getLectureId())){
-                HashMap<String, Object> lectureEntry = (HashMap<String, Object>)runningLectures.get(lecturer.getLectureId());
-                String ownerGuid = (String) lectureEntry.get("owner");
-                if (ownerGuid.equals(lecturer.getGuid())) {
-                    ArrayList<String> users = (ArrayList<String>) lectureEntry.get("listeners");
-                    for (int i = 0; i < users.size(); i++) {
-                        String listener = users.get(i);
-                        ClientSocketHandler listenerSocket = clients.get(listener);
-                        listenerSocket.getPW().println(makeClientMessage(SocketMethods.STOPPEDLECTURE, "lecture stopped"));
-                        listenerSocket.setLectureId(null);
+            if (lecturer.getLectureId() != null) {
+                if (runningLectures.containsKey(lecturer.getLectureId())) {
+                    RunningLecture rlecture = runningLectures.get(lecturer.getLectureId());
+                    String ownerGuid = rlecture.getOwner();
+                    if (ownerGuid.equals(lecturer.getGuid())) {
+
+                        rlecture.notifyListenersLectureStoppedAndRemoveUsedQuestions();
+                        Utilities.printLog("SocketHandler: lecture stopped with id: " + lecturer.getLectureId());
+
+                        runningLectures.remove(lecturer.getLectureId());
+                        usersRunningLectures.remove(lecturer.getGuid());
+                        Server.getDbHandler().updateUserWithRunningLecture(lecturer.getGuid(), lecturer.getLectureId(), true);
+
+                        lecturer.setLectureId(null);
+                    } else {
+                        throw new ExceptionHandler("you are not allowed to stop this lecture");
                     }
-
-                    //cleanup
-                    List<Object> questions = (List<Object>)lectureEntry.get("questions");
-                    synchronized (questions) {
-                        for (Object question : questions) {
-                            if (question instanceof Question) {
-                                Question q = (Question) question;
-                                if (answersToQuestions.containsKey(q.getGuid())) {
-                                    answersToQuestions.remove(q.getGuid());
-                                }
-                            }
-                        }
-                    }
-
-                    Utilities.printLog("SocketHandler: lecture stopped with id: " + lecturer.getLectureId());
-
-                    runningLectures.remove(lecturer.getLectureId());
-                    usersRunningLectures.remove(lecturer.getGuid());
-                    Server.getDbHandler().updateUserWithRunningLecture(lecturer.getGuid(), lecturer.getLectureId(), true);
-
-                    lecturer.setLectureId(null);
-                }else {
-                    throw new ExceptionHandler("you are not allowed to stop this lecture");
                 }
+//                else {
+                    //do nothing
+                    //                throw new ExceptionHandler("lecture isn't started or bad lecture id");
+//                }
             }else {
-                //do nothing
-//                throw new ExceptionHandler("lecture isn't started or bad lecture id");
+                throw new ExceptionHandler("you have no running lecture");
             }
 
         }catch (ExceptionHandler e){
@@ -239,10 +388,9 @@ public enum SocketHandler {
             String id = (String) params.get("id");
             String password = (String) params.get("password");
             if (runningLectures.containsKey(id)){
-                HashMap<String, Object> lectureEntry = (HashMap<String, Object>)runningLectures.get(id);
-                if (!lectureEntry.containsKey("password") || (password != null && password.equals(lectureEntry.get("password")))){
-                    ArrayList<String> users = (ArrayList<String>)lectureEntry.get("listeners");
-                    users.add(client.getGuid());
+                RunningLecture rlecture = runningLectures.get(id);
+                if (rlecture.password == null || rlecture.password.equals(password)){
+                    rlecture.addListener(client.getGuid());
                     client.setLectureId(id);
                 }else {
                     throw new ExceptionHandler("wrong password");
@@ -258,62 +406,45 @@ public enum SocketHandler {
     }
 
     void stopListenLecture(String lectureId, String guid) {
-        HashMap<String, Object> lectureEntry = (HashMap<String, Object>)runningLectures.get(lectureId);
+        RunningLecture rlecture = runningLectures.get(lectureId);
+        if (rlecture != null) {
 
-        if (lectureEntry != null) {
-            ArrayList<String> users = (ArrayList<String>)lectureEntry.get("listeners");
-            boolean found = false;
+            rlecture.removeListenerWithId(guid);
+//            boolean found = rlecture.removeListenerWithId(guid);
 
-            for (int i=0; i<users.size(); i++){
-                String userGuid = users.get(i);
-                if (userGuid.equals(guid)){
-                    users.remove(i);
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found){
+//            if (!found){
 //                    throw new ExceptionHandler("user is not listening to the selected lecture");
 //                    better do nothing, so that clientsocket sets listeningtothelecture = null and client gets success
-            }
-        }else {
+//            }
+        }
+//        else {
 //                throw new ExceptionHandler("lecture isn't started or bad lecture id");
 //                better do nothing, so that clientsocket sets listeningtothelecture = null and client gets success
-        }
+//        }
     }
 
     void sendQuestionToListeners(LinkedTreeMap params, ClientSocketHandler sender) throws ExceptionHandler {
         try {
             String questionId = (String) params.get("questionId");
-            if (runningLectures.containsKey(sender.getLectureId())){
-                Question question = Server.getDbHandler().getQuestion(questionId);
+            if (sender.getLectureId() != null) {
+                if (runningLectures.containsKey(sender.getLectureId())) {
 
-                HashMap<String, Object> lectureEntry = (HashMap<String, Object>)runningLectures.get(sender.getLectureId());
-                String owner = (String) lectureEntry.get("owner");
-                if (owner.equals(sender.getGuid())) {
-                    ArrayList<String> users = (ArrayList<String>) lectureEntry.get("listeners");
-                    for (String listenerGuid : users) {
-                        ClientSocketHandler listenerSocket = clients.get(listenerGuid);
-                        listenerSocket.getPW().println(makeClientMessage(SocketMethods.LECTURERSENTQUESTION, question));
+                    //fetch Question from DB
+                    Question question = Server.getDbHandler().getQuestion(questionId);
+                    ////
+
+                    RunningLecture rlecture = runningLectures.get(sender.getLectureId());
+                    String owner = rlecture.owner;
+                    if (owner.equals(sender.getGuid())) {
+                        rlecture.sendQuestionToListeners(question);
+                    } else {
+                        throw new ExceptionHandler("you are not allowed to do this");
                     }
-
-                    //add entry to the answersToQuestions object
-                    int count = question.getAnswers().size();
-                    int [] answersArray = new int[count];
-                    answersToQuestions.put(questionId, answersArray);
-                    ///////
-
-                    //update lectures
-                    List<Object> questions = (List<Object>)lectureEntry.get("questions");
-                    questions.add(question);
-                    ////////
-
-                }else {
-                    throw new ExceptionHandler("you are not allowed to do this");
+                } else {
+                    throw new ExceptionHandler("lecture isn't started or bad lecture id");
                 }
             }else {
-                throw new ExceptionHandler("lecture isn't started or bad lecture id");
+                throw new ExceptionHandler("you have no running lecture");
             }
         }catch (ExceptionHandler e){
             throw e;
@@ -326,23 +457,15 @@ public enum SocketHandler {
         try {
             String questionText = (String) params.get("questionText");
             if (listener.getIsListener()){
-                if (runningLectures.containsKey(listener.getLectureId())){
-                    HashMap<String, Object> lectureEntry = (HashMap<String, Object>) runningLectures.get(listener.getLectureId());
-
-                    //add question to the array
-                    List<Object> listenerQuestions = (List<Object>) lectureEntry.get("listenerQuestions");
-                    listenerQuestions.add(questionText);
-                    ////
-
-                    String owner = (String) lectureEntry.get("owner");
-                    ClientSocketHandler ownerSocker = clients.get(owner);
-                    if (ownerSocker != null) {
-                        ownerSocker.getPW().println(makeClientMessage(SocketMethods.LISTENERSENTQUESTION, questionText));
+                if (listener.getLectureId() != null) {
+                    if (runningLectures.containsKey(listener.getLectureId())) {
+                        RunningLecture rlecture = runningLectures.get(listener.getLectureId());
+                        rlecture.sendQuestionToLecturer(questionText);
                     } else {
-                        //owner is disconnected, currently do nothing
+                        throw new ExceptionHandler("lecture isn't started or bad lecture id");
                     }
                 }else {
-                    throw new ExceptionHandler("lecture isn't started or bad lecture id");
+                    throw new ExceptionHandler("you are not listening to any lecture");
                 }
             }else {
                 throw new ExceptionHandler("lecturer is not allowed to do this");
@@ -356,27 +479,21 @@ public enum SocketHandler {
 
     void sendListenerQuestionToListeners(LinkedTreeMap params, ClientSocketHandler lecturer) throws ExceptionHandler {
         try {
-            Object questionText = params.get("questionText");
-            if (runningLectures.containsKey(lecturer.getLectureId())){
-                HashMap<String, Object> lectureEntry = (HashMap<String, Object>)runningLectures.get(lecturer.getLectureId());
-                String owner = (String) lectureEntry.get("owner");
-                if (owner.equals(lecturer.getGuid())) {
-                    ArrayList<String> users = (ArrayList<String>) lectureEntry.get("listeners");
-                    for (String listenerGuid : users) {
-                        ClientSocketHandler listenerSocket = clients.get(listenerGuid);
-                        listenerSocket.getPW().println(makeClientMessage(SocketMethods.LECTURERSENTLISTENERQUESTION, questionText));
+            String questionText = (String)params.get("questionText");
+            if (lecturer.getLectureId() != null) {
+                if (runningLectures.containsKey(lecturer.getLectureId())) {
+                    RunningLecture rlecture = runningLectures.get(lecturer.getLectureId());
+                    String owner = rlecture.getOwner();
+                    if (owner.equals(lecturer.getGuid())) {
+                        rlecture.sendQuestionToListeners(questionText);
+                    } else {
+                        throw new ExceptionHandler("you are not allowed to do this");
                     }
-
-                    //update lectures
-                    List<Object> questions = (List<Object>)lectureEntry.get("questions");
-                    questions.add(questionText);
-                    ////////
-
-                }else {
-                    throw new ExceptionHandler("you are not allowed to do this");
+                } else {
+                    throw new ExceptionHandler("lecture isn't started or bad lecture id");
                 }
             }else {
-                throw new ExceptionHandler("lecture isn't started or bad lecture id");
+                throw new ExceptionHandler("you have no running lecture");
             }
         }catch (ExceptionHandler e){
             throw e;
@@ -391,18 +508,15 @@ public enum SocketHandler {
             if (listener.getIsListener()){
                 String questionId = (String) params.get("questionId");
                 Double answerIndex = (Double) params.get("answerIndex");
-                if (answersToQuestions.containsKey(questionId)){
-                    int[] answersArray = answersToQuestions.get(questionId);
-                    if (answerIndex < answersArray.length){
-                        answersArray[answerIndex.intValue()]++;
-                    }else {
-                        throw new ExceptionHandler("index greater than number of questions");
-                    }
+                String lectureId = listener.getLectureId();
+                if (lectureId != null) {
+                    RunningLecture rlecture = runningLectures.get(lectureId);
+                    rlecture.updateAnswersToQuestion(questionId, answerIndex);
                 }else {
-                    throw new ExceptionHandler("question not asked or bad question id");
+                    throw new ExceptionHandler("you are not listening to any lecture");
                 }
             }else {
-                throw new ExceptionHandler("you are not listening to this lecture");
+                throw new ExceptionHandler("lecturer is not allower to send answer to question");
             }
         }catch (ExceptionHandler e){
             throw e;
@@ -411,15 +525,16 @@ public enum SocketHandler {
         }
     }
 
-    int[] getAnswersToQuestion(LinkedTreeMap params) throws ExceptionHandler {
+    int[] getAnswersToQuestion(LinkedTreeMap params, ClientSocketHandler client) throws ExceptionHandler {
         //extra security is to send senderId and lectureId and check if senderId is owner of lecture, but this is not needed for now
         try {
             String questionId = (String) params.get("questionId");
-            if (answersToQuestions.containsKey(questionId)){
-                int[] answersArray = answersToQuestions.get(questionId);
-                return answersArray;
+            String lectureId = client.getLectureId();
+            if (lectureId != null) {
+                RunningLecture rlecture = runningLectures.get(lectureId);
+                return rlecture.getAnswersToQuestion(questionId);
             }else {
-                throw new ExceptionHandler("question not asked or bad question id");
+                throw new ExceptionHandler("you are not listening to any lecture");
             }
         }catch (ExceptionHandler e){
             throw e;
@@ -430,15 +545,8 @@ public enum SocketHandler {
 
     Object getLastQuestion(String lectureId) throws ExceptionHandler {
         if (runningLectures.containsKey(lectureId)) {
-            HashMap<String, Object> lectureEntry = (HashMap<String, Object>) runningLectures.get(lectureId);
-            List<Object> questions = (List<Object>)lectureEntry.get("questions");
-            synchronized (questions) {
-                if (questions.size() > 0) {
-                    return questions.get(questions.size() - 1);
-                } else {
-                    return null;
-                }
-            }
+            RunningLecture rlecture = runningLectures.get(lectureId);
+            return rlecture.getLastLecturerQuestion();
         }else {
             throw new ExceptionHandler("lecture isn't started or bad lecture id");
         }
@@ -446,16 +554,20 @@ public enum SocketHandler {
 
     Object getListenerQuestions(ClientSocketHandler client) throws ExceptionHandler{
         try {
-            if (runningLectures.containsKey(client.getLectureId())){
-                HashMap<String, Object> lectureEntry = (HashMap<String, Object>) runningLectures.get(client.getLectureId());
-                String owner = (String) lectureEntry.get("owner");
-                if (owner.equals(client.getGuid())){
-                    return lectureEntry.get("listenerQuestions");
-                }else {
-                    throw new ExceptionHandler("you are not owner of this lecture");
+            if (client.getLectureId() != null) {
+                if (runningLectures.containsKey(client.getLectureId())) {
+                    RunningLecture rlecture = runningLectures.get(client.getLectureId());
+                    String owner = rlecture.getOwner();
+                    if (owner.equals(client.getGuid())) {
+                        return rlecture.getListenerQuestions();
+                    } else {
+                        throw new ExceptionHandler("you are not owner of this lecture");
+                    }
+                } else {
+                    throw new ExceptionHandler("lecture isn't started or bad lecture id");
                 }
             }else {
-                throw new ExceptionHandler("lecture isn't started or bad lecture id");
+                throw new ExceptionHandler("you have no running lecture");
             }
         }catch (ExceptionHandler e){
             throw e;
@@ -468,14 +580,17 @@ public enum SocketHandler {
         try {
             if (sender.getLectureId() != null){
                 if (runningLectures.containsKey(sender.getLectureId())) {
-                    HashMap<String, Object> lectureEntry = (HashMap<String, Object>) runningLectures.get(sender.getLectureId());
-                    ArrayList<String> users = (ArrayList<String>) lectureEntry.get("listeners");
-                    return users.size();
+                    RunningLecture rlecture = runningLectures.get(sender.getLectureId());
+                    return rlecture.getListenersCount();
                 } else {
                     throw new ExceptionHandler("lecture isn't started or bad lecture id");
                 }
             }else {
-                throw new ExceptionHandler("you are not listening to any lecture");
+                if (sender.getIsListener()) {
+                    throw new ExceptionHandler("you are not listening to any lecture");
+                }else {
+                    throw new ExceptionHandler("you have no running lecture");
+                }
             }
         }catch (ExceptionHandler e){
             throw e;

@@ -116,7 +116,6 @@ public class ClientSocketHandler implements Runnable{
                             }
                             break;
                         case SOCKET_STOPLECTURE:{
-                            LinkedTreeMap params = (LinkedTreeMap) message.get("params");
                             SocketHandler.INSTANCE.stopLecture(this);
                             pw.println(SocketHandler.makeClientResponse(true, "lecture stopped"));
                             break;
@@ -196,7 +195,7 @@ public class ClientSocketHandler implements Runnable{
                         case SOCKET_GETANSWERSTOQUESTION:{
                             if (message.get("params") instanceof LinkedTreeMap) {
                                 LinkedTreeMap params = (LinkedTreeMap) message.get("params");
-                                int[] answers = SocketHandler.INSTANCE.getAnswersToQuestion(params);
+                                int[] answers = SocketHandler.INSTANCE.getAnswersToQuestion(params, this);
                                 pw.println(SocketHandler.makeClientResponse(true, answers));
                             }else {
                                 pw.println(SocketHandler.makeClientResponse(false, "bad params"));
@@ -295,7 +294,6 @@ public class ClientSocketHandler implements Runnable{
     }
 
     static long getNewListenerNumber(){
-        long num = listenerNumber++;
-        return num;
+        return listenerNumber++;
     }
 }

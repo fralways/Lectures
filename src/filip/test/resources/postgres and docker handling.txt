@@ -1,3 +1,5 @@
+POSTGRESQL
+
 psql -Upostgres ako treba da se promeni user na postgres
 
 psql (connection options here) postgres(ime db)< yourbackup.sql
@@ -19,10 +21,19 @@ docker commit ac2b1eab409b(ovo je id kontejnera sto ima u docker ps -a) postgres
 
 za bash i docker start:
 docker run -i -t f424490974dd /bin/bash
-docker build -t newimagename .
 
-
+----------------------------
 LECTURES JAR
 
+docker build -t gcr.io/lectures-145120/server_with_jar .
+docker build -t gcr.io/lectures-145120/server_with_jar_test .
 
 #ne zaboravi da uradis build + build artifacts da se update jar fajl i posle ga prebaci iz out/artifacts u ovaj folder
+
+---------------------------
+OTHER DOCKER COMMANDS
+
+docker images
+docker ps -a
+docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
+docker rmi the_image -remove image

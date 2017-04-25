@@ -21,7 +21,7 @@ public class Test {
     PrintWriter out;
     BufferedReader userInputBR;
 
-    final String host = "24.135.51.251";
+    final String host = "localhost";
     final int portNumber = 8210;
     boolean badCommand = false;
 

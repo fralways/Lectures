@@ -2,10 +2,8 @@ package filip.test.socket;
 
 import com.google.gson.internal.LinkedTreeMap;
 import filip.test.*;
-import org.joda.time.DateTime;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.net.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,16 +49,15 @@ public enum SocketHandler {
         }
 
         void addListener(String guid){
-            synchronized (listeners) {
-                listeners.add(guid);
-            }
+            listeners.add(guid);
+            notifyUsersWithChangedNumberOfListeners();
         }
 
         private void notifyListenersLectureStopped(){
             synchronized (listeners) {
                 for (String listener : listeners) {
                     ClientSocketHandler listenerSocket = clients.get(listener);
-                    listenerSocket.getPW().println(makeClientMessage(SocketMethods.STOPPEDLECTURE, "lecture stopped"));
+                    listenerSocket.PWPrintln(makeClientMessage(SocketMethods.STOPPEDLECTURE, "lecture stopped"));
                     listenerSocket.setLectureId(null);
                 }
             }
@@ -71,8 +68,10 @@ public enum SocketHandler {
                 for (Object question : lecturerQuestions) {
                     if (question instanceof Question) {
                         Question q = (Question) question;
-                        if (answersToQuestions.containsKey(q.getGuid())) {
-                            answersToQuestions.remove(q.getGuid());
+                        synchronized (answersToQuestions) {
+                            if (answersToQuestions.containsKey(q.getGuid())) {
+                                answersToQuestions.remove(q.getGuid());
+                            }
                         }
                     }
                 }
@@ -98,6 +97,10 @@ public enum SocketHandler {
                 }
             }
 
+            if (found){
+                notifyUsersWithChangedNumberOfListeners();
+            }
+
             return found;
         }
 
@@ -115,46 +118,61 @@ public enum SocketHandler {
 
         //lecturer sends his question to listeners
         void sendQuestionToListeners(Question question){
+            Utilities.printLog("send question to listeners 1");
             SocketQuestion squestion = addLecturerQuestion(question);
+            Utilities.printLog("send question to listeners 2");
 
             //send question to listeners
             synchronized (listeners) {
                 for (String listenerGuid : listeners) {
                     ClientSocketHandler listenerSocket = clients.get(listenerGuid);
-                    listenerSocket.getPW().println(makeClientMessage(SocketMethods.LECTURERSENTQUESTION, squestion.getQuestion()));
+                    listenerSocket.PWPrintln(makeClientMessage(SocketMethods.LECTURERSENTQUESTION, squestion.getQuestion()));
                 }
             }
+
+            Utilities.printLog("send question to listeners 3");
 
             //add entry to the answersToQuestions object
             int count = question.getAnswers().size();
             int[] answersArray = new int[count];
             answersToQuestions.put(question.getGuid(), answersArray);
+            Utilities.printLog("send question to listeners 4");
         }
 
         //lecturer sends listener question to listeners
         void sendQuestionToListeners(String question){
+            Utilities.printLog("send question to listeners 11");
             SocketQuestion squestion = addLecturerQuestion(question);
+            Utilities.printLog("send question to listeners 22");
 
             //send question to listeners
-            for (String listenerGuid : listeners) {
-                ClientSocketHandler listenerSocket = clients.get(listenerGuid);
-                listenerSocket.getPW().println(makeClientMessage(SocketMethods.LECTURERSENTLISTENERQUESTION, squestion.getQuestion()));
+            synchronized (listeners) {
+                for (String listenerGuid : listeners) {
+                    ClientSocketHandler listenerSocket = clients.get(listenerGuid);
+                    listenerSocket.PWPrintln(makeClientMessage(SocketMethods.LECTURERSENTLISTENERQUESTION, squestion.getQuestion()));
+                }
             }
+            Utilities.printLog("send question to listeners 33");
         }
 
         private SocketQuestion addListenerQuestion(String question){
+            Utilities.printLog("add listener q 1");
             SocketQuestion squestion = new SocketQuestion(question);
+            Utilities.printLog("add listener q 2");
             listenerQuestions.add(squestion);
+            Utilities.printLog("add listener q 3");
             return squestion;
         }
 
         void sendQuestionToLecturer(String question){
+            Utilities.printLog("send question to lecturer 1");
             SocketQuestion squestion = addListenerQuestion(question);
-
+            Utilities.printLog("send question to lecturer 2");
             ClientSocketHandler ownerSocker = clients.get(owner);
             if (ownerSocker != null) {
-                ownerSocker.getPW().println(makeClientMessage(SocketMethods.LISTENERSENTQUESTION, squestion.getQuestion()));
+                ownerSocker.PWPrintln(makeClientMessage(SocketMethods.LISTENERSENTQUESTION, squestion.getQuestion()));
             }
+            Utilities.printLog("send question to lecturer 3");
 //            else {
                 //owner is disconnected, currently do nothing
 //            }
@@ -185,23 +203,45 @@ public enum SocketHandler {
         }
 
         void updateAnswersToQuestion(String questionId, Double answerIndex) throws Exception{
-            if (answersToQuestions.containsKey(questionId)){
-                int[] answersArray = answersToQuestions.get(questionId);
-                if (answerIndex < answersArray.length){
-                    answersArray[answerIndex.intValue()]++;
-                }else {
-                    throw new ExceptionHandler("index greater than number of questions");
+            synchronized (answersToQuestions) {
+                if (answersToQuestions.containsKey(questionId)) {
+                    int[] answersArray = answersToQuestions.get(questionId);
+                    if (answerIndex < answersArray.length) {
+                        answersArray[answerIndex.intValue()]++;
+                    } else {
+                        throw new ExceptionHandler("index greater than number of questions");
+                    }
+                } else {
+                    throw new ExceptionHandler("question not asked");
                 }
-            }else {
-                throw new ExceptionHandler("question not asked");
             }
         }
 
         int [] getAnswersToQuestion(String questionId) throws Exception{
-            if (answersToQuestions.containsKey(questionId)){
-                return answersToQuestions.get(questionId);
-            }else {
-                throw new ExceptionHandler("question not asked or bad question id");
+            synchronized (answersToQuestions) {
+                if (answersToQuestions.containsKey(questionId)) {
+                    return answersToQuestions.get(questionId);
+                } else {
+                    throw new ExceptionHandler("question not asked or bad question id");
+                }
+            }
+        }
+
+        void notifyUsersWithChangedNumberOfListeners(){
+            synchronized (listeners){
+                int num = getListenersCount();
+                Map<String, Integer> message = new HashMap<>();
+                message.put("NumOfListeners", num);
+                //listeners currently cannot fetch this number
+//                for (String listenerId: listeners) {
+//                    ClientSocketHandler listener = clients.get(listenerId);
+//                    listener.PWPrintln(makeClientMessage(SocketMethods.CHANGEDNUMBEROFLISTENERS, message));
+//                }
+                String ownerId = getOwner();
+                ClientSocketHandler owner = clients.get(ownerId);
+                if (owner != null) {
+                    owner.PWPrintln(makeClientMessage(SocketMethods.CHANGEDNUMBEROFLISTENERS, message));
+                }
             }
         }
     }
@@ -220,6 +260,7 @@ public enum SocketHandler {
         LISTENERSENTQUESTION,
         LECTURERSENTQUESTION,
         LECTURERSENTLISTENERQUESTION,
+        CHANGEDNUMBEROFLISTENERS,
         CLOSE
     }
 
@@ -259,7 +300,7 @@ public enum SocketHandler {
         try {
             for (String key : clients.keySet()) {
                 ClientSocketHandler client = clients.get(key);
-                client.getPW().println(makeClientMessage(SocketMethods.MESSAGE, "socket closed due to server restart"));
+                client.PWPrintln(makeClientMessage(SocketMethods.MESSAGE, "socket closed due to server restart"));
                 closeClient(client);
             }
             clients = null;
@@ -275,7 +316,7 @@ public enum SocketHandler {
     void loginClient(ClientSocketHandler client, String guid) throws ExceptionHandler {
         if (clients.containsKey(guid)) {
             ClientSocketHandler oldClient = clients.get(guid);
-            oldClient.getPW().println(makeClientMessage(SocketMethods.CLOSE, "You logged in from different place"));
+            oldClient.PWPrintln(makeClientMessage(SocketMethods.CLOSE, "You logged in from different place"));
             closeClient(oldClient);
 //            throw new ExceptionHandler("user already logged in");
         }
@@ -349,7 +390,6 @@ public enum SocketHandler {
 
                 Utilities.printLog("SocketHandler: lecture started with id: " + id);
 
-
                 return id;
             }
         }catch (ExceptionHandler e){
@@ -399,10 +439,13 @@ public enum SocketHandler {
             String id = (String) params.get("id");
             String password = (String) params.get("password");
             if (runningLectures.containsKey(id)){
+                Utilities.printLog("test1");
                 RunningLecture rlecture = runningLectures.get(id);
+                Utilities.printLog("test2");
                 if (rlecture.password == null || rlecture.password.equals(password)){
                     rlecture.addListener(client.getGuid());
                     client.setLectureId(id);
+                    Utilities.printLog("test3");
                 }else {
                     throw new ExceptionHandler("wrong password");
                 }
@@ -438,21 +481,26 @@ public enum SocketHandler {
         try {
             String questionId = (String) params.get("questionId");
             if (sender.getLectureId() != null) {
-                if (runningLectures.containsKey(sender.getLectureId())) {
+                Utilities.printLog("test11");
+                synchronized (runningLectures) {
+                    if (runningLectures.containsKey(sender.getLectureId())) {
 
-                    //fetch Question from DB
-                    Question question = Server.getDbHandler().getQuestion(questionId);
-                    ////
-
-                    RunningLecture rlecture = runningLectures.get(sender.getLectureId());
-                    String owner = rlecture.owner;
-                    if (owner.equals(sender.getGuid())) {
-                        rlecture.sendQuestionToListeners(question);
+                        //fetch Question from DB
+                        Question question = Server.getDbHandler().getQuestion(questionId);
+                        ////
+                        Utilities.printLog("test22");
+                        RunningLecture rlecture = runningLectures.get(sender.getLectureId());
+                        Utilities.printLog("test33");
+                        String owner = rlecture.owner;
+                        if (owner.equals(sender.getGuid())) {
+                            rlecture.sendQuestionToListeners(question);
+                            Utilities.printLog("test44");
+                        } else {
+                            throw new ExceptionHandler("you are not allowed to do this");
+                        }
                     } else {
-                        throw new ExceptionHandler("you are not allowed to do this");
+                        throw new ExceptionHandler("lecture isn't started or bad lecture id");
                     }
-                } else {
-                    throw new ExceptionHandler("lecture isn't started or bad lecture id");
                 }
             }else {
                 throw new ExceptionHandler("you have no running lecture");
@@ -466,9 +514,11 @@ public enum SocketHandler {
 
     void sendQuestionToLecturer(LinkedTreeMap params, ClientSocketHandler listener) throws ExceptionHandler {
         try {
+            Utilities.printLog("wants to send question to lecturer 1");
             String questionText = (String) params.get("questionText");
             if (listener.getIsListener()){
                 if (listener.getLectureId() != null) {
+                    Utilities.printLog("wants to send question to lecturer 2");
                     if (runningLectures.containsKey(listener.getLectureId())) {
                         RunningLecture rlecture = runningLectures.get(listener.getLectureId());
                         rlecture.sendQuestionToLecturer(questionText);
@@ -592,7 +642,11 @@ public enum SocketHandler {
             if (sender.getLectureId() != null){
                 if (runningLectures.containsKey(sender.getLectureId())) {
                     RunningLecture rlecture = runningLectures.get(sender.getLectureId());
-                    return rlecture.getListenersCount();
+                    if (sender.getGuid().equals(rlecture.getOwner())) {
+                        return rlecture.getListenersCount();
+                    }else {
+                        throw new ExceptionHandler("you are not allowed to do this");
+                    }
                 } else {
                     throw new ExceptionHandler("lecture isn't started or bad lecture id");
                 }

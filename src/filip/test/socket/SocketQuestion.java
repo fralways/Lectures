@@ -1,5 +1,6 @@
 package filip.test.socket;
 
+import filip.test.ListenerQuestion;
 import filip.test.Question;
 
 import java.text.SimpleDateFormat;
@@ -11,17 +12,17 @@ import java.util.HashMap;
  */
 
 class SocketQuestion {
-    private String text; //if listener sends his question
+    private ListenerQuestion listenerQuestion;
     private Question question; //if lecturer sends his question
-    private Date date;
+    private Date date; //if lecturer sends his question
 
     public Date getDate() {
         return date;
     }
 
-    SocketQuestion(String question){
-        text = question;
-        date = new Date();
+    SocketQuestion(ListenerQuestion question){
+        listenerQuestion = question;
+        date = question.getDate();
     }
 
     SocketQuestion(Question question){
@@ -39,7 +40,7 @@ class SocketQuestion {
         if (question != null) {
             hashQuestion.put("question", question);
         } else {
-            hashQuestion.put("question", text);
+            hashQuestion.put("question", listenerQuestion);
         }
 
         return hashQuestion;

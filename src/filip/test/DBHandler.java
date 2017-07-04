@@ -1,12 +1,13 @@
 package filip.test;
 
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 import io.jsonwebtoken.Jwts;
 
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.joda.time.DateTime;
 import org.postgresql.jdbc.PgArray;
 
-import javax.rmi.CORBA.Util;
+import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.security.NoSuchAlgorithmException;
@@ -24,54 +25,121 @@ public class DBHandler {
     String host = "localhost";
     int port = 5432;
 
-    private Connection conn;
+//    private Connection conn;
+    private ComboPooledDataSource cpds;
 
-    DBHandler() throws ClassNotFoundException, SQLException {
+    DBHandler() throws ClassNotFoundException, SQLException, PropertyVetoException {
         connect(host, port);
         cleanupDB();
     }
 
-    DBHandler(String host, int port) throws ClassNotFoundException, SQLException {
+    DBHandler(String host, int port) throws ClassNotFoundException, SQLException, PropertyVetoException {
         this.port = port;
         this.host = host;
         connect(host, port);
         cleanupDB();
     }
 
-    private void connect(String host, int port) throws ClassNotFoundException, SQLException{
-        Class.forName("org.postgresql.Driver");
-        String url = "jdbc:postgresql://"+ host + ":" + port + "/postgres?currentSchema=lectures";
-        Properties props = new Properties();
-        props.setProperty("user","postgres");
-        props.setProperty("password","filip123");
-        props.setProperty("ssl","false");
-        props.setProperty("tcpKeepAlive", "true");
-        props.put("autoReconnect", "true");
-        conn = DriverManager.getConnection(url, props);
+    private void closeConnections(Connection conn){
+        closeConnections(null, null, null, conn);
     }
 
-    private void cleanupDB(){
+    private void closeConnections(Statement st, Connection conn){
+        closeConnections(null, null, st, conn);
+    }
+
+    private void closeConnections(ResultSet rs, Connection conn){
+        closeConnections(rs, null, null, conn);
+    }
+
+    private void closeConnections(ResultSet rs, PreparedStatement ps, Connection conn){
+        closeConnections(rs, ps, null, conn);
+    }
+
+    private void closeConnections(ResultSet rs, PreparedStatement ps, Statement st, Connection conn){
+        if (rs != null){
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                Utilities.printLog(e.toString());
+            }
+        }
+        if (ps != null){
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                Utilities.printLog(e.toString());
+            }
+        }
+        if (st != null){
+            try {
+                st.close();
+            } catch (SQLException e) {
+                Utilities.printLog(e.toString());
+            }
+        }
+        if (conn != null){
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                Utilities.printLog(e.toString());
+            }
+        }
+    }
+
+    private void connect(String host, int port) throws ClassNotFoundException, SQLException, PropertyVetoException {
+//        Class.forName("org.postgresql.Driver");
+//        String url = "jdbc:postgresql://"+ host + ":" + port + "/postgres?currentSchema=lectures";
+//        Properties props = new Properties();
+//        props.setProperty("user","postgres");
+//        props.setProperty("password","filip123");
+//        props.setProperty("ssl","false");
+//        props.setProperty("tcpKeepAlive", "true");
+//        props.put("autoReconnect", "true");
+//        conn = DriverManager.getConnection(url, props);
+
+        cpds = new ComboPooledDataSource();
+        cpds.setDriverClass("org.postgresql.Driver"); //loads the jdbc driver
+        String url = "jdbc:postgresql://"+ host + ":" + port + "/postgres?currentSchema=lectures";
+        cpds.setJdbcUrl(url);
+        cpds.setUser("postgres");
+        cpds.setPassword("filip123");
+    }
+
+    private void cleanupDB() {
         Utilities.printLog(this, "DB cleanup started");
+
+        Connection conn = null;
         try {
+            conn = cpds.getConnection();
             PreparedStatement ps = conn.prepareStatement("update users set runninglecture = null");
             ps.executeUpdate();
             ps.close();
-            Utilities.printLog(this, "cleaned users");
+            Utilities.printLog(this, "set no running lecture to all users");
 
             ps = conn.prepareStatement("delete from question where owner IS null");
             int count = ps.executeUpdate();
             ps.close();
-            Utilities.printLog(this, "cleaned questions: " + count);
+            Utilities.printLog(this, "cleaned questions without owner: " + count);
+
+            ps = conn.prepareStatement("delete from listener_question");
+            count = ps.executeUpdate();
+            ps.close();
+            Utilities.printLog(this, "cleaned listener questions: " + count);
 
             Utilities.printLog(this, "DB cleanup end");
         } catch (SQLException e) {
             Utilities.printLog(e.toString());
+        } finally {
+            closeConnections(conn);
         }
     }
 
     public void getAllFromDB() {
-        Statement st;
+        Statement st = null;
+        Connection conn = null;
         try {
+            conn = cpds.getConnection();
             st = conn.createStatement();
 
             ResultSet rs = st.executeQuery("SELECT * FROM question");
@@ -79,12 +147,12 @@ public class DBHandler {
             {
                 System.out.print("Column 1 returned ");
                 System.out.println(rs.getString(1));
-            } rs.close();
-
-            st.close();
-
+            }
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            closeConnections(st, conn);
         }
     }
 
@@ -110,18 +178,22 @@ public class DBHandler {
     private void createUser(Object email, Object title, Object userId, Object firstname,
                            Object lastname, Object description, Object university, Object password) throws ExceptionHandler {
 
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM users WHERE email = ?");
+            conn = cpds.getConnection();
+            ps = conn.prepareStatement("SELECT * FROM users WHERE email = ?");
             ps.setString(1, (String) email);
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
             if (rs.next()) {
-                rs.close();
                 throw new ExceptionHandler("user already exist", HttpURLConnection.HTTP_INTERNAL_ERROR);
             } else {
                 String cryptPassword = Utilities.cryptWithMD5((String) password);
                 String guid = Utilities.cryptWithMD5((String) email);
 
                 String imageId = createImage();
+                ps.close();
                 ps = conn.prepareStatement("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 ps.setString(1, (String) email);
                 ps.setString(2, (String) title);
@@ -141,18 +213,23 @@ public class DBHandler {
                 ps.setString(1, guid);
                 ps.setString(2, imageId);
                 ps.executeUpdate();
-                ps.close();
             }
         }catch (SQLException|NoSuchAlgorithmException|IOException e){
             throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        } finally {
+            closeConnections(rs, ps, conn);
         }
     }
 
     public void deleteUserByGuid(String guid) throws ExceptionHandler {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
-            PreparedStatement ps = conn.prepareStatement("select * FROM users WHERE guid = ?");
+            conn = cpds.getConnection();
+            ps = conn.prepareStatement("select * FROM users WHERE guid = ?");
             ps.setString(1, guid);
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
             List<HashMap<String,Object>> userList = Utilities.convertResultSetToList(rs);
             if (userList.size() > 0){
@@ -167,24 +244,30 @@ public class DBHandler {
                 ps = conn.prepareStatement("DELETE FROM users WHERE guid = ?");
                 ps.setString(1, guid);
                 ps.executeUpdate();
-                ps.close();
 
             }else {
                 throw new ExceptionHandler("user does not exist", HttpURLConnection.HTTP_NOT_FOUND);
             }
         }catch (SQLException e){
             throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }finally {
+            closeConnections(rs, ps, conn);
         }
     }
 
     public Object getUserByEmail(Object email) throws ExceptionHandler {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             if (String.class.isInstance(email)) {
-                PreparedStatement ps = conn.prepareStatement("SELECT * FROM users WHERE email = ?");
+                conn = cpds.getConnection();
+                ps = conn.prepareStatement("SELECT * FROM users WHERE email = ?");
                 ps.setString(1, (String) email);
-                ResultSet rs = ps.executeQuery();
+                rs = ps.executeQuery();
 
                 List<HashMap<String, Object>> results = Utilities.convertResultSetToList(rs);
+
                 if (results != null && results.size() > 0) {
                     HashMap<String, Object> user = results.get(0);
                     PgArray lectures = (PgArray) user.get("lectures");
@@ -202,7 +285,9 @@ public class DBHandler {
                                 statement.append("'");
                             }
 
+                            ps.close();
                             ps = conn.prepareStatement(statement.toString());
+                            rs.close();
                             rs = ps.executeQuery();
 
                             results = Utilities.convertResultSetToList(rs);
@@ -225,15 +310,21 @@ public class DBHandler {
             }
         }catch (SQLException e){
             throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }finally {
+            closeConnections(rs, ps, conn);
         }
     }
 
     public Boolean checkIfUserExists(String guid) throws ExceptionHandler {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             if (guid != null) {
-                PreparedStatement ps = conn.prepareStatement("select exists(select 1 from users where guid = ?) AS \"exists\"");
+                conn = cpds.getConnection();
+                ps = conn.prepareStatement("select exists(select 1 from users where guid = ?) AS \"exists\"");
                 ps.setString(1, guid);
-                ResultSet rs = ps.executeQuery();
+                rs = ps.executeQuery();
                 List<HashMap<String,Object>> list = Utilities.convertResultSetToList(rs);
                 HashMap<String,Object> result = list.get(0);
                 return (Boolean) result.get("exists");
@@ -242,57 +333,70 @@ public class DBHandler {
             }
         }catch (SQLException e){
             throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }finally {
+            closeConnections(rs, ps, conn);
         }
     }
 
     public void updateUserWithParams(String userId, Map<String, Object> params) throws ExceptionHandler {
-
+        Connection conn = null;
+        PreparedStatement ps = null;
         try {
             Set<String> allowedFields = new HashSet<>(
                     Arrays.asList("firstname", "lastname", "description", "title", "password", "university"));
 
             String querry = makePatchDBQuerry("users", allowedFields, params, userId);
             if (querry != null) {
-                PreparedStatement ps = conn.prepareStatement(querry);
+                conn = cpds.getConnection();
+                ps = conn.prepareStatement(querry);
                 ps.executeUpdate();
             } else {
                 throw new ExceptionHandler("bad params", HttpURLConnection.HTTP_BAD_REQUEST);
             }
         }catch (SQLException e){
             throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }finally {
+            closeConnections(ps, conn);
         }
     }
 
     public void updateUserWithRunningLecture(String userId, String uniqueId, boolean delete) throws ExceptionHandler{
+        Connection conn = null;
+        PreparedStatement ps = null;
         try {
             if (userId != null) {
+                conn = cpds.getConnection();
                 if (delete) {
-                    PreparedStatement ps = conn.prepareStatement("UPDATE users SET runninglecture = null WHERE guid = ? and runninglecture = ?");
+                    ps = conn.prepareStatement("UPDATE users SET runninglecture = null WHERE guid = ? and runninglecture = ?");
                     ps.setString(1, userId);
                     ps.setString(2, uniqueId);
                     ps.executeUpdate();
-                    ps.close();
                 }else {
-                    PreparedStatement ps = conn.prepareStatement("UPDATE users SET runninglecture = ? WHERE guid = ?");
+                    ps = conn.prepareStatement("UPDATE users SET runninglecture = ? WHERE guid = ?");
                     ps.setString(1, uniqueId);
                     ps.setString(2, userId);
                     ps.executeUpdate();
-                    ps.close();
                 }
             }else {
                 throw new ExceptionHandler("bad user", HttpURLConnection.HTTP_BAD_REQUEST);
             }
         }catch (SQLException e){
             throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }finally {
+            closeConnections(ps, conn);
         }
     }
 
     public Boolean checkIfUserHasRunningLecture(String userId) throws ExceptionHandler {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             if (userId != null) {
-                PreparedStatement ps = conn.prepareStatement("select exists(select 1 from users where runninglecture is not null and guid = ?) AS \"exists\"");
+                conn = cpds.getConnection();
+                ps = conn.prepareStatement("select exists(select 1 from users where runninglecture is not null and guid = ?) AS \"exists\"");
                 ps.setString(1, userId);
-                ResultSet rs = ps.executeQuery();
+                rs = ps.executeQuery();
                 List<HashMap<String,Object>> list = Utilities.convertResultSetToList(rs);
                 HashMap<String,Object> result = list.get(0);
                 return (Boolean) result.get("exists");
@@ -301,16 +405,22 @@ public class DBHandler {
             }
         }catch (SQLException e){
             throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }finally {
+            closeConnections(rs, ps, conn);
         }
     }
 
     public Boolean checkIfUserIsOwnerOfLecture(String userId, String uniqueId) throws ExceptionHandler {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             if (userId != null && uniqueId != null) {
-                PreparedStatement ps = conn.prepareStatement("select exists(select 1 from lecture where owner = ? and unique_id = ?) AS \"exists\"");
+                conn = cpds.getConnection();
+                ps = conn.prepareStatement("select exists(select 1 from lecture where owner = ? and unique_id = ?) AS \"exists\"");
                 ps.setString(1, userId);
                 ps.setString(2, uniqueId);
-                ResultSet rs = ps.executeQuery();
+                rs = ps.executeQuery();
                 List<HashMap<String,Object>> list = Utilities.convertResultSetToList(rs);
                 HashMap<String,Object> result = list.get(0);
                 return (Boolean) result.get("exists");
@@ -319,32 +429,38 @@ public class DBHandler {
             }
         }catch (SQLException e){
             throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }finally {
+            closeConnections(rs, ps, conn);
         }
     }
 
     public String createImage() throws IOException, SQLException {
-        Statement st;
+        Connection conn = null;
+        Statement st = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        conn = cpds.getConnection();
         st = conn.createStatement();
-        ResultSet rs = st.executeQuery("SELECT uuid_generate_v4()");
+        rs = st.executeQuery("SELECT uuid_generate_v4()");
         rs.next();
         String genuuid = rs.getString(1);
 
-        PreparedStatement ps = conn.prepareStatement("INSERT INTO image(id, defaultImage) VALUES (?, ?)");
+        ps = conn.prepareStatement("INSERT INTO image(id, defaultImage) VALUES (?, ?)");
 
         ps.setString(1, genuuid);
         ps.setBoolean(2, true);
-//        File file = new File("giphy_s.gif");
-//        FileInputStream fis = new FileInputStream(file);
-//        ps.setBinaryStream(3, fis, (int)file.length());
-//        fis.close();
         ps.executeUpdate();
 
-        ps.close();
+        closeConnections(rs, ps, st, conn);
 
         return genuuid;
     }
 
     public String authenticateUser(Map<String, Object> parameters) throws ExceptionHandler {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         if (String.class.isInstance(parameters.get("email")) && String.class.isInstance(parameters.get("password"))) {
             String email = (String) parameters.get("email");
             String password = (String) parameters.get("password");
@@ -352,13 +468,12 @@ public class DBHandler {
             if (!email.equals("") && !password.equals("")){
                 try {
                     String cryptPassword = Utilities.cryptWithMD5(password);
-                    PreparedStatement ps = conn.prepareStatement("SELECT * FROM users WHERE email = ? and password = ?");
+                    conn = cpds.getConnection();
+                    ps = conn.prepareStatement("SELECT * FROM users WHERE email = ? and password = ?");
                     ps.setString(1, email);
                     ps.setString(2, cryptPassword);
-                    ResultSet rs = ps.executeQuery();
+                    rs = ps.executeQuery();
                     if (rs.next()) {
-
-                        //                    String userEmail = rs.getString("email");
                         String guid = rs.getString("guid");
 
                         //napravi token i vrati korisniku
@@ -381,6 +496,8 @@ public class DBHandler {
                     }
                 }catch (SQLException|NoSuchAlgorithmException e){
                     throw new ExceptionHandler("bad username or password", HttpURLConnection.HTTP_BAD_REQUEST);
+                }finally {
+                    closeConnections(rs, ps, conn);
                 }
             }else{
                 throw new ExceptionHandler("bad username or password", HttpURLConnection.HTTP_BAD_REQUEST);
@@ -391,26 +508,32 @@ public class DBHandler {
     }
 
     public Lecture createLecture(Map<String, Object> parameters, String userId) throws ExceptionHandler {
+        Connection conn = null;
+        Statement st = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT uuid_generate_v4()");
+            conn = cpds.getConnection();
+            st = conn.createStatement();
+            rs = st.executeQuery("SELECT uuid_generate_v4()");
             rs.next();
             String guid = rs.getString(1);
             Lecture lecture = new Lecture(parameters, guid);
 
-
             String uniqueid = Utilities.generateLectureString();
             boolean exists;
             do {
-                PreparedStatement ps = conn.prepareStatement("select exists(select 1 from lecture where unique_id = ?) AS \"exists\"");
+                ps = conn.prepareStatement("select exists(select 1 from lecture where unique_id = ?) AS \"exists\"");
                 ps.setString(1, uniqueid);
                 rs = ps.executeQuery();
                 List<HashMap<String,Object>> list = Utilities.convertResultSetToList(rs);
                 HashMap<String,Object> result = list.get(0);
                 exists = (Boolean) result.get("exists");
+                ps.close();
+                ps = null;
             }while (exists);
 
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO lecture(title, description, guid, unique_id, owner) VALUES (?, ?, ?, ?, ?)");
+            ps = conn.prepareStatement("INSERT INTO lecture(title, description, guid, unique_id, owner) VALUES (?, ?, ?, ?, ?)");
             ps.setString(1, lecture.getTitle());
             ps.setString(2, lecture.getDescription());
             ps.setString(3, lecture.getGuid());
@@ -423,20 +546,25 @@ public class DBHandler {
             ps.setString(1, lecture.getGuid());
             ps.setString(2, userId);
             ps.executeUpdate();
-            ps.close();
 
             return lecture;
         }catch (SQLException e){
             throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
         }catch (ExceptionHandler e){
             throw e;
+        }finally {
+            closeConnections(rs, ps, st, conn);
         }
     }
 
     public void deleteLecture(Object id, String userId) throws ExceptionHandler{
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             if (String.class.isInstance(id)){
-                PreparedStatement ps = conn.prepareStatement("update users set lectures = array_remove(lectures, CAST (? AS TEXT )) where guid=?");
+                conn = cpds.getConnection();
+                ps = conn.prepareStatement("update users set lectures = array_remove(lectures, CAST (? AS TEXT )) where guid=?");
                 ps.setString(1, (String)id);
                 ps.setString(2, userId);
                 ps.executeUpdate();
@@ -444,7 +572,7 @@ public class DBHandler {
 
                 ps = conn.prepareStatement("select * from lecture where guid=?");
                 ps.setString(1, (String)id);
-                ResultSet rs = ps.executeQuery();
+                rs = ps.executeQuery();
 
                 Lecture lecture = new Lecture(rs);
                 if (lecture != null && lecture.questionIds != null && lecture.questionIds.size() > 0) {
@@ -456,15 +584,15 @@ public class DBHandler {
                         query.append("'").append(lecture.questionIds.get(i)).append("'");
                     }
                     query.append(")");
+                    ps.close();
                     ps = conn.prepareStatement(query.toString());
                     ps.executeUpdate();
-                    ps.close();
                 }
 
+                ps.close();
                 ps = conn.prepareStatement("DELETE FROM lecture WHERE guid = ?");
                 ps.setString(1, (String) id);
                 ps.executeUpdate();
-                ps.close();
             }else {
                 throw new ExceptionHandler("bad params", HttpURLConnection.HTTP_BAD_REQUEST);
             }
@@ -473,12 +601,17 @@ public class DBHandler {
         }
         catch (SQLException e){
             throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }finally {
+            closeConnections(rs, ps, conn);
         }
     }
 
     List<HashMap<String,Object>> getLectureQuestions(Lecture lecture) throws ExceptionHandler{
         StringBuilder statement = new StringBuilder("SELECT * FROM question WHERE guid='");
 
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             if (lecture.questionIds != null) {
                 for (int i = 0; i < lecture.questionIds.size(); i++) {
@@ -490,8 +623,9 @@ public class DBHandler {
                     statement.append("'");
                 }
 
-                PreparedStatement ps = conn.prepareStatement(statement.toString());
-                ResultSet rs = ps.executeQuery();
+                conn = cpds.getConnection();
+                ps = conn.prepareStatement(statement.toString());
+                rs = ps.executeQuery();
 
                 List<HashMap<String, Object>> questionsList = Utilities.convertResultSetToList(rs);
                 for (int i = 0; i < questionsList.size(); i++) {
@@ -509,15 +643,21 @@ public class DBHandler {
             }
         }catch (Exception e){
             throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }finally {
+            closeConnections(rs, ps, conn);
         }
     }
 
     public Lecture getLecture(Object id) throws ExceptionHandler {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             if (String.class.isInstance(id)) {
-                PreparedStatement ps = conn.prepareStatement("SELECT * FROM lecture WHERE guid = ?");
+                conn = cpds.getConnection();
+                ps = conn.prepareStatement("SELECT * FROM lecture WHERE guid = ?");
                 ps.setString(1, (String) id);
-                ResultSet rs = ps.executeQuery();
+                rs = ps.executeQuery();
 
                 Lecture lecture = new Lecture(rs);
                 List<HashMap<String, Object>> questions = getLectureQuestions(lecture);
@@ -530,15 +670,21 @@ public class DBHandler {
             throw e;
         }catch (SQLException e){
             throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }finally {
+            closeConnections(rs, ps, conn);
         }
     }
 
     public Lecture getLectureFromUniqueId(Object uniqueid) throws ExceptionHandler {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             if (String.class.isInstance(uniqueid)) {
-                PreparedStatement ps = conn.prepareStatement("SELECT * FROM lecture WHERE unique_id = ?");
+                conn = cpds.getConnection();
+                ps = conn.prepareStatement("SELECT * FROM lecture WHERE unique_id = ?");
                 ps.setString(1, (String) uniqueid);
-                ResultSet rs = ps.executeQuery();
+                rs = ps.executeQuery();
 
                 Lecture lecture = new Lecture(rs);
                 List<HashMap<String, Object>> questions = getLectureQuestions(lecture);
@@ -551,6 +697,8 @@ public class DBHandler {
             throw e;
         }catch (SQLException e){
             throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }finally {
+            closeConnections(rs, ps, conn);
         }
     }
 
@@ -571,8 +719,11 @@ public class DBHandler {
                         Question question = getQuestion(questionId);
 
                         if (lecture != null && question != null) {
+                            Connection conn = null;
+                            PreparedStatement ps = null;
                             try {
-                                PreparedStatement ps = conn.prepareStatement("update lecture set questions = array_append(questions, CAST (? AS TEXT )) where guid=?");
+                                conn = cpds.getConnection();
+                                ps = conn.prepareStatement("update lecture set questions = array_append(questions, CAST (? AS TEXT )) where guid=?");
                                 ps.setString(1, question.getGuid());
                                 ps.setString(2, lecture.getGuid());
                                 ps.executeUpdate();
@@ -582,9 +733,10 @@ public class DBHandler {
                                 ps.setString(1, lecture.getGuid());
                                 ps.setString(2, question.getGuid());
                                 ps.executeUpdate();
-                                ps.close();
                             }catch (SQLException e){
                                 throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+                            }finally {
+                                closeConnections(ps, conn);
                             }
                         } else {
                             throw new ExceptionHandler("bad params", HttpURLConnection.HTTP_BAD_REQUEST);
@@ -605,8 +757,11 @@ public class DBHandler {
                         Question question = getQuestion(questionId);
 
                         if (lecture != null && question != null) {
+                            Connection conn = null;
+                            PreparedStatement ps = null;
                             try {
-                                PreparedStatement ps = conn.prepareStatement("update lecture set questions = array_remove(questions, CAST (? AS TEXT )) where guid=?");
+                                conn = cpds.getConnection();
+                                ps = conn.prepareStatement("update lecture set questions = array_remove(questions, CAST (? AS TEXT )) where guid=?");
                                 ps.setString(1, question.getGuid());
                                 ps.setString(2, lecture.getGuid());
                                 ps.executeUpdate();
@@ -615,9 +770,10 @@ public class DBHandler {
                                 ps = conn.prepareStatement("DELETE FROM question WHERE guid = ?");
                                 ps.setString(1, question.getGuid());
                                 ps.executeUpdate();
-                                ps.close();
                             }catch (SQLException e){
                                 throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+                            }finally {
+                                closeConnections(ps, conn);
                             }
                         } else {
                             throw new ExceptionHandler("bad params", HttpURLConnection.HTTP_BAD_REQUEST);
@@ -629,17 +785,21 @@ public class DBHandler {
                     break;
                 }
                 case "replace": {
+                    Connection conn = null;
+                    PreparedStatement ps = null;
                     try {
                         Set<String> allowedFields = new HashSet<>(
                                 Arrays.asList("title", "description"));
                         String query = makePatchDBQuerry("lecture", allowedFields, parameters, path);
                         if (query != null) {
-                            PreparedStatement ps = conn.prepareStatement(query);
+                            conn = cpds.getConnection();
+                            ps = conn.prepareStatement(query);
                             ps.executeUpdate();
-                            ps.close();
                         }
                     }catch (SQLException e){
                         throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+                    }finally {
+                        closeConnections(ps, conn);
                     }
 
                     break;
@@ -654,14 +814,19 @@ public class DBHandler {
     }
 
     public String createQuestion(Map<String, Object> parameters) throws ExceptionHandler{
+        Connection conn = null;
+        PreparedStatement ps = null;
+        Statement st = null;
+        ResultSet rs = null;
         try {
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT uuid_generate_v4()");
+            conn = cpds.getConnection();
+            st = conn.createStatement();
+            rs = st.executeQuery("SELECT uuid_generate_v4()");
             rs.next();
             String guid = rs.getString(1);
             Question question = new Question(parameters, guid);
 
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO question(guid, question, correctindex, duration, answers) VALUES (?, ?, ?, ?, ?)");
+            ps = conn.prepareStatement("INSERT INTO question(guid, question, correctindex, duration, answers) VALUES (?, ?, ?, ?, ?)");
             ps.setString(1, question.getGuid());
             ps.setString(2, question.getQuestion());
             ps.setInt(3, question.getCorrectIndex());
@@ -671,21 +836,26 @@ public class DBHandler {
             final java.sql.Array sqlArray = conn.createArrayOf("VARCHAR", data);
             ps.setArray(5, sqlArray);
             ps.executeUpdate();
-            ps.close();
             return question.getGuid();
         }catch (ExceptionHandler e){
             throw e;
         }catch (SQLException e) {
             throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }finally {
+            closeConnections(rs, ps, st, conn);
         }
     }
 
     public Question getQuestion(Object id) throws ExceptionHandler {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             if (String.class.isInstance(id)) {
-                PreparedStatement ps = conn.prepareStatement("SELECT * FROM question WHERE guid = ?");
+                conn = cpds.getConnection();
+                ps = conn.prepareStatement("SELECT * FROM question WHERE guid = ?");
                 ps.setString(1, (String) id);
-                ResultSet rs = ps.executeQuery();
+                rs = ps.executeQuery();
                 Question question = new Question(rs);
                 return question;
             } else {
@@ -695,6 +865,8 @@ public class DBHandler {
             throw e;
         }catch (SQLException e){
             throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }finally {
+            closeConnections(rs, ps, conn);
         }
     }
 
@@ -705,6 +877,8 @@ public class DBHandler {
         if (op != null && path != null && parameters != null){
             switch (op) {
                 case "replace": {
+                    Connection conn = null;
+                    PreparedStatement ps = null;
                     try {
                         ArrayList<String> answers = (ArrayList<String>) parameters.get("answers");
                         //update answer array
@@ -718,12 +892,14 @@ public class DBHandler {
                                 Arrays.asList("question", "correctindex", "duration", "answers"));
                         String query = makePatchDBQuerry("question", allowedFields, parameters, path);
                         if (query != null) {
-                            PreparedStatement ps = conn.prepareStatement(query);
+                            conn = cpds.getConnection();
+                            ps = conn.prepareStatement(query);
                             ps.executeUpdate();
-                            ps.close();
                         }
                     }catch (SQLException e){
                         throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+                    }finally {
+                        closeConnections(ps, conn);
                     }
                     break;
                 }
@@ -737,9 +913,12 @@ public class DBHandler {
     }
 
     public void deleteQuestion(Object id, Object lectureId) throws ExceptionHandler{
+        Connection conn = null;
+        PreparedStatement ps = null;
         try {
             if (String.class.isInstance(id) && String.class.isInstance(lectureId)) {
-                PreparedStatement ps = conn.prepareStatement("update lecture set questions = array_remove(questions, CAST (? AS TEXT )) where guid=?");
+                conn = cpds.getConnection();
+                ps = conn.prepareStatement("update lecture set questions = array_remove(questions, CAST (? AS TEXT )) where guid=?");
                 ps.setString(1, (String) id);
                 ps.setString(2, (String) lectureId);
                 ps.executeUpdate();
@@ -748,12 +927,128 @@ public class DBHandler {
                 ps = conn.prepareStatement("DELETE FROM question WHERE guid = ?");
                 ps.setString(1, (String) id);
                 ps.executeUpdate();
-                ps.close();
             } else {
                 throw new ExceptionHandler(EXCEPTION_BADREQUEST, HttpURLConnection.HTTP_BAD_REQUEST);
             }
         }catch (SQLException e){
             throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }finally {
+            closeConnections(ps, conn);
+        }
+    }
+
+    public ListenerQuestion createListenerQuestion(Map<String, Object> parameters, String lectureId) throws ExceptionHandler{
+        Connection conn = null;
+        PreparedStatement ps = null;
+        Statement st = null;
+        ResultSet rs = null;
+        try {
+            conn = cpds.getConnection();
+            st = conn.createStatement();
+            rs = st.executeQuery("SELECT uuid_generate_v4()");
+            rs.next();
+            String guid = rs.getString(1);
+            Date dateNow = new Date();
+            ListenerQuestion question = new ListenerQuestion(parameters, guid, lectureId, dateNow, false);
+
+            ps = conn.prepareStatement("INSERT INTO listener_question(guid, question, lecture_id, date) VALUES (?, ?, ?, to_timestamp(?, 'YYYY-DD-MM HH24:MI:SS.MS'))");
+            ps.setString(1, question.getGuid());
+            ps.setString(2, question.getQuestion());
+            ps.setString(3, question.getLectureId());
+
+            Timestamp timestamp = new Timestamp(dateNow.getTime());
+            String timestampValue = timestamp.toString();
+            ps.setString(4, timestampValue);
+
+            ps.executeUpdate();
+            return question;
+        }catch (ExceptionHandler e){
+            throw e;
+        }catch (SQLException e) {
+            throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }finally {
+            closeConnections(rs, ps, st, conn);
+        }
+    }
+
+    public List<ListenerQuestion> getListenerQuestions(Object lectureId) throws ExceptionHandler {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            if (String.class.isInstance(lectureId)) {
+                conn = cpds.getConnection();
+                ps = conn.prepareStatement("SELECT * FROM listener_question WHERE lecture_id = ?");
+                ps.setString(1, (String) lectureId);
+                rs = ps.executeQuery();
+                List<ListenerQuestion> questions = ListenerQuestion.getQuestions(rs);
+
+                return questions;
+            } else {
+                throw new ExceptionHandler("bad params", HttpURLConnection.HTTP_BAD_REQUEST);
+            }
+        }catch (ExceptionHandler e){
+            throw e;
+        }catch (SQLException e){
+            throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }finally {
+            closeConnections(rs, ps, conn);
+        }
+    }
+
+    public ListenerQuestion getListenerQuestion(String id) throws ExceptionHandler {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = cpds.getConnection();
+            ps = conn.prepareStatement("SELECT * FROM listener_question WHERE guid = ?");
+            ps.setString(1, id);
+            rs = ps.executeQuery();
+            ListenerQuestion question = new ListenerQuestion(rs);
+            return question;
+        }catch (ExceptionHandler e){
+            throw e;
+        }catch (SQLException e){
+            throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }finally {
+            closeConnections(rs, ps, conn);
+        }
+    }
+
+    public void setSharedListenerQuestion(String id) throws ExceptionHandler {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            conn = cpds.getConnection();
+            ps = conn.prepareStatement("update listener_question set shared = true where guid = ?");
+            ps.setString(1, id);
+            ps.executeUpdate();
+        }catch (SQLException e){
+            throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }finally {
+            closeConnections(ps, conn);
+        }
+    }
+
+    public void removeListenerQuestions(Object lectureId) throws ExceptionHandler {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        try {
+            if (String.class.isInstance(lectureId)) {
+                conn = cpds.getConnection();
+                ps = conn.prepareStatement("DELETE FROM listener_question WHERE lecture_id = ?");
+                ps.setString(1, (String) lectureId);
+                ps.executeUpdate();
+            } else {
+                throw new ExceptionHandler("bad params", HttpURLConnection.HTTP_BAD_REQUEST);
+            }
+        }catch (ExceptionHandler e){
+            throw e;
+        }catch (SQLException e){
+            throw new ExceptionHandler(e.toString(), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }finally {
+            closeConnections(ps, conn);
         }
     }
 

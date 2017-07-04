@@ -16,6 +16,8 @@ import static filip.test.StaticKeys.*;
  */
 public class ClientSocketHandler implements Runnable{
 
+    static int listenerCountTEST = 0;
+
     private Socket socket;
     private Thread runningOnThread;
     private String guid;
@@ -24,7 +26,6 @@ public class ClientSocketHandler implements Runnable{
     private PrintWriter pw;
     private boolean isListener;
     private String lectureId;
-    private static long listenerNumber = 0;
 
     public void setRunningOnThread(Thread t){
         runningOnThread = t;
@@ -97,10 +98,10 @@ public class ClientSocketHandler implements Runnable{
                 try {
                     switch (method){
                         case SOCKET_LOGIN:
-                            if (message.get("params") instanceof String) {
+                            if (message.get("params") instanceof LinkedTreeMap) {
                                 if (this.guid == null) {
-                                    String guid = (String) message.get("params");
-                                    SocketHandler.INSTANCE.loginClient(this, guid);
+                                    LinkedTreeMap params = (LinkedTreeMap) message.get("params");
+                                    SocketHandler.INSTANCE.loginClient(this, params);
                                     PWPrintln(SocketHandler.makeClientResponse(true, "Hello, " + this.guid + ". Select action"));
                                     Utilities.printLog("ClientHandler: client logged in with guid " + this.guid);
                                 }else {
@@ -274,7 +275,7 @@ public class ClientSocketHandler implements Runnable{
                     }
                 }
             }else {
-                if (message.get("params") instanceof String && message.get("method").equals(SOCKET_LOGIN)) {
+                if (message.get("params") instanceof LinkedTreeMap && ((LinkedTreeMap) message.get("params")).get("guid") instanceof String && message.get("method").equals(SOCKET_LOGIN)) {
 
                 }else {
                     throw new ExceptionHandler("message not in good format or user not logged in");
@@ -296,9 +297,5 @@ public class ClientSocketHandler implements Runnable{
 
     void interruptThread(){
         runningOnThread.interrupt();
-    }
-
-    static synchronized long getNewListenerNumber(){
-        return listenerNumber++;
     }
 }

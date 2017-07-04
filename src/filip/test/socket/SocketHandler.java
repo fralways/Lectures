@@ -16,14 +16,13 @@ public enum SocketHandler {
      * creating ClientSocketHandler threads for each client connected
      */
 
-    class RunningLecture {
+    private class RunningLecture {
 
         private String lectureId;
         private String owner;
         private String password;
         private final List<String> listeners;
         private final List<SocketQuestion> lecturerQuestions;    //questions that lecturer sends to the listeners
-        private final List<SocketQuestion> listenerQuestions;    //questions that listener sends to the lecturer
         private final ConcurrentHashMap<String, int []> answersToQuestions;
 
         public String getLectureId() {
@@ -44,7 +43,6 @@ public enum SocketHandler {
             this.password = password;
             listeners = Collections.synchronizedList(new ArrayList());
             lecturerQuestions = Collections.synchronizedList(new ArrayList());
-            listenerQuestions = Collections.synchronizedList(new ArrayList());
             answersToQuestions = new ConcurrentHashMap<>();
         }
 
@@ -110,7 +108,7 @@ public enum SocketHandler {
             return squestion;
         }
 
-        private SocketQuestion addLecturerQuestion(String question){
+        private SocketQuestion addLecturerQuestion(ListenerQuestion question){
             SocketQuestion squestion = new SocketQuestion(question);
             lecturerQuestions.add(squestion);
             return squestion;
@@ -118,9 +116,7 @@ public enum SocketHandler {
 
         //lecturer sends his question to listeners
         void sendQuestionToListeners(Question question){
-            Utilities.printLog("send question to listeners 1");
             SocketQuestion squestion = addLecturerQuestion(question);
-            Utilities.printLog("send question to listeners 2");
 
             //send question to listeners
             synchronized (listeners) {
@@ -130,20 +126,15 @@ public enum SocketHandler {
                 }
             }
 
-            Utilities.printLog("send question to listeners 3");
-
             //add entry to the answersToQuestions object
             int count = question.getAnswers().size();
             int[] answersArray = new int[count];
             answersToQuestions.put(question.getGuid(), answersArray);
-            Utilities.printLog("send question to listeners 4");
         }
 
         //lecturer sends listener question to listeners
-        void sendQuestionToListeners(String question){
-            Utilities.printLog("send question to listeners 11");
+        void sendQuestionToListeners(ListenerQuestion question){
             SocketQuestion squestion = addLecturerQuestion(question);
-            Utilities.printLog("send question to listeners 22");
 
             //send question to listeners
             synchronized (listeners) {
@@ -152,27 +143,14 @@ public enum SocketHandler {
                     listenerSocket.PWPrintln(makeClientMessage(SocketMethods.LECTURERSENTLISTENERQUESTION, squestion.getQuestion()));
                 }
             }
-            Utilities.printLog("send question to listeners 33");
         }
 
-        private SocketQuestion addListenerQuestion(String question){
-            Utilities.printLog("add listener q 1");
+        void sendQuestionToLecturer(ListenerQuestion question){
             SocketQuestion squestion = new SocketQuestion(question);
-            Utilities.printLog("add listener q 2");
-            listenerQuestions.add(squestion);
-            Utilities.printLog("add listener q 3");
-            return squestion;
-        }
-
-        void sendQuestionToLecturer(String question){
-            Utilities.printLog("send question to lecturer 1");
-            SocketQuestion squestion = addListenerQuestion(question);
-            Utilities.printLog("send question to lecturer 2");
             ClientSocketHandler ownerSocker = clients.get(owner);
             if (ownerSocker != null) {
                 ownerSocker.PWPrintln(makeClientMessage(SocketMethods.LISTENERSENTQUESTION, squestion.getQuestion()));
             }
-            Utilities.printLog("send question to lecturer 3");
 //            else {
                 //owner is disconnected, currently do nothing
 //            }
@@ -188,13 +166,14 @@ public enum SocketHandler {
             }
         }
 
-        ArrayList<Object> getListenerQuestions(){
-            ArrayList<Object> questions = new ArrayList<>();
-            synchronized (listenerQuestions) {
-                for (SocketQuestion squestion : listenerQuestions) {
-                    questions.add(squestion.getQuestion());
-                }
+        List<ListenerQuestion> getListenerQuestions(){
+            List<ListenerQuestion> questions = null;
+            try {
+                questions = Server.getDbHandler().getListenerQuestions(getLectureId());
+            } catch (ExceptionHandler exceptionHandler) {
+                exceptionHandler.printStackTrace();
             }
+
             return questions;
         }
 
@@ -313,7 +292,10 @@ public enum SocketHandler {
         }
     }
 
-    void loginClient(ClientSocketHandler client, String guid) throws ExceptionHandler {
+    void loginClient(ClientSocketHandler client, LinkedTreeMap params) throws ExceptionHandler {
+        String guid = (String)params.get("guid");
+
+        boolean listener = params.containsKey("listener") && (boolean) params.get("listener");
         if (clients.containsKey(guid)) {
             ClientSocketHandler oldClient = clients.get(guid);
             oldClient.PWPrintln(makeClientMessage(SocketMethods.CLOSE, "You logged in from different place"));
@@ -322,7 +304,7 @@ public enum SocketHandler {
         }
 
         Boolean exists;
-        if (guid.equals("LISTENER")) {
+        if (listener) {
             exists = true;
             client.setIsListener(true);
         } else{
@@ -330,7 +312,7 @@ public enum SocketHandler {
         }
         if (exists) {
             if (client.getIsListener()){
-                client.setGuid("LISTENER" + ClientSocketHandler.getNewListenerNumber());
+                client.setGuid(guid);
             }else {
                 client.setGuid(guid);
                 client.setLectureId(getRunningLectureForUser(guid));
@@ -349,9 +331,10 @@ public enum SocketHandler {
             clients.remove(guid);
 
             //remove if client is listening to some lecture
-            if (client.getLectureId() != null) {
-                stopListenLecture(client.getLectureId(), client.getGuid());
-            }
+            //prevent this since we added a unique id, so now user can rejoin when reconnected on socket
+//            if (client.getLectureId() != null) {
+//                stopListenLecture(client.getLectureId(), client.getGuid());
+//            }
             //////
         }
         client.closeSocket();
@@ -413,6 +396,7 @@ public enum SocketHandler {
                         runningLectures.remove(lecturer.getLectureId());
                         usersRunningLectures.remove(lecturer.getGuid());
                         Server.getDbHandler().updateUserWithRunningLecture(lecturer.getGuid(), lecturer.getLectureId(), true);
+                        Server.getDbHandler().removeListenerQuestions(lecturer.getLectureId());
 
                         lecturer.setLectureId(null);
                     } else {
@@ -514,14 +498,12 @@ public enum SocketHandler {
 
     void sendQuestionToLecturer(LinkedTreeMap params, ClientSocketHandler listener) throws ExceptionHandler {
         try {
-            Utilities.printLog("wants to send question to lecturer 1");
-            String questionText = (String) params.get("questionText");
+            ListenerQuestion question = Server.getDbHandler().createListenerQuestion(params, listener.getLectureId());
             if (listener.getIsListener()){
                 if (listener.getLectureId() != null) {
-                    Utilities.printLog("wants to send question to lecturer 2");
                     if (runningLectures.containsKey(listener.getLectureId())) {
                         RunningLecture rlecture = runningLectures.get(listener.getLectureId());
-                        rlecture.sendQuestionToLecturer(questionText);
+                        rlecture.sendQuestionToLecturer(question);
                     } else {
                         throw new ExceptionHandler("lecture isn't started or bad lecture id");
                     }
@@ -540,13 +522,15 @@ public enum SocketHandler {
 
     void sendListenerQuestionToListeners(LinkedTreeMap params, ClientSocketHandler lecturer) throws ExceptionHandler {
         try {
-            String questionText = (String)params.get("questionText");
+            String listenerQuestionId = (String)params.get("id");
             if (lecturer.getLectureId() != null) {
                 if (runningLectures.containsKey(lecturer.getLectureId())) {
                     RunningLecture rlecture = runningLectures.get(lecturer.getLectureId());
                     String owner = rlecture.getOwner();
                     if (owner.equals(lecturer.getGuid())) {
-                        rlecture.sendQuestionToListeners(questionText);
+                        ListenerQuestion question = Server.getDbHandler().getListenerQuestion(listenerQuestionId);
+                        rlecture.sendQuestionToListeners(question);
+                        Server.getDbHandler().setSharedListenerQuestion(listenerQuestionId);
                     } else {
                         throw new ExceptionHandler("you are not allowed to do this");
                     }

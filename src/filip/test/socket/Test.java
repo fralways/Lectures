@@ -21,6 +21,8 @@ public class Test {
     PrintWriter out;
     BufferedReader userInputBR;
 
+    static int listenerCount = 0;
+
     final String host = "localhost";
     final int portNumber = 8210;
     boolean badCommand = false;
@@ -76,8 +78,10 @@ public class Test {
                     break; // skip
                 case "10": {
                     Map<String, Object> message = new HashMap<>();
+                    Map<String, String> params = new HashMap<>();
                     message.put("method", "login");
-                    message.put("params", "83528b7a13aff88491a7772acddb6d22");
+                    params.put("guid", "83528b7a13aff88491a7772acddb6d22");
+                    message.put("params", params);
                     String json = Utilities.mapToJson(message);
                     out.println(json);
                     break;
@@ -85,8 +89,11 @@ public class Test {
                 case "11": {
                     //login as listener
                     Map<String, Object> message = new HashMap<>();
+                    Map<String, Object> params = new HashMap<>();
                     message.put("method", "login");
-                    message.put("params", "LISTENER");
+                    params.put("guid", "SOMELISTENERID" + ClientSocketHandler.listenerCountTEST++);
+                    params.put("listener", true);
+                    message.put("params", params);
                     String json = Utilities.mapToJson(message);
                     out.println(json);
                     break;
@@ -163,7 +170,7 @@ public class Test {
                 case "510": {
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
-                    params.put("questionText", "Some text here is ins");
+                    params.put("question", "Some text here is ins");
                     message.put("method", "sendQuestionToLecturer");
                     message.put("params", params);
                     String json = Utilities.mapToJson(message);
@@ -171,9 +178,13 @@ public class Test {
                     break;
                 }
                 case "520": {
+                    System.out.println("enter question guid: ");
+                    String responseMessage = userInputBR.readLine();
+
+
                     Map<String, Object> message = new HashMap<>();
                     Map<String, String> params = new HashMap<>();
-                    params.put("questionText", "Some text here is inserted");
+                    params.put("id", responseMessage);
                     message.put("method", "sendListenerQuestionToListeners");
                     message.put("params", params);
                     String json = Utilities.mapToJson(message);

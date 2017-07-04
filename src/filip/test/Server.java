@@ -3,6 +3,7 @@ package filip.test;
  * Created by Filip on 8/7/2016.
  */
 
+import java.beans.PropertyVetoException;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
@@ -37,7 +38,7 @@ public class Server {
             server.serverInit();
             SocketHandler socketServer = SocketHandler.INSTANCE;
             socketServer.start();
-        } catch (IOException | ClassNotFoundException | SQLException e) {
+        } catch (IOException | ClassNotFoundException | SQLException | PropertyVetoException e) {
             e.printStackTrace();
         }
     }

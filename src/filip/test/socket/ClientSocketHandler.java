@@ -170,9 +170,13 @@ public class ClientSocketHandler implements Runnable{
                         case SOCKET_SENDQUESTIONTOLECTURER:{
                             Utilities.printLog("wants to send question to lecturer");
                             if (message.get("params") instanceof LinkedTreeMap) {
-                                LinkedTreeMap params = (LinkedTreeMap) message.get("params");
-                                SocketHandler.INSTANCE.sendQuestionToLecturer(params, this);
-                                PWPrintln(SocketHandler.makeClientResponse(true, "sent question to the lecturer"));
+                                if (getLectureId() != null && !getLectureId().equals("")){
+                                    LinkedTreeMap params = (LinkedTreeMap) message.get("params");
+                                    SocketHandler.INSTANCE.sendQuestionToLecturer(params, this);
+                                    PWPrintln(SocketHandler.makeClientResponse(true, "sent question to the lecturer"));
+                                }else{
+                                    PWPrintln(SocketHandler.makeClientResponse(false, "user is not listening to any lecture"));
+                                }
                             }else {
                                 PWPrintln(SocketHandler.makeClientResponse(false, "bad params"));
                             }

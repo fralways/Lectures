@@ -91,7 +91,8 @@ public class Test {
                     Map<String, Object> message = new HashMap<>();
                     Map<String, Object> params = new HashMap<>();
                     message.put("method", "login");
-                    params.put("guid", "SOMELISTENERID" + ClientSocketHandler.listenerCountTEST++);
+//                    params.put("guid", "SOMELISTENERID" + ClientSocketHandler.listenerCountTEST++);
+                    params.put("guid", "SOMELISTENERID");
                     params.put("listener", true);
                     message.put("params", params);
                     String json = Utilities.mapToJson(message);

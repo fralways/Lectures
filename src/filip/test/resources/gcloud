@@ -6,3 +6,9 @@ gcloud docker -- push gcr.io/lectures-145120/postgresql:with_schema
 
 gcloud docker pull gcr.io/lectures-145120/server_with_jar:latest
 gcloud docker pull gcr.io/lectures-145120/postgresql:with_schema
+
+
+sa docker clouda:
+
+docker push fralways/postgresql:with_schema
+docker push fralways/server:latest

@@ -47,8 +47,26 @@ public enum SocketHandler {
         }
 
         void addListener(String guid){
-            listeners.add(guid);
-            notifyUsersWithChangedNumberOfListeners();
+            if (!checkIfListenerAlreadyListenToLecture(guid)) {
+                listeners.add(guid);
+                notifyUsersWithChangedNumberOfListeners();
+            }
+        }
+
+        boolean checkIfListenerAlreadyListenToLecture(String guid){
+            boolean found = false;
+
+            synchronized (listeners) {
+                for (int i = 0; i < listeners.size(); i++) {
+                    String userGuid = listeners.get(i);
+                    if (userGuid.equals(guid)) {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            return found;
         }
 
         private void notifyListenersLectureStopped(){
@@ -166,15 +184,20 @@ public enum SocketHandler {
             }
         }
 
-        List<ListenerQuestion> getListenerQuestions(){
+        List<Object> getListenerQuestions(){
             List<ListenerQuestion> questions = null;
+            List<Object> list = new ArrayList<Object>();
             try {
                 questions = Server.getDbHandler().getListenerQuestions(getLectureId());
+                for (ListenerQuestion question: questions){
+                    SocketQuestion sQuestion = new SocketQuestion(question);
+                    list.add(sQuestion.getQuestion());
+                }
             } catch (ExceptionHandler exceptionHandler) {
                 exceptionHandler.printStackTrace();
             }
 
-            return questions;
+            return list;
         }
 
         int getListenersCount(){
@@ -423,13 +446,10 @@ public enum SocketHandler {
             String id = (String) params.get("id");
             String password = (String) params.get("password");
             if (runningLectures.containsKey(id)){
-                Utilities.printLog("test1");
                 RunningLecture rlecture = runningLectures.get(id);
-                Utilities.printLog("test2");
                 if (rlecture.password == null || rlecture.password.equals(password)){
                     rlecture.addListener(client.getGuid());
                     client.setLectureId(id);
-                    Utilities.printLog("test3");
                 }else {
                     throw new ExceptionHandler("wrong password");
                 }
@@ -465,20 +485,16 @@ public enum SocketHandler {
         try {
             String questionId = (String) params.get("questionId");
             if (sender.getLectureId() != null) {
-                Utilities.printLog("test11");
                 synchronized (runningLectures) {
                     if (runningLectures.containsKey(sender.getLectureId())) {
 
                         //fetch Question from DB
                         Question question = Server.getDbHandler().getQuestion(questionId);
                         ////
-                        Utilities.printLog("test22");
                         RunningLecture rlecture = runningLectures.get(sender.getLectureId());
-                        Utilities.printLog("test33");
                         String owner = rlecture.owner;
                         if (owner.equals(sender.getGuid())) {
                             rlecture.sendQuestionToListeners(question);
-                            Utilities.printLog("test44");
                         } else {
                             throw new ExceptionHandler("you are not allowed to do this");
                         }
@@ -591,7 +607,12 @@ public enum SocketHandler {
     Object getLastQuestion(String lectureId) throws ExceptionHandler {
         if (runningLectures.containsKey(lectureId)) {
             RunningLecture rlecture = runningLectures.get(lectureId);
-            return rlecture.getLastLecturerQuestion().getQuestion();
+            SocketQuestion lastQ = rlecture.getLastLecturerQuestion();
+            if (lastQ != null) {
+                return rlecture.getLastLecturerQuestion().getQuestion();
+            }else{
+                return new HashMap<>();
+            }
         }else {
             throw new ExceptionHandler("lecture isn't started or bad lecture id");
         }

@@ -10,16 +10,20 @@ ODAVDE:
 backup db:
 desni klik na bazu - backup
 izaberi lokaciju, izaberi format:plain, i dump option:only schema
+(obicno biram folder dbscripts u projektu)
 
 
 docker:
 1)docker build -t postgresql:raw . - pravi docker image
 2)docker run --rm -P --name pg_test postgresql:raw - pokreni bazu
-idi gde je instaliran postgres/bin nadji psql tu otvori
-comm line, -p je onaj port sto pise kad uradis docker ps -a (pa pogledas tu koji je port od postgres)
-3)psql -h localhost -p 32769 -d postgres -U postgres --password -
+3)idi gde je instaliran postgres/bin (treba da ima psql u tom folderu)
+C:\Program Files\PostgreSQL\9.6\bin
+tu otvori comm line, -p je onaj port sto pise kad uradis docker ps -a (pa pogledas tu koji je port od postgres)
+psql -h localhost -p 32768 -d postgres -U postgres --password
+pass = filip123
 4)docker=# \i C:/Users/jENOV/IdeaProjects/Lectures/src/filip/test/dbskripts/baza1.sql = create schema
-docker commit ac2b1eab409b(ovo je id kontejnera sto ima u docker ps -a) postgresql:with_schema = sacuvaj novu bazu
+docker commit ac2b1eab409b fralways/postgresql:with_schema = sacuvaj novu bazu,
+(ac2b1eab409b - ovo je id kontejnera sto ima u docker ps -a)
 
 za bash i docker start:
 docker run -i -t f424490974dd /bin/bash
@@ -27,10 +31,14 @@ docker run -i -t f424490974dd /bin/bash
 ----------------------------
 LECTURES JAR
 
-docker build -t gcr.io/lectures-145120/server_with_jar .
-gcloud docker -- push gcr.io/lectures-145120/server_with_jar:latest
+#docker build -t gcr.io/lectures-145120/server_with_jar .
+#gcloud docker -- push gcr.io/lectures-145120/server_with_jar:latest
 
-#ne zaboravi da uradis build + build artifacts da se update jar fajl i posle ga prebaci iz out/artifacts u ovaj folder
+za docker cloud:
+docker build -t fralways/server .
+docker push fralways/server:latest
+
+#ne zaboravi da uradis build + build artifacts da se update jar fajl i posle ga prebaci iz out/artifacts u jar docker folder
 
 ---------------------------
 OTHER DOCKER COMMANDS
